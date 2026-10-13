@@ -1,6 +1,5 @@
 # Runbook: onboard Azure Activity into Microsoft Sentinel
 
-**Client:** Atlas Financial (*fictional*)  
 **Source:** Azure subscription's management-plane Activity Log  
 **Target:** `law-sentinelops-mxdr-euw` / `AzureActivity`
 

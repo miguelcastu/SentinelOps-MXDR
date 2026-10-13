@@ -4,7 +4,6 @@
 
 | Component | Lab value |
 |---|---|
-| Logical customer | Atlas Financial (fictional) |
 | Resource group | `rg-sentinelops-mxdr` |
 | Resource group metadata region | Spain Central |
 | Workspace | `law-sentinelops-mxdr-euw` |

@@ -1,10 +1,10 @@
 # SentinelOps MXDR
 
-**Microsoft Sentinel platform-engineering lab | Atlas Financial (fictional customer)**
+**Microsoft Sentinel platform-engineering lab**
 
 > **v0.1 — verified foundation and Azure Activity onboarding (13 October 2026).** Detection-as-code, IaC and SOAR are planned, not yet implemented.
 
-This is an evidence-based, hands-on MXDR engineering portfolio project covering SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. It is a **personal lab**, not a production MSSP or a real customer deployment.
+This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
 ## Proven deliverables
 
@@ -48,20 +48,19 @@ Azure Policy **governs and deploys configuration**, rather than forwarding event
 4. Run the reusable [KQL queries](hunting/) against a workspace containing `AzureActivity`.
 5. Review [validation evidence](docs/validation/first-ingestion.md) and the [roadmap](docs/roadmap.md).
 
-## Repository organization
+## Project organization
 
 ```text
 docs/         Architecture, onboarding, deployment, validation, troubleshooting
-hunting/      KQL queries versioned as code
+hunting/      Reusable KQL queries
 evidence/     Sanitized Azure screenshots
 infrastructure/  Reserved for future Bicep implementation
-tests/        Lightweight offline repository validation
-.github/      Non-deploying CI checks
+tests/        Lightweight offline project validation
 ```
 
 ## Costs and privacy
 
-Azure budgets are alerts, **not hard spending limits**. Promotional credit and product trials are subject to eligibility and expiration. Verify charges, Log Analytics ingestion, retention and workspace caps in your own subscription. Do not commit secrets, tenant/subscription IDs, email identities or unredacted event logs. See [evidence guidelines](docs/evidence-handling.md).
+Azure budgets are alerts, **not hard spending limits**. Promotional credit and product trials are subject to eligibility and expiration. Verify charges, Log Analytics ingestion, retention and workspace caps in your own subscription. Do not include secrets, tenant/subscription IDs, email identities or unredacted event logs. See [evidence guidelines](docs/evidence-handling.md).
 
 ## Status / roadmap
 
@@ -69,7 +68,5 @@ Azure budgets are alerts, **not hard spending limits**. Promotional credit and p
 - ⬜ Detection engineering, scheduled analytics rules, entity mapping, MITRE ATT&CK, alert investigations.
 - ⬜ Connector health, telemetry coverage, ingestion baseline and troubleshooting.
 - ⬜ Logic Apps / Python automation, idempotency, failures and cost management.
-- ⬜ Bicep Infrastructure as Code and GitHub Actions deployments.
-- ⬜ Customer-facing runbooks, service KPIs and operational handover.
-
-*Independent educational project. Atlas Financial is fictional. No affiliation with a real financial institution, Microsoft or NCC Group.*
+- ⬜ Bicep Infrastructure as Code and automated deployments.
+- ⬜ Operational runbooks, service KPIs and handover.
