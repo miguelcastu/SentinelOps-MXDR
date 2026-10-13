@@ -1,0 +1,5 @@
+// AZ-004: visualize hourly events; a zero-event hour may be normal inactivity.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| summarize EventCount=count() by bin(TimeGenerated, 1h)
+| order by TimeGenerated asc

@@ -1,0 +1,6 @@
+// AZ-001: most recent Azure management-plane events.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| project TimeGenerated, Caller, OperationNameValue, ActivityStatusValue, ResourceGroup
+| order by TimeGenerated desc
+| take 50

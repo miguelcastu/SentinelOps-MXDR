@@ -1,0 +1,5 @@
+// AZ-006: approximate ingest time delay; integer-minute precision, not an SLA.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| extend IngestionDelayMinutes = datetime_diff("minute", ingestion_time(), TimeGenerated)
+| summarize Events=count(), AvgDelayMinutes=round(avg(IngestionDelayMinutes), 2), MaxDelayMinutes=max(IngestionDelayMinutes)

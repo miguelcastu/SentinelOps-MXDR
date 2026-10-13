@@ -1,0 +1,6 @@
+// AZ-002: identify failed ARM operations by caller and operation.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where ActivityStatusValue =~ "Failure"
+| summarize FailedEvents=count() by Caller, OperationNameValue
+| order by FailedEvents desc

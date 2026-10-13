@@ -1,0 +1,6 @@
+// AZ-003: group operations and statuses. Empty result is not automatically an outage.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| summarize EventCount=count() by OperationNameValue, ActivityStatusValue
+| order by EventCount desc
+| take 20

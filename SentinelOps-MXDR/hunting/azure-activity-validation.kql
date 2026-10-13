@@ -1,0 +1,4 @@
+// AZ-005: validate source ingestion and the unique number of Caller values.
+AzureActivity
+| where TimeGenerated > ago(24h)
+| summarize TotalEvents=count(), FirstEvent=min(TimeGenerated), LastEvent=max(TimeGenerated), UniqueCallers=dcount(Caller)
