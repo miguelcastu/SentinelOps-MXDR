@@ -1,0 +1,86 @@
+{
+  "properties": {
+    "plan": "Analytics",
+    "schema": {
+      "name": "SentinelOpsAuth_CL",
+      "columns": [
+        {
+          "name": "TimeGenerated",
+          "type": "datetime"
+        },
+        {
+          "name": "EventStartTime",
+          "type": "datetime"
+        },
+        {
+          "name": "EventEndTime",
+          "type": "datetime"
+        },
+        {
+          "name": "EventCount",
+          "type": "int"
+        },
+        {
+          "name": "EventType",
+          "type": "string"
+        },
+        {
+          "name": "EventResult",
+          "type": "string"
+        },
+        {
+          "name": "EventVendor",
+          "type": "string"
+        },
+        {
+          "name": "EventProduct",
+          "type": "string"
+        },
+        {
+          "name": "EventSchema",
+          "type": "string"
+        },
+        {
+          "name": "EventSchemaVersion",
+          "type": "string"
+        },
+        {
+          "name": "EventOriginalUid",
+          "type": "string"
+        },
+        {
+          "name": "EventOriginalType",
+          "type": "string"
+        },
+        {
+          "name": "Dvc",
+          "type": "string"
+        },
+        {
+          "name": "DvcHostname",
+          "type": "string"
+        },
+        {
+          "name": "TargetUsername",
+          "type": "string"
+        },
+        {
+          "name": "SrcIpAddr",
+          "type": "string"
+        },
+        {
+          "name": "Synthetic",
+          "type": "boolean"
+        },
+        {
+          "name": "BatchId",
+          "type": "string"
+        },
+        {
+          "name": "CustomerName",
+          "type": "string"
+        }
+      ]
+    }
+  }
+}

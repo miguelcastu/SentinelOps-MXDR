@@ -1,0 +1,10 @@
+[
+  {"synthetic":true,"detection":"AZ-DET-001","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","verdict":"benign","reason":"Approved policy remediation; investigation context required"},
+  {"synthetic":true,"detection":"AZ-DET-001","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Success","verdict":"suspicious","reason":"Simulated unauthorized monitoring removal"},
+  {"synthetic":true,"detection":"AZ-DET-001","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Failed","verdict":"suspicious","reason":"Failed tampering attempt is outside this success-only rule"},
+  {"synthetic":true,"detection":"AZ-DET-001","offset":-30,"operation":"Microsoft.Insights/diagnosticSettings/read","status":"Success","verdict":"benign","reason":"Read-only configuration inspection"},
+  {"synthetic":true,"detection":"AZ-DET-002","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","verdict":"benign","reason":"Approved CI reader access; rule cannot infer intent"},
+  {"synthetic":true,"detection":"AZ-DET-002","offset":-120,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Succeeded","verdict":"suspicious","reason":"Simulated unauthorized role grant; role privilege requires enrichment"},
+  {"synthetic":true,"detection":"AZ-DET-002","offset":-120,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Failed","verdict":"suspicious","reason":"Denied escalation is outside this success-only rule"},
+  {"synthetic":true,"detection":"AZ-DET-002","offset":-30,"operation":"Microsoft.Authorization/roleAssignments/read","status":"Success","verdict":"benign","reason":"Read-only authorization review"}
+]
