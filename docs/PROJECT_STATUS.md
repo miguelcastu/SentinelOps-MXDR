@@ -32,7 +32,7 @@ Free subscription remains active; spending limit On. Credit API closed balance E
 
 Prior successful deployments: [001](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39134917660), [002](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39134917548). These are prior evidence, not new ingestion evidence.
 
-Branch: `feat/phase-two-bounded-ingestion`. Local verification: 67 tests pass on Python 3.12 and 3.15, both detection contracts pass, independent JSON Schema validation passes for 100 events, five workflow YAML files parse, actionlint and Markdown link checks pass. Commit, PR and CI references will be recorded after remote verification. Use protected PR checks/merge; do not redeploy unchanged rules solely to produce activity.
+Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branch `feat/phase-two-bounded-ingestion`, implementation commit `613f11b`. The [required offline CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39142405359) passed on that implementation. Local verification: 67 tests pass on Python 3.12 and 3.15, both detection contracts pass, independent JSON Schema validation passes for 100 events, five workflow YAML files parse, actionlint and Markdown link checks pass. The PR records final-head checks and the protected merge SHA. No unchanged rule deployment is needed for this offline increment.
 
 ## Next executable task
 
