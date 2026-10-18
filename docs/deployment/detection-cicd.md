@@ -1,106 +1,57 @@
-# Detection-as-code deployment runbook
+# Existing-identity Detection-as-Code setup
 
-This pipeline updates **one existing disabled rule** in the existing subscription. Do not change the subscription, billing plan or workspace. Approximately 175 EUR remaining credit was reported by the operator; its actual balance, currency and expiry have not been independently verified.
+This supersedes the original operator-only proposal. The operator authorized initial Azure/GitHub administration on 18 October 2026. Routine deployment uses GitHub OIDC; the personal MFA account is confined to setup and verification. The existing subscription and billing plan remain pinned and unchanged.
 
-## Local checks (no Azure calls)
+## Reproducible setup
 
-```powershell
-python -m scripts.validate_detection
-python -m unittest discover -s tests -v
-```
-
-Python 3.12+ and the standard library are sufficient. There are no runtime Python dependencies. Offline CI uses a standard `ubuntu-latest` runner and has no Azure secrets or OIDC permission. [Standard hosted runners are free for public repositories](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#choosing-github-hosted-runners). All jobs refuse to run if the repository becomes private, so a future visibility change requires a fresh cost decision. Workflows do not upload artifacts or schedule recurring health queries.
-
-## Prerequisites the operator must complete
-
-The agent must not use the personal Azure user/Owner session to create an identity or grant roles. Missing configuration blocks Azure deployment; it does not block local development or opening the PR. Do the following administrative setup yourself, using the Azure portal or your own reviewed commands, against the **currently selected existing subscription**.
-
-1. In Azure Portal, confirm the current subscription matches the lab and review Cost Management credit, expiry and existing usage. Do not upgrade or select another subscription.
-2. Confirm `rg-sentinelops-mxdr` / `law-sentinelops-mxdr-euw` already exists in West Europe, Sentinel is already enabled, and Azure Activity is already onboarded. Do not provision replacements.
-3. Open Analytics and find exactly one rule named `AZ-DET-001 - Azure Diagnostic Settings Modified`. Record its existing UUID and resource ID privately. Confirm its kind is Scheduled and it is already disabled. If absent, duplicated or enabled, stop and resolve with the operator; this pipeline cannot create a replacement or choose a target for you.
-4. Confirm Microsoft Sentinel Repositories or another automation system does not also manage that rule.
-5. Inspect for an existing dedicated managed identity `id-sentinelops-ci`. If none exists, the operator must explicitly create it in the existing group; identity creation is an administrative prerequisite, not an autonomous agent action. Do not assign Owner, Contributor or Sentinel Contributor.
-6. Have an administrator grant the narrow permissions described below and inspect all inherited assignments for that principal. Azure permissions add together; a narrow custom role does not cancel a broader inherited role.
-7. Add the managed identity's OIDC federated credential with the exact settings below.
-8. In GitHub, configure the protected `sentinel-lab` environment and fill its secrets/variables. Never post their values into issues, PRs or chat.
-
-An administrator may inspect the existing rule with this **read-only** request in their own terminal. It does not select a subscription or make changes:
+Existing resources: rg-sentinelops-mxdr, law-sentinelops-mxdr-euw in West Europe, Sentinel, disabled AZ-DET-001 and **id-sentinelops-ci**. The script refuses ambiguous/missing targets; it never creates a replacement identity or rule. Ignored .local/azure-target.json pins the original subscription and tenant. Never publish its values or select another subscription to pass a check.
 
 ```powershell
-$workspaceId = az monitor log-analytics workspace show `
-  --resource-group rg-sentinelops-mxdr `
-  --workspace-name law-sentinelops-mxdr-euw --query id -o tsv
-$url = "https://management.azure.com$workspaceId/providers/Microsoft.SecurityInsights/alertRules?api-version=2025-09-01"
-$rules = (az rest --method get --url $url | ConvertFrom-Json).value
-$matches = @($rules | Where-Object {
-  $_.properties.displayName -eq 'AZ-DET-001 - Azure Diagnostic Settings Modified'
-})
-if ($matches.Count -ne 1) { throw 'Expected exactly one existing rule; do not guess or create a duplicate.' }
-if ($matches[0].kind -ne 'Scheduled' -or $matches[0].properties.enabled -ne $false) {
-  throw 'The existing target must already be a disabled Scheduled rule.'
-}
-# Inspect $matches[0].name and .id privately; do not paste them into public evidence.
+# Preview, without cloud changes:
+uv run --python 3.12 --with pynacl==1.6.2 --no-project python -m scripts.bootstrap_oidc
+# Explicitly authorized administrative setup after MFA:
+uv run --python 3.12 --with pynacl==1.6.2 --no-project python -m scripts.bootstrap_oidc --apply
 ```
 
-## Least-privilege Azure boundary
+[bootstrap.ps1](../../scripts/bootstrap.ps1) wraps those commands; -Apply enables administration. PyNaCl 1.6.2 is a temporary local dependency for sealed-box encryption. Normal CI/deployment uses only the standard library. This resolves the earlier dependency failure without installing packages in Azure or storing credentials.
 
-Use separate custom role assignments so rule-write permissions do not span all workspace rules:
+## MFA and resource scope
 
-| Assignment scope | Allowed Actions | Purpose |
+Azure returned HTTP 401 RequestDisallowedByAzure on a required role-definition write, with an official WWW-Authenticate challenge for context p1. Supported interactive Azure CLI login used that challenge, the pinned tenant/subscription and scope https://management.core.windows.net//.default; the operator completed MFA.
+
+The intended ARM core token then contained mfa/p1 and Azure accepted the administrative PUT with HTTP 201. A separately cached management.azure.com token still lacked those claims; inspecting that alias alone incorrectly suggested reauthentication failed. Never print access tokens, extract browser credentials, weaken Conditional Access or use Cloud Shell. Follow the actual challenge and verify the intended resource token plus service response. See [Microsoft MFA troubleshooting](https://learn.microsoft.com/en-us/cli/azure/use-azure-cli-successfully-troubleshooting#troubleshooting-multifactor-authentication-mfa).
+
+## Least privilege
+
+| Role | Actions | Assignment scope |
 |---|---|---|
-| Exact existing rule resource ID | `Microsoft.SecurityInsights/alertRules/read`, `Microsoft.SecurityInsights/alertRules/write` | Read/update AZ-DET-001 only |
-| Exact workspace resource ID | `Microsoft.OperationalInsights/workspaces/read` | Verify existing workspace ID/location |
-| Exact workspace resource ID, optional for live checks | `Microsoft.OperationalInsights/workspaces/query/read`, `Microsoft.OperationalInsights/workspaces/query/AzureActivity/read` | Run fixed AzureActivity queries |
+| SentinelOps Existing Analytics Rule Deployer | Microsoft.SecurityInsights/alertRules/read and /write | Exact existing AZ-DET-001 |
+| SentinelOps Workspace Metadata Reader | Microsoft.OperationalInsights/workspaces/read | Exact existing workspace |
 
-Define custom roles with `NotActions`, `DataActions` and `NotDataActions` empty, and `AssignableScopes` limited to the existing resource group. Assign the actions only at the scopes above. No delete, shared-key, infrastructure-write, role-assignment or billing permissions are required. This is an intentional restriction compared with the broader workspace-wide deployer and Log Analytics Reader roles in the initial proposal.
+Custom-role assignable scopes are restricted to the existing group. NotActions/DataActions/NotDataActions are empty. No wildcard, delete, shared-key, infrastructure, billing, query or RBAC-management action is granted. Definitions must match the approved actions; deterministic IDs and inventories prevent duplicates. Unexpected inherited roles or trusts stop setup. Optional query access is not granted without a required bounded validation.
 
-Microsoft documents [custom Sentinel roles](https://learn.microsoft.com/en-us/azure/sentinel/roles) and the [table-specific query permissions](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/manage-table-access#configure-table-level-access-legacy-method). That table-specific Actions method remains documented but is now labeled legacy. Environments using newer granular/protected-table RBAC may require an administrator to configure equivalent AzureActivity-only data access. Do not automatically fall back to a broad Reader role or change the workspace's access model.
+Permissions add together: audit definitions and applicable assignments. Do not test a denial by trying paid resource creation or changing pricing. The allowed-action set and scopes supply the boundary; actual CI verifies permitted operations. Diagnose service errors before adding permissions.
 
-RBAC cannot constrain `alertRules/write` to `enabled=false`, nor distinguish create from update on that same resource path. The pipeline's exact-ID, existing-resource, etag and disabled-state checks supplement RBAC. Environment protection and reviewed workflow changes are part of the trust boundary. Never describe AGENTS.md or a budget as a spending lock.
+## GitHub OIDC
 
-## OIDC trust and GitHub settings
+The existing sentinel-lab environment allows only branch main, no tags. Main requires a PR, successful offline check, current-branch validation and resolved conversations. Admin enforcement is on; force pushes/deletion are prohibited. Public-repository standard runners are free; workflows refuse private repositories.
 
-| Federated credential field | Exact value |
+| Trust field | Actual value |
 |---|---|
-| Issuer | `https://token.actions.githubusercontent.com` |
-| Subject | `repo:miguelcastu/SentinelOps-MXDR:environment:sentinel-lab` |
-| Audience | `api://AzureADTokenExchange` |
+| Issuer | https://token.actions.githubusercontent.com |
+| Audience | api://AzureADTokenExchange |
+| Subject | repo:miguelcastu@98903292/SentinelOps-MXDR@1417963827:environment:sentinel-lab |
 
-See [Azure login with OIDC](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure-openid-connect) and [GitHub OIDC claims](https://docs.github.com/en/actions/reference/security/oidc). Environment credentials are bound to the environment subject, so **restrict that environment to the `main` branch**. Workflow branch checks alone are insufficient: an untrusted branch must not be allowed to obtain the same federated token.
+New repositories use [immutable subjects](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims). Bootstrap reads sub_claim_prefix from the authenticated repository OIDC API and validates it against repository metadata. The first workflow failed with AADSTS700213 because the proposal used a legacy name-only subject. The existing credential was corrected in place; no extra identity/trust was added. Custom or unrelated subjects are not guessed or overwritten.
 
-In repository Settings → Environments → `sentinel-lab`, allow only branch `main`, no tag patterns. Protect main with pull requests and disallow force pushes. Review changes to the workflows, validators and schema as carefully as the detection itself.
+Secrets: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID. Values are encrypted in memory with GitHub's environment public key and the existing Git credential. There is no client password. Variables pin the existing rule UUID and deployment/exclusive-owner approval. The live-query flag stays false until separately reviewed.
 
-| Environment secret | Source |
-|---|---|
-| `AZURE_CLIENT_ID` | Dedicated managed identity's client/application ID |
-| `AZURE_TENANT_ID` | Existing subscription's tenant |
-| `AZURE_SUBSCRIPTION_ID` | **The same existing subscription**, never a replacement |
+## Deployment and evidence
 
-| Environment variable | Initial value / gate |
-|---|---|
-| `SENTINEL_RULE_ID` | Existing rule UUID, only after unique-target verification |
-| `SENTINEL_EXCLUSIVE_RULE_OWNER` | `false` until the operator confirms no competing deployment system |
-| `SENTINEL_DEPLOYMENT_APPROVED` | `false` until identity, RBAC, same-subscription and target checks are reviewed |
-| `SENTINEL_LIVE_VALIDATION_APPROVED` | `false`; optional, only after a query-cost/access review |
+PRs validate offline without OIDC or Azure environment credentials. Approved main changes deploy with the restricted identity. The deployer verifies tenant/client/subscription, workspace/location, exact existing rule/type/name/disabled state and etag; it conditionally PUTs that resource and compares managed properties after GET. Sanitized Azure error codes remain visible; raw identities/telemetry do not. The API is an upsert endpoint: do not concurrently delete/recreate targets or assume unverified conditional-header semantics.
 
-The three approval flags require the literal string `true`. Identifiers are not passwords, but storing authentication IDs as environment secrets keeps them out of public code and normal workflow output. Do not add client secrets; OIDC does not need one. `azure/login` authenticates to the configured existing subscription; scripts stop on mismatched tenant/subscription/client and never run a subscription-switch command.
+The manual Check Sentinel Configuration Drift workflow compares source using GET only, with no recurring schedule or log query. Within-run identical rows are removed by distinct; cross-run overlap remains a limitation while AZ-DET-001 stays disabled.
 
-## First controlled deployment
+Original configuration was saved privately and as [sanitized evidence](../validation/AZ-DET-001-original.sanitized.json). It had a 30-minute query period with a 24-hour predicate, T1562 and a Caller/Account mapping. Source aligns the predicate/period to one hour, refines T1562.008 and avoids assuming callers are human accounts. The rule and incident creation remain disabled.
 
-1. Review and approve the implementation PR. Keep approval flags false until all prerequisites are ready.
-2. Merge the approved PR into `main` yourself. The agent does not merge on your behalf.
-3. After prerequisite review, set the exclusive-owner and deployment-approved flags to `true`, then run **Deploy Sentinel Detection** on `main` (or let a later approved detection change trigger it).
-4. Validation and prerequisite checks run before OIDC login. An error stops the job, without creating infrastructure or expanding permissions.
-5. The deployer verifies the dedicated service principal, expected subscription/tenant, exact workspace/location and existing rule's type, name, disabled state and etag.
-6. It sends one conditional PUT with the observed etag and `If-Match`, then GETs the same resource and compares all managed properties. It never retries a conflict with a new etag.
-7. Record the successful Actions run link, commit and sanitized REST-verification result in the validation record. An offline pass is not evidence of cloud deployment.
-
-The [Sentinel endpoint](https://learn.microsoft.com/en-us/rest/api/securityinsights/alert-rules/create-or-update?view=rest-securityinsights-2025-09-01) is an upsert API. Service-side concurrency behavior has not yet been verified in this lab; keep the target under exclusive ownership and do not delete/recreate it during deployment. The code uses one configured UUID and never generates a new one. A missing GET stops before PUT. If strict server-enforced update-only semantics cannot be confirmed, keep the deployment gate false pending review.
-
-## Optional read-only live KQL validation
-
-Run **Read-only KQL Validation** manually on `main`, after enabling its approval variable and checking its confirmation box. It has no scheduled or PR trigger and accepts no arbitrary query input. After an existing-workspace metadata GET, it sends exactly two fixed query requests: a one-hour count-only AzureActivity health check and actual detection logic over in-memory synthetic data. It uses the [documented Logs API endpoint and token audience](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/api/request-format). It never generates activity events, ingests fixtures, exports data, restores logs or returns caller/resource rows. The same dedicated identity is used; this workflow's code performs only read/query operations, while the principal also retains its single-rule write permission. A separate query-only identity is a future hardening option.
-
-Microsoft's [query pricing documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/cost-logs) distinguishes Analytics queries from Basic/Auxiliary and retention-related scans; the [AzureActivity table reference](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/azureactivity) currently lists no Basic/Auxiliary support. Confirm the existing environment before using the opt-in; this task does not need a chargeable query. Do not enable query auditing or other features just to validate this pipeline.
-
-The query wrapper captures responses privately, rejects partial errors or unexpected columns, and prints only nonnegative integer aggregates. No raw Azure error response is printed because it may contain identifiers or query text. Zero activity is a valid lab outcome and does not prove connector health.
+Actual Actions and Azure GET evidence, not bootstrap/login/tests alone, is required for success. Preserve workspace, connector resources and diagnostic settings. See the [validation record](../validation/platform-setup.md).

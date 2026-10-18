@@ -10,6 +10,8 @@ def check(mode):
     required = ["AZURE_CLIENT_ID", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID"]
     if mode == "deploy":
         required += ["SENTINEL_RULE_ID", "SENTINEL_DEPLOYMENT_APPROVED", "SENTINEL_EXCLUSIVE_RULE_OWNER"]
+    elif mode == "additional":
+        required += ["SENTINEL_AZ_DET_002_APPROVED"]
     else:
         required += ["SENTINEL_LIVE_VALIDATION_APPROVED"]
     missing = [name for name in required if not os.environ.get(name)]
@@ -25,7 +27,7 @@ def check(mode):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["deploy", "query"], required=True)
+    parser.add_argument("--mode", choices=["deploy", "query", "additional"], required=True)
     try:
         check(parser.parse_args().mode)
     except ValueError as exc:

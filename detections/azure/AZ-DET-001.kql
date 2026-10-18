@@ -5,3 +5,4 @@ AzureActivity
 | extend TargetResourceId = coalesce(ResourceId, _ResourceId)
 | extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")
 | project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId
+| distinct *

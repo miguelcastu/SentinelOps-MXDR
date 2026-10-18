@@ -1,5 +1,6 @@
 """Validate the narrow rule schema and the supported KQL contract offline."""
 import json
+import argparse
 import re
 from pathlib import Path
 
@@ -13,6 +14,18 @@ OPERATIONS = {
     "microsoft.insights/diagnosticsettings/delete",
 }
 STATUSES = {"success", "succeeded"}
+DETECTIONS = {
+    "AZ-DET-001": {"name": DISPLAY_NAME, "operations": OPERATIONS, "rule": RULE,
+                   "query": KQL, "schema": SCHEMA},
+    "AZ-DET-002": {
+        "name": "AZ-DET-002 - Azure Role Assignment Created",
+        "operations": {"microsoft.authorization/roleassignments/write"},
+        "rule": ROOT / "detections/azure/AZ-DET-002.json",
+        "query": ROOT / "detections/azure/AZ-DET-002.kql",
+        "schema": ROOT / "schemas/AZ-DET-002.schema.json",
+        "resource_uuid": "5a347e1c-bc1e-53ab-80a1-d6fd619eb91c",
+    },
+}
 PROJECT = ("TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, "
            "SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId")
 
@@ -51,14 +64,16 @@ def validate_schema(value, schema, path="$ "):
         require(len(value) <= schema.get("maxLength", len(value)), f"{path}: too long")
 
 
-def parse_predicates(query):
+def parse_predicates(query, detection="AZ-DET-001"):
     """Parse this rule's three filters; reject arbitrary KQL and extra stages."""
+    require(detection in DETECTIONS, "Unapproved detection")
     lines = [line.strip() for line in query.strip().splitlines()]
-    require(len(lines) == 7 and lines[0] == "AzureActivity", "KQL must have the approved seven stages")
+    stages = 8 if detection == "AZ-DET-001" else 7
+    require(len(lines) == stages and lines[0] == "AzureActivity", "KQL must have the approved stages")
     match = re.fullmatch(r"\| where TimeGenerated between \(ago\((\d+)h\) \.\. now\(\)\)", lines[1])
     require(match is not None and match[1] == "1", "KQL must use the bounded one-hour window")
     predicates = []
-    for line, column, expected in zip(lines[2:4], ("OperationNameValue", "ActivityStatusValue"), (OPERATIONS, STATUSES)):
+    for line, column, expected in zip(lines[2:4], ("OperationNameValue", "ActivityStatusValue"), (DETECTIONS[detection]["operations"], STATUSES)):
         match = re.fullmatch(r"\| where " + column + r" in~ \((.*)\)", line)
         require(match is not None, f"Invalid {column} filter")
         try:
@@ -72,18 +87,26 @@ def parse_predicates(query):
     require(lines[4] == "| extend TargetResourceId = coalesce(ResourceId, _ResourceId)", "Invalid resource projection")
     require(lines[5] == '| extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")', "Invalid IP projection")
     require(lines[6] == "| project " + PROJECT, "Invalid output columns")
+    if detection == "AZ-DET-001":
+        require(lines[7] == "| distinct *", "Exact duplicate rows must be removed within each run")
     return 3600, predicates
 
 
-def validate_rule(rule=None, query=None):
-    rule = json.loads(RULE.read_text(encoding="utf-8")) if rule is None else rule
-    query = KQL.read_text(encoding="utf-8") if query is None else query
-    validate_schema(rule, json.loads(SCHEMA.read_text(encoding="utf-8")))
+def validate_rule(rule=None, query=None, detection="AZ-DET-001"):
+    require(detection in DETECTIONS, "Unapproved detection")
+    config = DETECTIONS[detection]
+    rule = json.loads(config["rule"].read_text(encoding="utf-8")) if rule is None else rule
+    query = config["query"].read_text(encoding="utf-8") if query is None else query
+    validate_schema(rule, json.loads(config["schema"].read_text(encoding="utf-8")))
     require(rule["properties"]["query"] == query, "REST query must exactly match the KQL source")
-    parse_predicates(query)
+    parse_predicates(query, detection)
     return rule
 
 
 if __name__ == "__main__":
-    validate_rule()
-    print("PASS: restricted REST schema, disabled rule, approved KQL and synchronized source")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--detection", choices=["all", *DETECTIONS], default="all")
+    selection = parser.parse_args().detection
+    for detection in DETECTIONS if selection == "all" else [selection]:
+        validate_rule(detection=detection)
+        print(f"PASS: {detection}: restricted REST schema, disabled rule, approved KQL and synchronized source")

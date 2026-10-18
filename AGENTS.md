@@ -17,19 +17,21 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 - Prefer offline work and free public-repository standard GitHub runners. Do not consume credit for experiments.
 - Never create VMs, databases, workspaces, connectors, Logic Apps, paid resources or Defender plans.
 - Never change pricing, retention, ingestion, daily caps, budgets or diagnostic settings.
-- Never use the personal Azure user/Owner session for autonomous cloud operations.
-- Never create Azure identities, assign roles or grant additional RBAC permissions autonomously.
-- Missing OIDC/RBAC prerequisites block that cloud operation; document the exact manual prerequisite.
+- The operator explicitly authorized administrative setup on 18 October 2026: reuse `id-sentinelops-ci`, configure narrow custom RBAC and exact GitHub OIDC trust, and populate GitHub environment identifiers. The personal session may be used for that setup and verification only, with valid MFA.
+- Routine rule deployments must use GitHub OIDC, never the personal account. Do not create duplicate identities, grant broad roles, weaken MFA/Conditional Access or use Cloud Shell.
+- Request human intervention only for unavoidable MFA/consent or sensitive changes outside the authorized scope. Continue independent work while authentication is pending.
 - Never delete Azure resources or deploy unrelated infrastructure.
 
 ## Deployment boundary
 
-- Only update the existing AZ-DET-001 rule at the configured UUID. Never discover a new target by guesswork.
+- Update AZ-DET-001 only at its configured existing UUID.
+- The operator authorized one additional disabled detection, AZ-DET-002 (Azure Role Assignment Created), on 18 October 2026. Its dedicated workflow may create/update only its fixed, reviewed UUID. No other resource creation is authorized.
 - Keep the rule disabled. Stop if its existing cloud state is enabled, missing, ambiguous or managed by another deployment system.
 - Reject resource templates, other resource types, arbitrary query input and enabled rules.
-- Do not bypass environment protections or merge a PR on the operator's behalf.
+- Do not bypass environment protections. Under the latest explicit end-to-end setup authorization, configuration changes may be reviewed and merged through the protected PR path after required CI passes; never force-push or bypass required checks.
 - Live KQL validation is manual, opt-in, aggregate-only, with no raw log/identity output.
 - Never commit credentials, subscription/tenant identifiers or sensitive telemetry.
+- Reproducible bootstrap scripts must default to preview, pin the existing subscription, reuse discovered resources and surface Azure error codes without publishing identifiers or tokens. The latest explicit setup authorization supersedes the earlier operator-only bootstrap restriction.
 
 ## Validation and documentation
 

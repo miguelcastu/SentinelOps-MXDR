@@ -14,6 +14,7 @@ Identify successful changes to Azure diagnostic settings that could interrupt se
 - Success statuses: `Success` and `Succeeded`; failures, start/accept events and substring matches do not qualify.
 - Inclusive event-time window from `ago(1h)` through `now()`. Schedule: every 15 minutes, lookback: one hour.
 - Medium severity; more than zero results would trigger an alert if separately approved and enabled.
+- `distinct *` removes identical projected rows within each execution. It does not prevent overlapping-window matches across executions.
 - Rule disabled, incident creation disabled, no playbook or automation resources.
 
 Microsoft documents the [AzureActivity columns](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/azureactivity), including the success-status variation. This rule is intentionally more conservative than matching any operation containing `diagnosticSettings`.

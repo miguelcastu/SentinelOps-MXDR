@@ -1,6 +1,7 @@
 """Azure CLI wrapper with GitHub OIDC context and immutable target checks."""
 import json
 import os
+import re
 import shutil
 import subprocess
 import uuid
@@ -20,8 +21,10 @@ def az_json(*args):
     except subprocess.TimeoutExpired:
         raise ValueError("Azure request timed out; no automatic retry was attempted") from None
     # Azure errors can contain identities, resource IDs and KQL. Never echo them.
-    require(result.returncode == 0,
-            "Azure request failed. Check restricted identity, target existence and API access privately; no permission escalation was attempted.")
+    if result.returncode:
+        match = re.search(r"\(([A-Za-z][A-Za-z0-9]+)\)", result.stderr)
+        code = match[1] if match else "AzureCLIError"
+        raise ValueError(f"Azure request failed ({code}). Check identity, MFA and target privately; no permission escalation was attempted.")
     return json.loads(result.stdout)
 
 
