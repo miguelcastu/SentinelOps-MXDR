@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Synthetic RBA normalized signal v1.0",
+  "type": "object",
+  "required": [
+    "synthetic",
+    "event_id",
+    "source_event_id",
+    "time",
+    "source",
+    "kind",
+    "actor",
+    "host",
+    "source_ip",
+    "resource"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "synthetic": {
+      "const": true
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^synthetic-[0-9a-f]{32}$"
+    },
+    "source_event_id": {
+      "type": "string",
+      "pattern": "^synthetic-[0-9a-f]{32}$"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "enum": [
+        "azure-activity",
+        "synthetic-authentication",
+        "synthetic-endpoint"
+      ]
+    },
+    "kind": {
+      "enum": [
+        "authentication_failure",
+        "authentication_success",
+        "rbac_assignment",
+        "diagnostic_change",
+        "endpoint_execution",
+        "administrative_failure",
+        "policy_change"
+      ]
+    },
+    "actor": {
+      "type": "string",
+      "pattern": "^synthetic-user-[0-9]{2}$"
+    },
+    "host": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^lab-auth-[0-9]{2}$"
+    },
+    "source_ip": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 45
+    },
+    "resource": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^lab-resource-[a-z0-9-]{1,40}$"
+    }
+  }
+}

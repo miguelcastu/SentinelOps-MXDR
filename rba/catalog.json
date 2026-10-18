@@ -1,0 +1,20 @@
+{
+  "policy_version": "atlas-rba-1.0",
+  "window_minutes": 60,
+  "lookback_minutes": 240,
+  "half_life_minutes": 30,
+  "finding_threshold": 60,
+  "sequence_bonus": 16,
+  "sequence_span_minutes": 30,
+  "max_events": 500,
+  "max_actors": 32,
+  "signals": {
+    "authentication_failure": {"source":"synthetic-authentication","family":"authentication","points":10,"confidence":0.3,"cap":12,"severity":"Low","techniques":["T1110"]},
+    "authentication_success": {"source":"synthetic-authentication","family":"authentication","points":12,"confidence":0.35,"cap":8.4,"severity":"Informational","techniques":[]},
+    "rbac_assignment": {"source":"azure-activity","family":"authorization","points":30,"confidence":0.55,"cap":24,"severity":"Medium","techniques":["T1098.003"]},
+    "diagnostic_change": {"source":"azure-activity","family":"monitoring","points":40,"confidence":0.55,"cap":30,"severity":"Medium","techniques":["T1685.002"]},
+    "endpoint_execution": {"source":"synthetic-endpoint","family":"execution","points":30,"confidence":0.5,"cap":25,"severity":"Medium","techniques":["T1059.001"]},
+    "administrative_failure": {"source":"azure-activity","family":"administration","points":8,"confidence":0.3,"cap":8,"severity":"Low","techniques":[]},
+    "policy_change": {"source":"azure-activity","family":"policy","points":24,"confidence":0.5,"cap":20,"severity":"Medium","techniques":[]}
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schema_version": "1.0",
+  "evidence": "synthetic",
+  "customer": "Atlas Financial",
+  "as_of": "2026-10-18T12:20:00Z",
+  "events": [
+    {
+      "synthetic": true,
+      "event_id": "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+      "source_event_id": "synthetic-c64f7c2e9d345bf3bf3ffe2ac2e351ee",
+      "time": "2026-10-18T12:00:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-00",
+      "host": "lab-auth-00",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-efc879683f4c51cd8ec068a875b85a81",
+      "source_event_id": "synthetic-4a2560675cfe59acba23f631abdd8ecf",
+      "time": "2026-10-18T12:01:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-00",
+      "host": "lab-auth-00",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+      "source_event_id": "synthetic-c3a0ef01e87256beac60d46fb15073b7",
+      "time": "2026-10-18T12:02:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-00",
+      "host": "lab-auth-00",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+      "source_event_id": "synthetic-7d06fa7fcd4d55ec818743e95df001ff",
+      "time": "2026-10-18T12:03:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_success",
+      "actor": "synthetic-user-00",
+      "host": "lab-auth-00",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+      "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+      "time": "2026-10-18T12:06:00.000Z",
+      "source": "azure-activity",
+      "kind": "rbac_assignment",
+      "actor": "synthetic-user-00",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-01"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+      "source_event_id": "synthetic-ea74aa22f86a594baada1941fded4a60",
+      "time": "2026-10-18T12:10:00.000Z",
+      "source": "azure-activity",
+      "kind": "diagnostic_change",
+      "actor": "synthetic-user-00",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-01"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-c83d9c1a12e754c180d07420d03e1977",
+      "source_event_id": "synthetic-ca247f45c8fa567998f2e3bfb354bcb7",
+      "time": "2026-10-18T12:13:00.000Z",
+      "source": "synthetic-endpoint",
+      "kind": "endpoint_execution",
+      "actor": "synthetic-user-00",
+      "host": "lab-auth-00",
+      "source_ip": null,
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-9fa2832381825effa31f66e66a024a33",
+      "source_event_id": "synthetic-040beef0a07f50bb80e71ebe75e17932",
+      "time": "2026-10-18T12:00:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-01",
+      "host": "lab-auth-01",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-50e4f67e16f25074bc2255dbc9376a08",
+      "source_event_id": "synthetic-eb0e1a41ba2c5570a1d0dd3515fefcd9",
+      "time": "2026-10-18T12:01:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-01",
+      "host": "lab-auth-01",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-0a3f32aee0bc57b78a7464518812fa50",
+      "source_event_id": "synthetic-30e04880a2fc535cb43d26313ee7363d",
+      "time": "2026-10-18T12:02:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_failure",
+      "actor": "synthetic-user-01",
+      "host": "lab-auth-01",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-8939080450a15d118fd86ae654ca478e",
+      "source_event_id": "synthetic-1f0b6d89269451358d126f27d56627f7",
+      "time": "2026-10-18T12:03:00.000Z",
+      "source": "synthetic-authentication",
+      "kind": "authentication_success",
+      "actor": "synthetic-user-01",
+      "host": "lab-auth-01",
+      "source_ip": "192.0.2.10",
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-8d637e5ec1aa55d5a611d99161b99e86",
+      "source_event_id": "synthetic-7732eb4f12f65bf89ed98d1e174a8b60",
+      "time": "2026-10-18T12:06:00.000Z",
+      "source": "azure-activity",
+      "kind": "rbac_assignment",
+      "actor": "synthetic-user-01",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-02"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-fc5f582101a959ebb56e0bfc98ee0e67",
+      "source_event_id": "synthetic-ce0ea663bc355c08bd6c31423ddffbc2",
+      "time": "2026-10-18T12:10:00.000Z",
+      "source": "azure-activity",
+      "kind": "diagnostic_change",
+      "actor": "synthetic-user-01",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-02"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-5e295296ffee544a81c67240594eeed3",
+      "source_event_id": "synthetic-3daaf17cad1b583b8cb9a31d26577ddb",
+      "time": "2026-10-18T12:13:00.000Z",
+      "source": "synthetic-endpoint",
+      "kind": "endpoint_execution",
+      "actor": "synthetic-user-01",
+      "host": "lab-auth-01",
+      "source_ip": null,
+      "resource": null
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-2a5819ea3aa558a7bdb01af744685123",
+      "source_event_id": "synthetic-e247aa16d76252cb80672e6d167e55be",
+      "time": "2026-10-18T12:04:00.000Z",
+      "source": "azure-activity",
+      "kind": "administrative_failure",
+      "actor": "synthetic-user-02",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-03"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-e6b92b7ddfaa5dd4912178bf350b078a",
+      "source_event_id": "synthetic-01f7b2bccf705d16b419bbe5fdeeb524",
+      "time": "2026-10-18T12:09:00.000Z",
+      "source": "azure-activity",
+      "kind": "policy_change",
+      "actor": "synthetic-user-02",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-03"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+      "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+      "time": "2026-10-18T12:06:00.000Z",
+      "source": "azure-activity",
+      "kind": "rbac_assignment",
+      "actor": "synthetic-user-00",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-01"
+    },
+    {
+      "synthetic": true,
+      "event_id": "synthetic-9517ad7351ad54be8ed240b00b0f053b",
+      "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+      "time": "2026-10-18T12:06:00.000Z",
+      "source": "azure-activity",
+      "kind": "rbac_assignment",
+      "actor": "synthetic-user-00",
+      "host": null,
+      "source_ip": "192.0.2.10",
+      "resource": "lab-resource-workspace-01"
+    }
+  ],
+  "health": {
+    "evidence": "synthetic",
+    "observed_at": "2026-10-18T12:20:00Z",
+    "states": {
+      "azure-activity": "Healthy",
+      "synthetic-authentication": "Healthy",
+      "synthetic-endpoint": "Unknown"
+    }
+  }
+}

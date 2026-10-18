@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **18 October 2026 - Phase 3 platform health implemented.** Source-specific health evaluation, safe fault injection, local reports and a manual read-only OIDC audit are implemented. The two managed detections remain intentionally disabled; live telemetry queries and a second cloud source still need approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
+> **18 October 2026 - Phase 4 offline risk correlation implemented.** Entity scoring now combines a reproducible synthetic authentication/RBAC/logging/endpoint sequence, with deduplication, decay, maintenance controls and a replay report. Existing managed rules remain disabled; live telemetry/ingestion/incident work still needs approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -57,6 +57,7 @@ python -m unittest discover -s tests -v
 python -m ingestion
 python -m scripts.assess_detections
 python -m platform_health
+python -m rba
 ```
 
 The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
@@ -87,18 +88,27 @@ The [actual OIDC health audit](https://github.com/miguelcastu/SentinelOps-MXDR/a
 
 See the [health runbook and SLIs](docs/operations/platform-health.md), [KQL library](platform_health/queries/) and [validation evidence](docs/validation/phase-3.md). No SentinelHealth export, resources or roles were added.
 
+## Risk-based correlation: synthetic investigation
+
+[Offline RBA](rba/) scores canonical account entities across synthetic authentication, AzureActivity-shaped administration and endpoint-style signals. AF-RBA-001 requires strict event order, same-account/host/resource relationships, at least three families and enough accumulated risk. Individual weak signals and duplicate replays cannot independently produce the demonstrated finding. Uncertainty about collection limits confidence without suppressing valid evidence.
+
+`python -m rba` writes an interactive entity/timeline replay, JSON contribution ledger, original synthetic dataset and investigation Markdown to `.local/rba/`. The default scenario produces one High-priority/Low-confidence synthetic finding with a 75.7182 peak; maintenance and administrative-noise controls remain below threshold. Nine scenarios cover joins, order, duplicates and benign controls. It executes no payload, network request, KQL or Azure operation and creates no Sentinel incident.
+
+See the [scoring design and investigation runbook](docs/operations/risk-correlation.md), [validation](docs/validation/phase-4.md) and [versioned signal contract](schemas/rba-signal.schema.json). This lab demonstrates heuristic correlation, not calibrated probabilities or measured production accuracy.
+
 ## Project organization
 
 ```text
 docs/         Architecture, onboarding, deployment, validation, troubleshooting
 hunting/      Reusable KQL queries
-evidence/     Sanitized Azure screenshots
+evidence/     Sanitized Azure records and explicitly labeled synthetic evidence
 infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
 ingestion/    Synthetic generator, normalization, bounded client and source inventory
 platform_health/  Source health, readonly collector, local reports, safe faults and KQL library
+rba/          Synthetic entity risk, correlation, baselines, source adapters and replay reports
 tests/        Lightweight offline project validation
 detections/azure/  Disabled REST rule definition and synchronized KQL
-schemas/      Restricted approved-rule JSON Schema
+schemas/      Signal/source contracts and restricted approved-rule JSON Schema
 scripts/      Offline validation, guarded deployment and aggregate queries
 .github/workflows/  Free public-repository CI, OIDC deployment and opt-in KQL checks
 ```
@@ -118,4 +128,5 @@ Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.9
 - [ ] Approved DCR/table deployment, one upload and destination verification for a second cloud source.
 - [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
 - [x] Platform health evaluator, local dashboard, eleven safe faults and manual read-only OIDC audit tooling.
-- [ ] SOAR, risk correlation, platform Bicep and operational handover.
+- [x] Offline entity risk correlation, strict attack sequence, baseline controls and replay report.
+- [ ] SOAR, platform Bicep and operational handover.
