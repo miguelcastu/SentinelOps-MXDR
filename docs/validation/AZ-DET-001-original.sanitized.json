@@ -1,0 +1,57 @@
+{
+  "evidence": "Observed Azure configuration before CI adoption; identifiers and etag intentionally omitted. This file is not an approved deployment payload.",
+  "kind": "Scheduled",
+  "properties": {
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT30M",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "eventGroupingSettings": {
+      "aggregationKind": "AlertPerResult"
+    },
+    "incidentConfiguration": {
+      "createIncident": true,
+      "groupingConfiguration": {
+        "enabled": true,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT5H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "customDetails": {
+      "OperationNameValue": "OperationNameValue",
+      "ResourceId": "ResourceId"
+    },
+    "entityMappings": [
+      {
+        "entityType": "Account",
+        "fieldMappings": [
+          {
+            "identifier": "FullName",
+            "columnName": "Caller"
+          }
+        ]
+      }
+    ],
+    "alertDetailsOverride": {
+      "alertDynamicProperties": []
+    },
+    "severity": "Medium",
+    "query": "AzureActivity\r\n| where TimeGenerated > ago(24h)\r\n| where OperationNameValue in~ (\r\n    \"MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE\",\r\n    \"MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/DELETE\"\r\n)\r\n| where ActivityStatusValue =~ \"Success\"\r\n| project\r\n    TimeGenerated,\r\n    Caller,\r\n    OperationNameValue,\r\n    ActivityStatusValue,\r\n    ResourceId,\r\n    CorrelationId\r\n| order by TimeGenerated desc\r\n",
+    "suppressionDuration": "PT5H",
+    "suppressionEnabled": false,
+    "tactics": [
+      "DefenseEvasion"
+    ],
+    "techniques": [
+      "T1562"
+    ],
+    "displayName": "AZ-DET-001 - Azure Diagnostic Settings Modified",
+    "enabled": false,
+    "description": "Detects successful changes to Azure diagnostic settings that may affect security monitoring visibility.",
+    "alertRuleTemplateName": null
+  }
+}

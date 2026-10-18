@@ -56,6 +56,6 @@
       }
     },
     "description": "Detects successful Azure diagnostic settings writes or deletions. Changes can reduce logging visibility; legitimate policy remediation and administration can also match. Initial deployment stays disabled and creates no incidents.",
-    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Insights/diagnosticSettings/write\", \"Microsoft.Insights/diagnosticSettings/delete\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n"
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Insights/diagnosticSettings/write\", \"Microsoft.Insights/diagnosticSettings/delete\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n| distinct *\n"
   }
 }

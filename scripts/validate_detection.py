@@ -68,7 +68,8 @@ def parse_predicates(query, detection="AZ-DET-001"):
     """Parse this rule's three filters; reject arbitrary KQL and extra stages."""
     require(detection in DETECTIONS, "Unapproved detection")
     lines = [line.strip() for line in query.strip().splitlines()]
-    require(len(lines) == 7 and lines[0] == "AzureActivity", "KQL must have the approved seven stages")
+    stages = 8 if detection == "AZ-DET-001" else 7
+    require(len(lines) == stages and lines[0] == "AzureActivity", "KQL must have the approved stages")
     match = re.fullmatch(r"\| where TimeGenerated between \(ago\((\d+)h\) \.\. now\(\)\)", lines[1])
     require(match is not None and match[1] == "1", "KQL must use the bounded one-hour window")
     predicates = []
@@ -86,6 +87,8 @@ def parse_predicates(query, detection="AZ-DET-001"):
     require(lines[4] == "| extend TargetResourceId = coalesce(ResourceId, _ResourceId)", "Invalid resource projection")
     require(lines[5] == '| extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")', "Invalid IP projection")
     require(lines[6] == "| project " + PROJECT, "Invalid output columns")
+    if detection == "AZ-DET-001":
+        require(lines[7] == "| distinct *", "Exact duplicate rows must be removed within each run")
     return 3600, predicates
 
 

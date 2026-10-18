@@ -136,7 +136,7 @@ class TestOperatorBootstrap(unittest.TestCase):
         tenant = "22222222-2222-4222-8222-222222222222"
         scope = f"/subscriptions/{subscription}/resourceGroups/rg-sentinelops-mxdr"
         principal = "33333333-3333-4333-8333-333333333333"
-        identity = {"name": "id-sentinelops-rule002-ci", "principalId": principal,
+        identity = {"name": "id-sentinelops-ci", "tenantId": tenant, "principalId": principal,
                     "clientId": "44444444-4444-4444-8444-444444444444"}
         role = {"id": scope + "/providers/Microsoft.Authorization/roleDefinitions/synthetic",
                 "roleName": ROLE_NAME, "assignableScopes": [scope],
@@ -151,20 +151,28 @@ class TestOperatorBootstrap(unittest.TestCase):
             if args[:3] == ("monitor", "log-analytics", "workspace"):
                 return WORKSPACE
             if args[:2] == ("identity", "list"):
-                return []
+                return [identity]
             if args[:2] == ("identity", "create"):
-                return identity
+                self.fail("The existing identity must be reused")
+            if args[:3] == ("rest", "--method", "get"):
+                if "sourcecontrols" in args[-1]:
+                    return {"value": []}
+                existing = dict(validate_rule(), name="66666666-6666-4666-8666-666666666666")
+                existing["id"] = WORKSPACE_ID + "/providers/Microsoft.SecurityInsights/alertRules/" + existing["name"]
+                return {"value": [existing]}
             if args[:3] == ("role", "definition", "list"):
                 return []
             if args[:3] == ("role", "definition", "create"):
                 body = json.loads(Path(args[-1]).read_text())
-                self.assertEqual(body["Actions"], ACTIONS)
+                self.assertIn(body["Actions"], [ACTIONS, ["Microsoft.OperationalInsights/workspaces/read"]])
                 self.assertEqual(body["AssignableScopes"], [scope])
-                return role
+                return {"id": scope + "/providers/Microsoft.Authorization/roleDefinitions/" + body["Id"],
+                        "roleName": body["Name"], "assignableScopes": [scope],
+                        "permissions": [{"actions": body["Actions"], "notActions": [], "dataActions": [], "notDataActions": []}]}
             if args[:3] == ("role", "assignment", "list"):
                 return []
             if args[:3] == ("role", "assignment", "create"):
-                self.assertEqual(args[-1], WORKSPACE_ID)
+                self.assertIn(args[-1], [WORKSPACE_ID, WORKSPACE_ID + "/providers/Microsoft.SecurityInsights/alertRules/66666666-6666-4666-8666-666666666666"])
                 self.assertIn(principal, args)
                 return {}
             if args[:3] == ("identity", "federated-credential", "list"):
@@ -180,6 +188,8 @@ class TestOperatorBootstrap(unittest.TestCase):
                 return None
             if path == "":
                 return {"visibility": "public", "permissions": {"admin": True}}
+            if path.endswith("/oidc/customization/sub"):
+                return {"use_default": True, "sub_claim_prefix": "repo:miguelcastu/SentinelOps-MXDR"}
             if path.endswith("deployment-branch-policies"):
                 return {"branch_policies": [{"name": "main", "type": "branch"}]}
             if path.endswith("/protection"):
@@ -197,11 +207,11 @@ class TestOperatorBootstrap(unittest.TestCase):
             pin.write_text(json.dumps({"subscription_id": subscription, "tenant_id": tenant}))
             with patch.dict(os.environ, {}, clear=True), patch.dict(sys.modules, {"nacl": types.ModuleType("nacl"), "nacl.public": public}), patch("scripts.bootstrap_oidc.PIN", pin), patch("scripts.bootstrap_oidc.az_json", side_effect=fake_az), patch("scripts.bootstrap_oidc.github_token", return_value="fake-token"), patch("scripts.bootstrap_oidc.github", side_effect=fake_github), patch("scripts.bootstrap_oidc.seal", return_value="sealed-ciphertext"), contextlib.redirect_stdout(io.StringIO()) as output:
                 bootstrap(apply=True)
-        self.assertEqual(len(writes), 4)
+        self.assertEqual(len(writes), 6)
         self.assertTrue(all(body.get("encrypted_value") == "sealed-ciphertext" for method, path, body in writes if "/secrets/" in path))
         self.assertNotIn(subscription, output.getvalue())
         self.assertNotIn("fake-token", output.getvalue())
-        self.assertFalse(any("rest" in call or "account set" in str(call) for call in calls))
+        self.assertFalse(any("account set" in str(call) or "identity create" in " ".join(call) for call in calls))
 
     def test_bootstrap_prohibited_in_ci_even_with_apply(self):
         with patch.dict(os.environ, {"GITHUB_ACTIONS": "true"}, clear=True), patch("scripts.bootstrap_oidc.az_json") as request:
