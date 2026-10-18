@@ -1,0 +1,7 @@
+AzureActivity
+| where TimeGenerated between (ago(1h) .. now())
+| where OperationNameValue in~ ("Microsoft.Insights/diagnosticSettings/write", "Microsoft.Insights/diagnosticSettings/delete")
+| where ActivityStatusValue in~ ("Success", "Succeeded")
+| extend TargetResourceId = coalesce(ResourceId, _ResourceId)
+| extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId

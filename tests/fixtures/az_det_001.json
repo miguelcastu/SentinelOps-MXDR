@@ -1,0 +1,23 @@
+[
+  {"id":"write-success","offset":-900,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","expected":true},
+  {"id":"delete-succeeded","offset":-600,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Succeeded","expected":true},
+  {"id":"mixed-case","offset":-60,"operation":"MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE","status":"sUcCeSs","expected":true},
+  {"id":"failed","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Failed","expected":false},
+  {"id":"failure","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Failure","expected":false},
+  {"id":"started","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Start","expected":false},
+  {"id":"accepted","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Accept","expected":false},
+  {"id":"read","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/read","status":"Success","expected":false},
+  {"id":"other-resource","offset":-60,"operation":"Microsoft.Compute/virtualMachines/write","status":"Success","expected":false},
+  {"id":"substring","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write/extra","status":"Success","expected":false},
+  {"id":"old","offset":-3601,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","expected":false},
+  {"id":"boundary","offset":-3600,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","expected":true},
+  {"id":"future","offset":1,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Success","expected":false},
+  {"id":"empty-operation","offset":-60,"operation":"","status":"Success","expected":false},
+  {"id":"empty-status","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"","expected":false},
+  {"id":"missing-optional-identity","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/delete","status":"Success","expected":true},
+  {"id":"valid-ipv4","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","ip":"192.0.2.10","expected_ip":"192.0.2.10","expected":true},
+  {"id":"valid-ipv6","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","ip":"2001:db8::10","expected_ip":"2001:db8::10","expected":true},
+  {"id":"invalid-ip","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","ip":"not-an-ip","expected_ip":"","expected":true},
+  {"id":"ipv4-cidr","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","ip":"192.0.2.0/24","expected_ip":"","expected":true},
+  {"id":"ipv6-cidr","offset":-120,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","ip":"2001:db8::/64","expected_ip":"","expected":true}
+]

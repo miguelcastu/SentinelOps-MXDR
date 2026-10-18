@@ -34,4 +34,19 @@ The resource-group metadata location is distinct from the physical region of the
 | KQL query validation | Proves destination receives events | Does not prove every source category is ingested |
 | Budget alerts and low-volume workload | Keeps lab spending observable | No guaranteed upper bound on Azure charges |
 
-Next phases will add detection-as-code, data health checks, automation and reproducible Bicep deployments.
+## Detection-as-code control path
+
+```mermaid
+flowchart LR
+    DEV[Feature branch: KQL / disabled REST JSON] --> TEST[Offline validation and synthetic fixtures]
+    TEST --> PR[Reviewed PR]
+    PR --> MAIN[Operator merges main]
+    MAIN --> ENV[Main-only sentinel-lab environment]
+    ENV --> OIDC[Dedicated Azure OIDC identity]
+    OIDC --> RULE[Existing AZ-DET-001 only: disabled]
+    RULE --> VERIFY[Azure GET verifies persisted state]
+```
+
+No part of the control path provisions a workspace, connector, playbook or paid compute. The deployment principal's write permission is scoped to the exact existing analytics rule; workspace metadata and optional AzureActivity query permissions are separate assignments. The personal Azure session is excluded from autonomous cloud work. Environment review flags default to false until prerequisites are reviewed. The code is implemented; actual Azure authentication/deployment is not yet evidenced.
+
+Offline PR CI has no OIDC permission or Azure secrets. The opt-in live validation workflow performs aggregate and synthetic queries only. Read the [deployment runbook](../deployment/detection-cicd.md) for limitations of RBAC, the upsert API, current MITRE mapping and query costs. Future phases cover data health, SOAR and reproducible Bicep deployments.

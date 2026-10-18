@@ -1,0 +1,51 @@
+name: Read-only KQL Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_no_query_charge:
+        description: 'I reviewed the existing Analytics table and billing; run two fixed aggregate queries'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/main' && github.event.repository.private == false && inputs.confirm_no_query_charge
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: sentinel-lab
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SENTINEL_LIVE_VALIDATION_APPROVED: ${{ vars.SENTINEL_LIVE_VALIDATION_APPROVED }}
+      AZURE_CORE_COLLECT_TELEMETRY: 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate source and opt-in prerequisites
+        run: |
+          python -m scripts.validate_detection
+          python -m scripts.check_prerequisites --mode query
+      - name: Azure login using dedicated OIDC identity
+        uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: Run fixed aggregate and synthetic Kusto checks
+        run: python -m scripts.validate_live
