@@ -1,0 +1,6 @@
+// Not executed. Exactly 24 completed UTC hourly bins; current partial hour excluded.
+let WindowEnd = bin(now(), 1h);
+let WindowStart = WindowEnd - 24h;
+AzureActivity
+| where TimeGenerated >= WindowStart and TimeGenerated < WindowEnd
+| make-series kind=nonempty Events=count() default=0 on TimeGenerated from WindowStart to WindowEnd step 1h

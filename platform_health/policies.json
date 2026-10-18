@@ -1,0 +1,18 @@
+{
+  "planning_eur_per_gb": 10,
+  "expected_workspace": {"region": "westeurope", "retention_days": 30, "daily_cap_gb": 0.1, "pricing_tier": "PerGB2018"},
+  "sources": {
+    "azure-activity": {
+      "collection_model": "event-driven",
+      "latency_warning_seconds": 900,
+      "freshness_warning_seconds": 3600,
+      "snapshot_max_age_seconds": 900
+    },
+    "synthetic-authentication": {
+      "collection_model": "single-approved-test-batch-only",
+      "latency_warning_seconds": 300,
+      "freshness_warning_seconds": 3600,
+      "snapshot_max_age_seconds": 900
+    }
+  }
+}

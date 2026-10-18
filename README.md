@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **18 October 2026 - Phase 2 ingestion implemented offline.** Both detections remain disabled and match Azure. Synthetic generation, normalization, bounded transport, DCR/table configuration and tests are implemented. A second live source and the alert/incident lifecycle require explicit approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
+> **18 October 2026 - Phase 3 platform health implemented.** Source-specific health evaluation, safe fault injection, local reports and a manual read-only OIDC audit are implemented. The two managed detections remain intentionally disabled; live telemetry queries and a second cloud source still need approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -56,6 +56,7 @@ python -m scripts.validate_detection
 python -m unittest discover -s tests -v
 python -m ingestion
 python -m scripts.assess_detections
+python -m platform_health
 ```
 
 The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
@@ -76,6 +77,14 @@ flowchart LR
 
 [Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. No DCR/table or ingestion workload was created. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
 
+## Platform health and observability
+
+[Health tooling](platform_health/) evaluates Healthy, Delayed, Missing, Misconfigured and Unknown states using the existing inventory. It handles stale/partial evidence, latency, missing approved batches, schema/mapping errors, duplicates, rule/workspace drift, latest deployment failures and partial ingestion-cost estimates. Quiet AzureActivity has no heartbeat requirement, so zero events alone never proves a collection failure.
+
+`python -m platform_health` runs eleven synthetic scenarios and writes JSON, Markdown and a standalone filterable dashboard under `.local/platform-health/`. The default demonstration performs no network calls. The manual **Read-only Platform Health** GitHub workflow reuses existing OIDC permissions to inspect workspace/rule configuration and workflow history; it executes no KQL or recurring workload. Configuration agreement is separate from active detection coverage and actual ingestion/runtime health.
+
+See the [health runbook and SLIs](docs/operations/platform-health.md), [KQL library](platform_health/queries/) and [validation evidence](docs/validation/phase-3.md). Azure telemetry/export/runtime components remain Unknown when current permissions cannot establish their health. No SentinelHealth export, resources or roles were added.
+
 ## Project organization
 
 ```text
@@ -84,6 +93,7 @@ hunting/      Reusable KQL queries
 evidence/     Sanitized Azure screenshots
 infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
 ingestion/    Synthetic generator, normalization, bounded client and source inventory
+platform_health/  Source health, readonly collector, local reports, safe faults and KQL library
 tests/        Lightweight offline project validation
 detections/azure/  Disabled REST rule definition and synchronized KQL
 schemas/      Restricted approved-rule JSON Schema
@@ -105,4 +115,5 @@ Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.9
 - [x] Ingestion offline: synthetic source, normalization, bounded transport, configuration and tests.
 - [ ] Approved DCR/table deployment, one upload and destination verification for a second cloud source.
 - [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
-- [ ] Broader platform health, SOAR, Bicep and operational handover.
+- [x] Platform health evaluator, local dashboard, eleven safe faults and manual read-only OIDC audit tooling.
+- [ ] SOAR, risk correlation, platform Bicep and operational handover.

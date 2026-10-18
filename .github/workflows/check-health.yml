@@ -1,0 +1,50 @@
+name: Read-only Platform Health
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-lab-deployment
+  cancel-in-progress: false
+
+jobs:
+  health:
+    if: github.ref == 'refs/heads/main' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    environment: sentinel-lab
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SENTINEL_RULE_ID: ${{ vars.SENTINEL_RULE_ID }}
+      GH_TOKEN: ${{ github.token }}
+      AZURE_CORE_COLLECT_TELEMETRY: 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate identifiers before authentication
+        run: |
+          python -c "import os; from scripts.azure_guard import canonical_uuid; [canonical_uuid(os.environ.get(k, '')) for k in ('AZURE_CLIENT_ID', 'AZURE_TENANT_ID', 'AZURE_SUBSCRIPTION_ID', 'SENTINEL_RULE_ID')]; print('PASS: configured identifiers have valid form')"
+      - name: Azure OIDC login with existing identity
+        uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: Read workspace and rule configuration and publish sanitized summary
+        run: python -m platform_health --collect-ci

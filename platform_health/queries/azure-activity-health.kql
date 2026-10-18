@@ -1,0 +1,11 @@
+// Not executed in this phase. One-hour aggregate; requires separately approved query access.
+let Events = materialize(AzureActivity
+    | where TimeGenerated between (ago(1h) .. now())
+    | extend Invalid = isempty(OperationNameValue) or isempty(ActivityStatusValue),
+             LatencySeconds = datetime_diff('second', ingestion_time(), TimeGenerated)
+    | extend EventIdentity = iff(isnotempty(EventDataId), EventDataId, hash_sha256(tostring(pack_array(TimeGenerated, OperationNameValue, ActivityStatusValue, CorrelationId, ResourceId, Caller)))));
+let UniqueEvents = toscalar(Events | summarize by EventIdentity | count);
+Events
+| summarize TotalEvents=count(), ValidEvents=countif(not(Invalid)), SchemaErrors=countif(Invalid), NegativeLatencyEvents=countif(LatencySeconds < 0), LastSeen=max(TimeGenerated), LatencyP95Seconds=percentile(iff(LatencySeconds >= 0, toreal(LatencySeconds), real(null)), 95), BillableBytes=tolong(sumif(_BilledSize, _IsBillable =~ "true"))
+| extend DistinctEvents=UniqueEvents, MappingErrors=long(0)
+| project TotalEvents, ValidEvents, DistinctEvents, SchemaErrors, MappingErrors, NegativeLatencyEvents, LastSeen, LatencyP95Seconds, BillableBytes
