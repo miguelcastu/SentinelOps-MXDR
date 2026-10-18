@@ -52,6 +52,6 @@ PRs validate offline without OIDC or Azure environment credentials. Approved mai
 
 The manual Check Sentinel Configuration Drift workflow compares source using GET only, with no recurring schedule or log query. Within-run identical rows are removed by distinct; cross-run overlap remains a limitation while AZ-DET-001 stays disabled.
 
-Original configuration was saved privately and as [sanitized evidence](../validation/AZ-DET-001-original.sanitized.json). It had a 30-minute query period with a 24-hour predicate, T1562 and a Caller/Account mapping. Source aligns the predicate/period to one hour, refines T1562.008 and avoids assuming callers are human accounts. The rule and incident creation remain disabled.
+Original configuration was saved privately and as [sanitized evidence](../validation/AZ-DET-001-original.sanitized.json). It had a 30-minute query period with a 24-hour predicate, T1562 and a Caller/Account mapping. Source aligns the predicate/period to one hour, preserves the existing parent technique T1562 (subtechnique T1562.008 is documented separately) and avoids assuming callers are human accounts. The rule and incident creation remain disabled.
 
 Actual Actions and Azure GET evidence, not bootstrap/login/tests alone, is required for success. Preserve workspace, connector resources and diagnostic settings. See the [validation record](../validation/platform-setup.md).

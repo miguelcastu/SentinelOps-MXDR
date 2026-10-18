@@ -15,7 +15,7 @@
       "PrivilegeEscalation"
     ],
     "techniques": [
-      "T1098.003"
+      "T1098"
     ],
     "entityMappings": [
       {
@@ -53,7 +53,10 @@
         "enabled": false,
         "reopenClosedIncident": false,
         "lookbackDuration": "PT1H",
-        "matchingMethod": "AllEntities"
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
       }
     },
     "description": "Detects successful Azure RBAC role assignment writes. These changes can support persistence or privilege escalation, but ordinary administration, policy remediation and approved automation also match. This lab rule is disabled and creates no incidents.",

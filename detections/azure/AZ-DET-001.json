@@ -14,7 +14,7 @@
       "DefenseEvasion"
     ],
     "techniques": [
-      "T1562.008"
+      "T1562"
     ],
     "entityMappings": [
       {
@@ -52,7 +52,10 @@
         "enabled": false,
         "reopenClosedIncident": false,
         "lookbackDuration": "PT1H",
-        "matchingMethod": "AllEntities"
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
       }
     },
     "description": "Detects successful Azure diagnostic settings writes or deletions. Changes can reduce logging visibility; legitimate policy remediation and administration can also match. Initial deployment stays disabled and creates no incidents.",
