@@ -37,6 +37,8 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 
 Read `docs/PROJECT_STATUS.md` first on subsequent sessions. Phase 2 synthetic ingestion is offline only: local code and REST resource bodies are permitted, but DCR/table provisioning, live ingestion, new roles and rule activation still require explicit approval. Do not infer approval from a cost estimate or create a live sender workflow until its scope is authorized.
 
+Phase 3 permits the manual main-only `check-health.yml` read-only OIDC workflow using existing workspace metadata and analytics-rule inventory permissions. It must not execute log queries, read the subscription export without authorization, change resources/roles, enable SentinelHealth or introduce a schedule. Unknown telemetry/runtime/export evidence must remain explicit. Local fault injection must not affect Azure collection.
+
 Run `python -m unittest discover -s tests -v` and `python -m scripts.validate_detection`.
 Document purpose, data sources, KQL, MITRE mapping, entities, false positives,
 testing, actual deployment evidence and limitations. Offline simulation is not Kusto execution.

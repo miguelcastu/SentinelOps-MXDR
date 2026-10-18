@@ -1,0 +1,7 @@
+// Not executed. Usage Quantity is MBytes; this is delayed usage, not an invoice.
+Usage
+| where TimeGenerated between (ago(24h) .. now())
+| where StartTime >= ago(24h) and IsBillable == true
+| where DataType in ("AzureActivity", "SentinelOpsAuth_CL")
+| summarize BillableMBytes=sumif(Quantity, QuantityUnit =~ "MBytes"), UnexpectedUnits=countif(QuantityUnit !~ "MBytes") by DataType
+| extend BillableGB=BillableMBytes/1000.0

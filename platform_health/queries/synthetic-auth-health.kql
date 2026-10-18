@@ -1,0 +1,13 @@
+// Not executed. Replace the batch ID from an explicitly approved, private run manifest.
+let ApprovedBatchId = "REPLACE_WITH_APPROVED_SYNTHETIC_BATCH_ID";
+let Events = materialize(SentinelOpsAuth_CL
+    | where TimeGenerated between (ago(1h) .. now())
+    | where Synthetic == true and BatchId == ApprovedBatchId
+    | extend Invalid = isempty(EventOriginalUid) or isempty(Dvc) or isempty(TargetUsername) or isempty(SrcIpAddr),
+             MappingInvalid = EventType != "Logon" or EventResult !in ("Success", "Failure") or EventCount != 1 or EventSchema != "Authentication" or EventSchemaVersion != "1.0.0" or EventStartTime != TimeGenerated or EventEndTime != TimeGenerated or isnull(parse_ipv6(SrcIpAddr)),
+             LatencySeconds = datetime_diff('second', ingestion_time(), TimeGenerated));
+let UniqueEvents = toscalar(Events | summarize by EventOriginalUid | count);
+Events
+| summarize TotalEvents=count(), ValidEvents=countif(not(Invalid)), SchemaErrors=countif(Invalid), MappingErrors=countif(MappingInvalid), NegativeLatencyEvents=countif(LatencySeconds < 0), LastSeen=max(TimeGenerated), LatencyP95Seconds=percentile(iff(LatencySeconds >= 0, toreal(LatencySeconds), real(null)), 95), BillableBytes=tolong(sumif(_BilledSize, _IsBillable =~ "true"))
+| extend DistinctEvents=UniqueEvents
+| project TotalEvents, ValidEvents, DistinctEvents, SchemaErrors, MappingErrors, NegativeLatencyEvents, LastSeen, LatencyP95Seconds, BillableBytes

@@ -32,3 +32,5 @@ jobs:
         run: |
           python -m ingestion
           python -m scripts.assess_detections
+      - name: Validate platform health and safe fault injection offline
+        run: python -m platform_health

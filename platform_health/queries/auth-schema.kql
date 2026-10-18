@@ -1,0 +1,4 @@
+// Not executed. Schema metadata only; compare with ingestion.events.COLUMNS offline.
+SentinelOpsAuth_CL
+| getschema
+| project ColumnName, DataType

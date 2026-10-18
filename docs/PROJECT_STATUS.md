@@ -1,19 +1,27 @@
 # SentinelOps MXDR project status
 
-Last updated: 18 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. This increment advances the partially implemented Phase 1 and implements Phase 2 offline, as requested. The eight-phase mission remains incomplete.
+Last updated: 18 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: Phase 3 platform health, following the completed offline Phase 2. The eight-phase mission remains incomplete.
 
 | Phase | State | Acceptance evidence / blocker |
 |---|---|---|
 | 1. Detection engineering and incident lifecycle | Partially complete | Two actual disabled deployments, fresh Azure audit, synthetic triage and investigation test plan. Actual alert -> incident -> classification requires approval and narrow access. |
 | 2. Advanced ingestion | Offline complete; live blocked by approval | Generator, schema, normalization, bounded HTTP client tested with mocks, inventory, REST bodies, validation KQL and runbook. No DCR/table deployment or upload. |
-| 3. Platform health | Pending | Next independent phase: inventory-driven evaluator and safe fault injection. |
+| 3. Platform health | Implemented; remote verification pending | Inventory-driven evaluator, eleven safe fault scenarios, local reports, KQL library and read-only OIDC collector. No live query access or health export enabled. |
 | 4. Risk-based correlation | Pending | No scoring engine claimed. |
 | 5. SOAR | Pending | No automation/Logic App claimed. |
 | 6. Infrastructure and advanced CI/CD | Partial baseline | Restricted OIDC detection CI/CD exists; REST bodies are not platform Bicep or verified infrastructure deployment. |
 | 7. Customer operations | Pending | Initial source onboarding and fictional customer context only. |
 | 8. Portfolio completion | Pending | No final release or full completion claim. |
 
-## Delivered in this increment
+## Current increment: Phase 3
+
+- [Health package](../platform_health/), per-source policies, last-seen/latency/volume/quality metrics and cost completeness.
+- Eleven deterministic, in-memory fault scenarios; no changes to collection.
+- Standalone local HTML dashboard plus JSON/Markdown reports; explicit synthetic/external/cloud-configuration evidence labels.
+- Manual `check-health.yml`: existing workspace/rule GETs, one bounded Actions history read, sanitized summary and nonzero exit on demonstrated configuration drift.
+- [Operations runbook, thresholds and SLIs](operations/platform-health.md), [validation record](validation/phase-3.md), and offline CI coverage. Local checks: 89 tests pass on Python 3.12/3.15, both detection validators, six YAML files, actionlint and documentation links pass. Protected PR and live OIDC verification will be recorded after execution.
+
+## Previous increment: Phases 1 and 2
 
 - [Detection audit and approval proposal](detections/lifecycle-validation.md), synthetic triage, benign-match examples and failed-attempt coverage gaps.
 - [Ingestion package](../ingestion/), strict [source schema](../schemas/synthetic-auth.schema.json), deterministic events and UTC normalization.
@@ -36,6 +44,6 @@ Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branc
 
 ## Next executable task
 
-Without new Azure access or spend: Phase 3 source-health evaluation and local fault scenarios from the source inventory, after the operator requests the next phase. Quiet event-driven AzureActivity must not be classified as Missing solely because one window has no events.
+Finish this increment by running protected PR checks, merging normally, executing the read-only health workflow once and recording the actual results. After Phase 3 acceptance, the next independent authorized increment is Phase 4's offline risk-based correlation engine when requested. Quiet event-driven AzureActivity must never be classified as Missing solely because one window has no events.
 
 For live acceptance: approve the concrete [Phase 1 test](detections/lifecycle-validation.md) or [Phase 2 cloud design](onboarding/synthetic-authentication.md), then implement/review the gated workflows and narrow OIDC roles, recheck finances and execute only the approved bounded test. Existing detection deployment roles remain unchanged. Current authorization does not permit those cloud expansions.
