@@ -1,0 +1,132 @@
+{
+  "checks": [
+    {
+      "id": "workspace",
+      "reason": "configuration_matches",
+      "state": "Healthy"
+    },
+    {
+      "id": "AZ-DET-001",
+      "reason": "configuration_matches",
+      "state": "Healthy"
+    },
+    {
+      "id": "AZ-DET-002",
+      "reason": "configuration_matches",
+      "state": "Healthy"
+    },
+    {
+      "id": "activity-export",
+      "reason": "export_not_authorized",
+      "state": "Unknown"
+    },
+    {
+      "id": "rule-runtime",
+      "reason": "runtime_not_collected",
+      "state": "Unknown"
+    },
+    {
+      "id": "validate.yml",
+      "reason": "deployment_success",
+      "state": "Healthy"
+    },
+    {
+      "id": "deploy-sentinel.yml",
+      "reason": "deployment_success",
+      "state": "Healthy"
+    },
+    {
+      "id": "deploy-additional-detection.yml",
+      "reason": "deployment_success",
+      "state": "Healthy"
+    }
+  ],
+  "cost": {
+    "complete": false,
+    "estimated_observed_eur": null,
+    "invoice_verified": false,
+    "known_sources": 0,
+    "observed_billable_bytes": null,
+    "planning_eur_per_gb": 10
+  },
+  "coverage": {
+    "healthy_sources": 0,
+    "inventoried_sources": 2,
+    "inventory_cloud_sources": 1,
+    "queried_sources": 0
+  },
+  "evaluated_at": "2026-10-18T18:15:57.307421Z",
+  "evidence": "azure-control-plane",
+  "fault_scenarios": 0,
+  "limits": {
+    "log_queries_executed": 0,
+    "recurring_schedule": false,
+    "runtime_health_verified": false
+  },
+  "observed_at": "2026-10-18T18:15:54.195551Z",
+  "rules": {
+    "active": 0,
+    "expected": 2,
+    "intentionally_disabled": 2,
+    "matching": 2,
+    "present": 2
+  },
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "billable_bytes": null,
+      "collection_model": "event-driven",
+      "distinct_events": null,
+      "duplicate_events": null,
+      "expected_by": null,
+      "expected_events": null,
+      "explanation": "Fresh complete query evidence is unavailable; do not infer zero events.",
+      "hourly_volume": [],
+      "last_seen": null,
+      "latency_p95_seconds": null,
+      "mapping_errors": null,
+      "negative_latency_events": null,
+      "onboarding_state": "existing-cloud-source",
+      "owner": "Lab platform operator",
+      "query_status": "not_authorized",
+      "reason": "query_unavailable",
+      "schema_errors": null,
+      "source_id": "azure-activity",
+      "state": "Unknown",
+      "table": "AzureActivity",
+      "total_events": null,
+      "uniqueness_ratio": null,
+      "validity_ratio": null,
+      "window_end": "2026-10-18T18:15:54.195551Z",
+      "window_start": "2026-10-18T17:15:54.195551Z"
+    },
+    {
+      "billable_bytes": null,
+      "collection_model": "single-approved-test-batch-only",
+      "distinct_events": null,
+      "duplicate_events": null,
+      "expected_by": null,
+      "expected_events": null,
+      "explanation": "Fresh complete query evidence is unavailable; do not infer zero events.",
+      "hourly_volume": [],
+      "last_seen": null,
+      "latency_p95_seconds": null,
+      "mapping_errors": null,
+      "negative_latency_events": null,
+      "onboarding_state": "offline-validated-cloud-not-authorized",
+      "owner": "Lab detection engineer",
+      "query_status": "not_collected",
+      "reason": "query_unavailable",
+      "schema_errors": null,
+      "source_id": "synthetic-authentication",
+      "state": "Unknown",
+      "table": "SentinelOpsAuth_CL",
+      "total_events": null,
+      "uniqueness_ratio": null,
+      "validity_ratio": null,
+      "window_end": "2026-10-18T18:15:54.195551Z",
+      "window_start": "2026-10-18T17:15:54.195551Z"
+    }
+  ],
+  "state": "Unknown"
+}
