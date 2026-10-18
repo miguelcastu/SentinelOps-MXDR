@@ -117,7 +117,7 @@ def bootstrap(apply=False):
             path.write_text(json.dumps(definition), encoding="utf-8")
             role = az_json("role", "definition", "create", "--role-definition", str(path))
         check_role(role, resource_group)
-    assignments = az_json("role", "assignment", "list", "--scope", workspace_id, "--include-inherited", "--all")
+    assignments = az_json("role", "assignment", "list", "--scope", workspace_id, "--include-inherited")
     own = [assignment for assignment in assignments if assignment.get("principalId", "").lower() == identity["principalId"].lower()]
     require(all(a.get("roleDefinitionId", "").lower() == role["id"].lower() and a.get("scope", "").lower() == workspace_id.lower() for a in own),
             "Dedicated identity has unexpected/inherited assignments. Administrator review required; no automatic removal or escalation.")
