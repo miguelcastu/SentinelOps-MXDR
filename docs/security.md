@@ -9,3 +9,5 @@ RBAC limits approved analytics-rule operations and workspace metadata. It grants
 No job prints raw event rows, identities, tokens or Azure error bodies. Private snapshots/pins stay under ignored .local/. Public configuration exports remove identifiers/runtime identity metadata. Error codes and changed-property names remain visible for honest diagnostics.
 
 There are no recurring health/drift jobs, paid services, new connectors, query audits or billing changes. Optional live validation requires bounded access and cost review. Budgets are alerts; billing lag, existing consumption and promotional expiry still matter.
+
+Final RBAC audit: three custom role definitions and four unique assignments. Write is assigned separately at each of the two exact analytics-rule UUIDs; workspace-level assignments permit only metadata/inventory reads. There is one reused managed identity and one immutable-subject federation. No temporary workspace-wide write grant was used.

@@ -155,11 +155,19 @@ class TestOperatorBootstrap(unittest.TestCase):
             if args[:2] == ("identity", "create"):
                 self.fail("The existing identity must be reused")
             if args[:3] == ("rest", "--method", "get"):
+                if "api-version=2025-02-01" in args[-1]:
+                    return WORKSPACE
                 if "sourcecontrols" in args[-1]:
                     return {"value": []}
                 existing = dict(validate_rule(), name="66666666-6666-4666-8666-666666666666")
                 existing["id"] = WORKSPACE_ID + "/providers/Microsoft.SecurityInsights/alertRules/" + existing["name"]
                 return {"value": [existing]}
+            if args[:3] == ("rest", "--method", "put"):
+                self.assertIn("/providers/Microsoft.Authorization/roleDefinitions/", args[args.index("--url") + 1])
+                body = json.loads(Path(args[args.index("--body") + 1][1:]).read_text())["properties"]
+                self.assertIn(body["permissions"][0]["actions"], [ACTIONS, ["Microsoft.OperationalInsights/workspaces/read"]])
+                self.assertEqual(body["assignableScopes"], [scope])
+                return {"id": scope + "/providers/Microsoft.Authorization/roleDefinitions/synthetic", "properties": body}
             if args[:3] == ("role", "definition", "list"):
                 return []
             if args[:3] == ("role", "definition", "create"):

@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **Foundation verified 13 October 2026; detection-as-code implemented 18 October 2026.** The initial rule stays disabled. Azure deployment and live Kusto verification are pending restricted OIDC prerequisites and an approved PR merge. IaC and SOAR remain planned.
+> **18 October 2026 - GitHub-to-Sentinel OIDC deployment verified.** AZ-DET-001 and AZ-DET-002 are deployed and disabled; API state matches code and the manual drift check passes. IaC, SOAR, activation and real-data false-positive measurement remain future work.
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -56,9 +56,9 @@ python -m scripts.validate_detection
 python -m unittest discover -s tests -v
 ```
 
-The pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
+The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
 
-The operator also authorized [AZ-DET-002 — Azure Role Assignment Created](docs/detections/AZ-DET-002.md), deployed disabled through a separate fixed-target workflow. Its [one-time connection runbook](docs/deployment/second-detection-test.md) provides a single operator-run command to configure restricted OIDC without sending identifiers through chat. Azure deployment remains pending until that prerequisite and the reviewed PR merge are complete.
+The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/detections/AZ-DET-002.md), now deployed disabled through its fixed-target workflow using the same existing identity. [Setup and scope](docs/deployment/detection-cicd.md), [security](docs/security.md), [reusable templates](templates/) and [actual Azure evidence](docs/validation/platform-setup.md) document the implementation. No paid service, connector or billing change was introduced.
 
 ## Project organization
 
@@ -78,14 +78,12 @@ scripts/      Offline validation, guarded deployment and aggregate queries
 
 Azure budgets are alerts, **not hard spending limits**. Promotional credit and product trials are subject to eligibility and expiration. Verify charges, Log Analytics ingestion, retention and workspace caps in your own subscription. Do not include secrets, tenant/subscription IDs, email identities or unredacted event logs. See [evidence guidelines](docs/evidence-handling.md).
 
-Keep the existing subscription and billing plan. The operator reports approximately 175 EUR in credit; balance and expiry remain unverified. Development and synthetic tests run locally; standard public-repository runners are free. No credit consumption is necessary for preparing this implementation. Existing Azure resources may still incur their own ongoing costs.
+Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.99 EUR sign-up credit expiring 12 November 2026 at 18:00 UTC. The credit API reports no charges in available events; billing lag can apply. No paid service or chargeable experiment was introduced. Existing Azure resources can still accrue their own costs. See [billing and preservation evidence](docs/validation/platform-setup.md).
 
 ## Status / roadmap
 
-- ✅ Azure foundation, Sentinel, Content Hub, Azure Policy remediation, working Azure Activity ingestion, KQL validation.
-- ✅ Disabled AZ-DET-001 definition, entity/MITRE mapping, synthetic tests and guarded OIDC workflow code.
-- ⬜ Restricted Azure prerequisites, approved PR merge, actual disabled-rule deployment and live Kusto evidence; alert investigations remain future work.
-- ⬜ Connector health, telemetry coverage, ingestion baseline and troubleshooting.
-- ⬜ Logic Apps / Python automation, idempotency, failures and cost management.
-- ⬜ Bicep Infrastructure as Code and automated deployments.
-- ⬜ Operational runbooks, service KPIs and handover.
+- [x] Azure foundation, source onboarding, policy remediation and working Azure Activity ingestion evidence.
+- [x] Exact-resource RBAC, MFA-protected initial setup, immutable GitHub OIDC and protected PR validation.
+- [x] Two disabled detections, synthetic cases, actual deployment/REST verification and a clean manual drift check.
+- [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
+- [ ] Broader platform health, SOAR, Bicep and operational handover.

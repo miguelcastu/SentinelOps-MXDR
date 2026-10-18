@@ -6,7 +6,7 @@ from unittest.mock import patch
 import subprocess
 
 from scripts.azure_guard import az_json
-from scripts.bootstrap_oidc import oidc_subject
+from scripts.bootstrap_oidc import ACTIONS, ROLE_NAME, ensure_role, oidc_subject
 from scripts.check_drift import changed_properties
 from scripts.validate_detection import DETECTIONS, validate_rule
 
@@ -33,6 +33,16 @@ class TestOidcSubject(unittest.TestCase):
                          {"use_default": True}):
             with self.subTest(settings=settings), self.assertRaises(ValueError):
                 oidc_subject(self.repository, settings)
+
+    def test_existing_role_with_legacy_generated_id_is_reused_by_name(self):
+        scope = "/subscriptions/synthetic/resourceGroups/lab"
+        role = {"id": "/subscriptions/synthetic/providers/Microsoft.Authorization/roleDefinitions/legacy-id",
+                "roleName": ROLE_NAME, "assignableScopes": [scope],
+                "permissions": [{"actions": ACTIONS, "notActions": [], "dataActions": [], "notDataActions": []}]}
+        with patch("scripts.bootstrap_oidc.az_json", return_value=[role]) as request:
+            self.assertEqual(ensure_role(ROLE_NAME, "reviewed-slug", ACTIONS, scope), role)
+        self.assertEqual(request.call_count, 1)
+        self.assertIn(ROLE_NAME, request.call_args.args)
 
 
 class TestDrift(unittest.TestCase):

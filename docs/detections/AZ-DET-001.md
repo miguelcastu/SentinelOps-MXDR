@@ -1,6 +1,6 @@
 # AZ-DET-001 — Azure Diagnostic Settings Modified
 
-Status: implemented as code, **disabled**. Cloud deployment and real Kusto execution are pending prerequisite completion. Historical screenshots do not prove this rule exists or that this implementation has been deployed.
+Status: **deployed and disabled**, verified by GitHub OIDC and the actual Azure API. The manual drift check matches source. Historical screenshots are separate foundation evidence; real-data false-positive measurement has not been performed.
 
 ## Purpose and data source
 

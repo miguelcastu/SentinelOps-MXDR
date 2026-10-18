@@ -1,0 +1,60 @@
+{
+  "kind": "Scheduled",
+  "properties": {
+    "displayName": "REVIEW-REQUIRED - Detection name",
+    "enabled": false,
+    "severity": "Medium",
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT1H",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "suppressionEnabled": false,
+    "suppressionDuration": "PT1H",
+    "tactics": [],
+    "techniques": [],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "SourceIPAddress"
+          }
+        ]
+      }
+    ],
+    "customDetails": {
+      "Operation": "OperationNameValue",
+      "Status": "ActivityStatusValue",
+      "Caller": "Caller",
+      "CorrelationId": "CorrelationId",
+      "EventDataId": "EventDataId"
+    },
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "incidentConfiguration": {
+      "createIncident": false,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT1H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "description": "Template only. Replace source, logic, mapping, synthetic tests and documentation through reviewed code. This template is not an approved deployment payload.",
+    "query": "AzureActivity\n| where false\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress = \"\", TargetResourceId = ResourceId, ResourceGroup, CorrelationId, EventDataId\n"
+  }
+}

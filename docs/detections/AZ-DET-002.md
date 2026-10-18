@@ -1,6 +1,6 @@
 # AZ-DET-002 — Azure Role Assignment Created
 
-Status: code and synthetic tests implemented; **disabled**. Actual Azure deployment is pending dedicated OIDC configuration and the approved PR merge. No live false-positive rate has been measured.
+Status: **deployed and disabled**, verified through the existing OIDC identity and the actual Azure API. No live false-positive rate has been measured.
 
 ## Purpose, source and logic
 

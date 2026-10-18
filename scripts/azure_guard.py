@@ -39,10 +39,12 @@ def az_json(*args):
         except (ValueError, AttributeError, TypeError):
             pass
         stage = "CLI context"
+        if args and args[0] in ("role", "identity", "monitor"):
+            stage = " ".join(args[:3])
         if "--url" in args:
             url = args[args.index("--url") + 1]
             stage = "analytics rule" if "/alertRules" in url else "workspace metadata"
-        verb = args[args.index("--method") + 1].upper() if "--method" in args else "READ"
+        verb = args[args.index("--method") + 1].upper() if "--method" in args else next((v.upper() for v in args[:3] if v in ("create", "update", "delete")), "READ")
         raise ValueError(f"Azure {verb} {stage} failed ({code}).{detail} No permission escalation was attempted.")
     return json.loads(result.stdout)
 
