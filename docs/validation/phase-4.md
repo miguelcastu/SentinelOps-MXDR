@@ -35,3 +35,5 @@ Final local suite: **112 tests pass on Python 3.12 and Python 3.15**. Independen
 Existing Azure rule definitions and deployment scripts were not changed. The previous [Phase 3 OIDC audit](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39153342114) remains historical; this phase does not claim a new Azure audit or refreshed credit balance. No deployment or health workflow needs to run to demonstrate this offline capability.
 
 Read the [engineering design/runbook](../operations/risk-correlation.md) for scoring choices, current MITRE references, baselines and known coverage gaps. [PROJECT_STATUS.md](../PROJECT_STATUS.md) records delivery and the next phase.
+
+Delivery: [PR #9](https://github.com/miguelcastu/SentinelOps-MXDR/pull/9), implementation `d46f19b`. The [required implementation CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39167931811) passed; the PR records final-head checks and the protected merge. No Azure deployment or health workflow was invoked.
