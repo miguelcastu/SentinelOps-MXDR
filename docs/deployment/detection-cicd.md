@@ -25,10 +25,11 @@ The intended ARM core token then contained mfa/p1 and Azure accepted the adminis
 
 | Role | Actions | Assignment scope |
 |---|---|---|
-| SentinelOps Existing Analytics Rule Deployer | Microsoft.SecurityInsights/alertRules/read and /write | Exact existing AZ-DET-001 |
+| SentinelOps Existing Analytics Rule Deployer | Microsoft.SecurityInsights/alertRules/read and /write | Exact AZ-DET-001 and AZ-DET-002 resources, separate assignments |
 | SentinelOps Workspace Metadata Reader | Microsoft.OperationalInsights/workspaces/read | Exact existing workspace |
+| SentinelOps Analytics Rule Inventory Reader | Microsoft.SecurityInsights/alertRules/read | Exact existing workspace, duplicate checks for AZ-DET-002 |
 
-Custom-role assignable scopes are restricted to the existing group. NotActions/DataActions/NotDataActions are empty. No wildcard, delete, shared-key, infrastructure, billing, query or RBAC-management action is granted. Definitions must match the approved actions; deterministic IDs and inventories prevent duplicates. Unexpected inherited roles or trusts stop setup. Optional query access is not granted without a required bounded validation.
+Custom-role assignable scopes are restricted to the existing group. NotActions/DataActions/NotDataActions are empty. No wildcard, delete, shared-key, infrastructure, billing, query or RBAC-management action is granted. Definitions must match the approved actions; name-based discovery reuses roles created by legacy CLI versions; new roles and assignments use deterministic REST IDs. Complete inventories prevent duplicates. Unexpected inherited roles or trusts stop setup. Optional query access is not granted without a required bounded validation.
 
 Permissions add together: audit definitions and applicable assignments. Do not test a denial by trying paid resource creation or changing pricing. The allowed-action set and scopes supply the boundary; actual CI verifies permitted operations. Diagnose service errors before adding permissions.
 
@@ -54,4 +55,6 @@ The manual Check Sentinel Configuration Drift workflow compares source using GET
 
 Original configuration was saved privately and as [sanitized evidence](../validation/AZ-DET-001-original.sanitized.json). It had a 30-minute query period with a 24-hour predicate, T1562 and a Caller/Account mapping. Source aligns the predicate/period to one hour, preserves the existing parent technique T1562 (subtechnique T1562.008 is documented separately) and avoids assuming callers are human accounts. The rule and incident creation remain disabled.
 
-Actual Actions and Azure GET evidence, not bootstrap/login/tests alone, is required for success. Preserve workspace, connector resources and diagnostic settings. See the [validation record](../validation/platform-setup.md).
+Both disabled deployments and the clean manual drift check are now verified. Actual Actions and Azure GET evidence, not bootstrap/login/tests alone, is required for success. Preserve workspace, connector resources and diagnostic settings. See the [validation record](../validation/platform-setup.md).
+
+For a fresh additional-rule setup, append --include-additional (or -IncludeAdditional with the PowerShell wrapper). Azure accepted the exact UUID assignment before creation, so no broad write grant is required. Existing additional-rule assignments are also recognized on ordinary reruns.

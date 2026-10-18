@@ -16,7 +16,7 @@ import uuid
 from pathlib import Path
 
 from scripts.azure_guard import RG, WORKSPACE, az_json, canonical_uuid
-from scripts.validate_detection import ROOT, require
+from scripts.validate_detection import DETECTIONS, ROOT, require
 
 PIN = ROOT / ".local/azure-target.json"
 REPO = "miguelcastu/SentinelOps-MXDR"
@@ -26,6 +26,8 @@ ACTIONS = ["Microsoft.SecurityInsights/alertRules/read", "Microsoft.SecurityInsi
 ROLE_NAME = "SentinelOps Existing Analytics Rule Deployer"
 METADATA_ACTIONS = ["Microsoft.OperationalInsights/workspaces/read"]
 METADATA_ROLE_NAME = "SentinelOps Workspace Metadata Reader"
+INVENTORY_ACTIONS = ["Microsoft.SecurityInsights/alertRules/read"]
+INVENTORY_ROLE_NAME = "SentinelOps Analytics Rule Inventory Reader"
 SUBJECT = f"repo:{REPO}:environment:{ENVIRONMENT}"
 
 
@@ -81,18 +83,23 @@ def check_role(role, scope, name=ROLE_NAME, actions=None):
 
 def ensure_role(name, slug, actions, resource_group):
     role_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, resource_group.lower() + "/" + slug))
-    roles = az_json("role", "definition", "list", "--name", role_uuid, "--scope", resource_group)
+    # Discover by verified role name, including roles created by older CLI
+    # versions that ignored the template's requested Id on create.
+    roles = az_json("role", "definition", "list", "--name", name, "--scope", resource_group)
     require(len(roles) <= 1, "Ambiguous custom role")
     if roles:
         check_role(roles[0], resource_group, name, actions)
         return roles[0]
-    definition = {"Name": name, "Id": role_uuid, "IsCustom": True,
-                  "Description": "Narrow SentinelOps lab CI permission; no infrastructure, delete, queries or billing operations",
-                  "Actions": actions, "NotActions": [], "DataActions": [], "NotDataActions": [], "AssignableScopes": [resource_group]}
+    definition = {"properties": {"roleName": name, "type": "CustomRole",
+                  "description": "Narrow SentinelOps lab CI permission; no infrastructure, delete, queries or billing operations",
+                  "permissions": [{"actions": actions, "notActions": [], "dataActions": [], "notDataActions": []}], "assignableScopes": [resource_group]}}
     with tempfile.TemporaryDirectory(prefix="sentinelops-role-") as directory:
         path = Path(directory) / "role.json"
         path.write_text(json.dumps(definition), encoding="utf-8")
-        role = az_json("role", "definition", "create", "--role-definition", str(path))
+        result = az_json("rest", "--method", "put", "--url",
+                         f"https://management.azure.com{resource_group}/providers/Microsoft.Authorization/roleDefinitions/{role_uuid}?api-version=2022-04-01",
+                         "--body", "@" + str(path))
+        role = dict(result["properties"], id=result["id"])
     check_role(role, resource_group, name, actions)
     return role
 
@@ -117,7 +124,7 @@ def set_variable(token, name, value):
            {"name": name, "value": value})
 
 
-def bootstrap(apply=False):
+def bootstrap(apply=False, include_additional=False):
     require(os.environ.get("GITHUB_ACTIONS") != "true", "Administrative bootstrap must never run in CI")
     require(PIN.exists(), "Missing private subscription pin; no target can be guessed")
     pin = json.loads(PIN.read_text(encoding="utf-8"))
@@ -127,6 +134,8 @@ def bootstrap(apply=False):
     require(account.get("id", "").lower() == subscription and account.get("tenantId", "").lower() == tenant,
             "Subscription/tenant differs from the private pin. Refusing to select a different subscription.")
     print("Plan: reuse id-sentinelops-ci, existing pinned workspace and existing disabled AZ-DET-001; exact-rule write scope, workspace metadata read, GitHub OIDC and encrypted identifiers. No new identity, infrastructure, queries or billing changes.")
+    if include_additional:
+        print("Additional plan: read-only analytics inventory and write only at the fixed AZ-DET-002 UUID; deployment remains in the disabled-rule CI workflow.")
     if not apply:
         print("PREVIEW ONLY: no Azure cloud request or GitHub mutation performed. Explicit setup authorization and MFA are required for --apply.")
         return
@@ -147,7 +156,7 @@ def bootstrap(apply=False):
     resource_group = f"/subscriptions/{subscription}/resourceGroups/{RG}"
     workspace_id = f"{resource_group}/providers/Microsoft.OperationalInsights/workspaces/{WORKSPACE}"
     print("Checking existing workspace, identity and unique disabled rule...")
-    workspace = az_json("monitor", "log-analytics", "workspace", "show", "--resource-group", RG, "--workspace-name", WORKSPACE)
+    workspace = az_json("rest", "--method", "get", "--url", f"https://management.azure.com{workspace_id}?api-version=2025-02-01")
     require(workspace.get("id", "").lower() == workspace_id.lower() and workspace.get("location") == "westeurope", "Existing workspace mismatch; no replacement is provisioned")
     identities = az_json("identity", "list", "--resource-group", RG)
     matches = [identity for identity in identities if identity.get("name") == IDENTITY]
@@ -163,20 +172,39 @@ def bootstrap(apply=False):
     rule_uuid = canonical_uuid(rule["name"])
     expected_id = workspace_id + "/providers/Microsoft.SecurityInsights/alertRules/" + rule_uuid
     require(rule.get("id", "").lower() == expected_id.lower(), "Rule resource ID mismatch")
+    additional = [r for r in rules["value"] if r.get("properties", {}).get("displayName") == DETECTIONS["AZ-DET-002"]["name"]]
+    require(len(additional) <= 1, "Duplicate AZ-DET-002 resources")
+    additional_id = None
+    if additional:
+        additional_id = workspace_id + "/providers/Microsoft.SecurityInsights/alertRules/" + DETECTIONS["AZ-DET-002"]["resource_uuid"]
+        require(additional[0].get("id", "").lower() == additional_id.lower() and additional[0].get("kind") == "Scheduled" and
+                additional[0]["properties"].get("enabled") is False, "Existing additional rule has unapproved ID/kind/state")
+    elif include_additional:
+        additional_id = workspace_id + "/providers/Microsoft.SecurityInsights/alertRules/" + DETECTIONS["AZ-DET-002"]["resource_uuid"]
+        require(not any(r.get("id", "").lower() == additional_id.lower() for r in rules["value"]), "The new fixed UUID is already occupied by an unrelated rule")
     sources = az_json("rest", "--method", "get", "--url", f"https://management.azure.com{workspace_id}/providers/Microsoft.SecurityInsights/sourcecontrols?api-version=2025-09-01")
     require(sources.get("value") == [] and not sources.get("nextLink"), "Existing Sentinel Repositories configuration requires ownership review")
-    (PIN.parent / "AZ-DET-001-original.private.json").write_text(json.dumps(rule, indent=2), encoding="utf-8")
-    print("Ensuring two narrow role definitions and scoped assignments...")
+    backup = PIN.parent / "AZ-DET-001-original.private.json"
+    if not backup.exists():
+        backup.write_text(json.dumps(rule, indent=2), encoding="utf-8")
+    print("Ensuring narrow role definitions and exact resource assignments...")
     writer = ensure_role(ROLE_NAME, "sentinelops-existing-rule-deployer", ACTIONS, resource_group)
     reader = ensure_role(METADATA_ROLE_NAME, "sentinelops-workspace-metadata-reader", METADATA_ACTIONS, resource_group)
     allowed = {(writer["id"].lower(), expected_id.lower()), (reader["id"].lower(), workspace_id.lower())}
-    for scope in (workspace_id, expected_id):
+    inventory_reader = None
+    if additional_id:
+        inventory_reader = ensure_role(INVENTORY_ROLE_NAME, "sentinelops-rule-inventory-reader", INVENTORY_ACTIONS, resource_group)
+        allowed |= {(writer["id"].lower(), additional_id.lower()), (inventory_reader["id"].lower(), workspace_id.lower())}
+    for scope in (workspace_id, expected_id, *([additional_id] if additional_id else [])):
         assignments = az_json("role", "assignment", "list", "--scope", scope, "--include-inherited", "--fill-principal-name", "false")
         own = [a for a in assignments if a.get("principalId", "").lower() == identity["principalId"].lower()]
         require(all((a.get("roleDefinitionId", "").lower(), a.get("scope", "").lower()) in allowed for a in own),
                 "Dedicated identity has unexpected/inherited permissions; no automatic removal or broader grant")
     ensure_assignment(identity["principalId"], reader, workspace_id)
     ensure_assignment(identity["principalId"], writer, expected_id)
+    if additional_id:
+        ensure_assignment(identity["principalId"], inventory_reader, workspace_id)
+        ensure_assignment(identity["principalId"], writer, additional_id)
     print("Ensuring exact GitHub OIDC federation...")
     credentials = az_json("identity", "federated-credential", "list", "--identity-name", IDENTITY, "--resource-group", RG)
     require(len(credentials) <= 1, "Unexpected or duplicate federated trusts")
@@ -199,13 +227,17 @@ def bootstrap(apply=False):
     set_variable(token, "SENTINEL_RULE_ID", rule_uuid)
     set_variable(token, "SENTINEL_EXCLUSIVE_RULE_OWNER", "true")
     set_variable(token, "SENTINEL_DEPLOYMENT_APPROVED", "true")
+    if include_additional:
+        set_variable(token, "SENTINEL_AZ_DET_002_APPROVED", "true")
     print("SETUP COMPLETE: existing identity, exact-rule RBAC, OIDC and GitHub configuration verified. No Sentinel rule deployed by this script. Use the approved main GitHub workflow for deployment and actual REST verification.")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true", help="Explicitly authorized administrative setup with interactive MFA")
+    parser.add_argument("--include-additional", action="store_true", help="Also prepare the exact AZ-DET-002 scope and read-only inventory; never broad workspace write")
     try:
-        bootstrap(parser.parse_args().apply)
+        arguments = parser.parse_args()
+        bootstrap(arguments.apply, arguments.include_additional)
     except (ValueError, OSError, subprocess.SubprocessError, ImportError) as exc:
         raise SystemExit(f"Setup stopped: {exc}") from None

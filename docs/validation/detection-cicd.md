@@ -1,5 +1,7 @@
 # Detection CI/CD validation record
 
+Historical preparation record. Later authorized setup and actual deployments are documented in [the final platform evidence](platform-setup.md). Statements below describe the earlier preparation stage.
+
 Assessment date: 18 October 2026 (Europe/Madrid).
 
 ## Observed starting state

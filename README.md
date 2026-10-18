@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **Foundation verified 13 October 2026; detection-as-code implemented 18 October 2026.** The initial rule stays disabled. Azure deployment and live Kusto verification are pending restricted OIDC prerequisites and an approved PR merge. IaC and SOAR remain planned.
+> **18 October 2026 ? GitHub-to-Sentinel OIDC deployment verified.** AZ-DET-001 and AZ-DET-002 are deployed and disabled; API state matches code and the manual drift check passes. IaC, SOAR, activation and real-data false-positive measurement remain future work.
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -56,7 +56,7 @@ python -m scripts.validate_detection
 python -m unittest discover -s tests -v
 ```
 
-The pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
+The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
 
 The operator also authorized [AZ-DET-002 — Azure Role Assignment Created](docs/detections/AZ-DET-002.md), deployed disabled through a separate fixed-target workflow. Its [one-time connection runbook](docs/deployment/second-detection-test.md) provides a single operator-run command to configure restricted OIDC without sending identifiers through chat. Azure deployment remains pending until that prerequisite and the reviewed PR merge are complete.
 

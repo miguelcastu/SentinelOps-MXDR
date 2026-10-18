@@ -5,9 +5,11 @@ on:
     branches: [main]
     paths:
       - 'detections/azure/AZ-DET-001.*'
-      - 'schemas/**'
-      - 'scripts/**'
-      - 'tests/**'
+      - 'schemas/scheduled-rule.schema.json'
+      - 'scripts/deploy_rule.py'
+      - 'scripts/azure_guard.py'
+      - 'scripts/validate_detection.py'
+      - 'scripts/check_prerequisites.py'
       - '.github/workflows/deploy-sentinel.yml'
   workflow_dispatch:
 

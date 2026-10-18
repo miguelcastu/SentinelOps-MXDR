@@ -1,13 +1,15 @@
-# Second disabled detection
+# Verified second disabled detection
 
-AZ-DET-002 observes successful Azure RBAC role assignment writes in the existing AzureActivity data. Its fixed definition and 17 synthetic event cases are implemented. It remains disabled; SENTINEL_AZ_DET_002_APPROVED controls whether its workflow authenticates and writes.
+AZ-DET-002 observes successful Azure RBAC role assignment writes in existing AzureActivity data. It was created through the protected-main OIDC workflow and its final Azure GET matches the disabled source definition. See [actual deployment evidence](../validation/platform-setup.md).
 
-The latest instructions authorize initial administration and require reuse of **id-sentinelops-ci**. The earlier proposal for id-sentinelops-rule002-ci is superseded; that identity was never created. Both workflows now reference the existing CI identity.
+The existing **id-sentinelops-ci** is reused. Azure accepted an RBAC write assignment on the fixed AZ-DET-002 resource UUID before the rule existed. No workspace-wide write grant or additional identity was needed. A separate read-only analytics inventory role at the existing workspace supports duplicate detection checks. Query and infrastructure permissions were not granted.
 
-The [canonical runbook](detection-cicd.md) covers MFA, dependencies, OIDC and exact-rule RBAC. Bootstrap grants write access only to the existing AZ-DET-001 resource. It does not silently broaden access to create AZ-DET-002.
+Reproducible authorized setup (preview without --apply):
 
-Creating a rule needs an applicable scope before the resource exists. Any additional assignment must be confined to the fixed rule where Azure supports it, or to analytics-rule operations in this existing workspace for initial creation, followed by reduction to the exact new resource. No Owner, Contributor, wildcard or infrastructure action is appropriate.
+```powershell
+uv run --python 3.12 --with pynacl==1.6.2 --no-project python -m scripts.bootstrap_oidc --apply --include-additional
+```
 
-The approved workflow creates/updates only the reviewed UUID and refuses duplicate, conflicting, enabled or incompletely inventoried targets. It verifies the final GET against source. Missing approval skips cloud operations explicitly; requested deployment with missing credentials or insufficient access fails.
+This prepares exact-resource RBAC, identity federation and environment approval; it does not create or enable a rule itself. The CI workflow creates/updates only the fixed reviewed UUID and rejects duplicate, conflicting, enabled or incompletely inventoried targets. GET then compares every managed property. Unrequested deployment skips cloud operations explicitly; requested deployment with missing access fails.
 
-Synthetic tests do not establish Azure deployment or a real false-positive rate. No connector, paid compute, ingestion, retention, cap or billing change is needed.
+The 17 synthetic cases include legitimate administration that also matches. Real historical false-positive measurement and activation remain separately reviewed work. No connector, paid compute, ingestion, retention, cap or billing change is required.

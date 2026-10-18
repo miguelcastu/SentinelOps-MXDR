@@ -7,6 +7,9 @@ on:
       - 'detections/azure/AZ-DET-002.*'
       - 'schemas/AZ-DET-002.schema.json'
       - 'scripts/deploy_additional_rule.py'
+      - 'scripts/azure_guard.py'
+      - 'scripts/validate_detection.py'
+      - 'scripts/check_prerequisites.py'
       - '.github/workflows/deploy-additional-detection.yml'
   workflow_dispatch:
 

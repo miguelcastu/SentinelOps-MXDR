@@ -1,5 +1,7 @@
 # Second-detection test evidence
 
+Historical preparation record. Later authorized setup and actual deployments are documented in [the final platform evidence](platform-setup.md). Statements below describe the earlier preparation stage.
+
 Date: 18 October 2026 (Europe/Madrid).
 
 - PR #1 was confirmed merged; the second implementation starts from main commit `f024e76618bda428d7ef737c5d7b35d0f062443c`.
