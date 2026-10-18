@@ -34,3 +34,5 @@ jobs:
           python -m scripts.assess_detections
       - name: Validate platform health and safe fault injection offline
         run: python -m platform_health
+      - name: Validate synthetic risk correlation and control scenarios offline
+        run: python -m rba

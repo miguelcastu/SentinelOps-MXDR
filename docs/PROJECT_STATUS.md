@@ -1,19 +1,27 @@
 # SentinelOps MXDR project status
 
-Last updated: 18 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: Phase 3 platform health, following the completed offline Phase 2. The eight-phase mission remains incomplete.
+Last updated: 18 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: Phase 4 offline risk correlation. The eight-phase mission remains incomplete.
 
 | Phase | State | Acceptance evidence / blocker |
 |---|---|---|
 | 1. Detection engineering and incident lifecycle | Partially complete | Two actual disabled deployments, fresh Azure audit, synthetic triage and investigation test plan. Actual alert -> incident -> classification requires approval and narrow access. |
 | 2. Advanced ingestion | Offline complete; live blocked by approval | Generator, schema, normalization, bounded HTTP client tested with mocks, inventory, REST bodies, validation KQL and runbook. No DCR/table deployment or upload. |
 | 3. Platform health | Implemented and verified within current scope | Eleven simulated faults and actual read-only OIDC configuration/deployment audit verified. Live telemetry/export/runtime remain Unknown; no query access or health export added. |
-| 4. Risk-based correlation | Pending | No scoring engine claimed. |
+| 4. Risk-based correlation | Implemented and verified offline | Bounded entity scoring, strict multi-stage sequence, decay/caps/deduplication, narrow maintenance context, health-aware confidence and replay report. No Sentinel incident or live validation. |
 | 5. SOAR | Pending | No automation/Logic App claimed. |
 | 6. Infrastructure and advanced CI/CD | Partial baseline | Restricted OIDC detection CI/CD exists; REST bodies are not platform Bicep or verified infrastructure deployment. |
 | 7. Customer operations | Pending | Initial source onboarding and fictional customer context only. |
 | 8. Portfolio completion | Pending | No final release or full completion claim. |
 
-## Current increment: Phase 3
+## Current increment: Phase 4
+
+- [Risk package](../rba/), versioned signal catalog, explicit fictional identity mapping, synthetic source adapters and [signal schema](../schemas/rba-signal.schema.json).
+- AF-RBA-001: one account's ordered failed authentication -> success -> role grant -> diagnostic change -> endpoint execution; exact host/scope joins, bounded windows and deterministic original-event deduplication.
+- Account risk with confidence weights, per-kind/global caps, half-life decay, contribution ledgers, history and narrow event-time maintenance exceptions.
+- Default scenario: 18 envelopes / 16 unique events / two replays / three accounts; one High-priority synthetic finding with Low confidence. Nine positive/benign/edge scenario checks; interactive replay dashboard and investigation artifact.
+- [Operations design](operations/risk-correlation.md), [validation record](validation/phase-4.md), offline CI step. 112 tests pass on Python 3.12/3.15; 95 independent JSON Schema cases, six workflow YAML files, actionlint and documentation links pass. [Synthetic dataset](../evidence/phase-4/dataset.synthetic.json) and [risk report](../evidence/phase-4/risk-report.synthetic.json) preserve the evidence chain and configuration hash. Existing Azure definitions, roles, subscription and resource settings are untouched. Final CI/PR references will be recorded after protected delivery.
+
+## Previous increment: Phase 3
 
 - [Health package](../platform_health/), per-source policies, last-seen/latency/volume/quality metrics and cost completeness.
 - Eleven deterministic, in-memory fault scenarios; no changes to collection.
@@ -34,6 +42,8 @@ Last updated: 18 October 2026. Read this file first when resuming. Atlas Financi
 
 ## Verified Azure and cost state
 
+Phase 4 is completely offline: zero network calls in the risk engine/demo, no Azure queries or changes, no new paid resources, connectors, identities, role assignments, schedules or incidents. Existing subscription protections remain unchanged by this work. Azure and billing statements below are historical checkpoints; this increment did not refresh them or claim a live attack/incident.
+
 Phase 3 at 18 October 2026 18:15:54 UTC: same expected workspace region/pricing/cap/retention and both managed rules match source. Latest observed validation/deployment runs succeeded. Source telemetry, export and rule-runtime are Unknown, so overall health is Unknown. Zero KQL requests or resource/role/billing/ingestion changes; existing identity and permissions were reused. No recurring workload. This did not refresh credit balance/expiry or prove current AzureActivity arrival.
 
 18 October read-only audit: pinned subscription/tenant unchanged; West Europe workspace, 30-day retention and 0.1 GB daily cap. Both rules disabled, unique and matching all managed properties. One existing subscription export, workspace/solution/identity inventory preserved. Fresh telemetry arrival was not queried.
@@ -48,6 +58,6 @@ Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branc
 
 ## Next executable task
 
-Phase 3 is delivered. The next independent phase, when requested, is **Phase 4: offline risk-based correlation** using labeled synthetic Azure administrative/authentication signals, entity scores, deduplication, correlation windows, decay, a multi-stage Atlas Financial scenario and meaningful tests. Reuse the source contracts and health-quality context; do not create live incidents or paid services. Quiet event-driven AzureActivity must never be classified as Missing solely because one window has no events.
+Phase 4 is implemented and verified offline. After its protected delivery, the next independent phase when requested is **Phase 5: offline SOAR and case management**, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization.
 
 For live acceptance: approve the concrete [Phase 1 test](detections/lifecycle-validation.md) or [Phase 2 cloud design](onboarding/synthetic-authentication.md), then implement/review the gated workflows and narrow OIDC roles, recheck finances and execute only the approved bounded test. Existing detection deployment roles remain unchanged. Current authorization does not permit those cloud expansions.

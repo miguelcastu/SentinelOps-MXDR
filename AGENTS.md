@@ -39,6 +39,8 @@ Read `docs/PROJECT_STATUS.md` first on subsequent sessions. Phase 2 synthetic in
 
 Phase 3 permits the manual main-only `check-health.yml` read-only OIDC workflow using existing workspace metadata and analytics-rule inventory permissions. It must not execute log queries, read the subscription export without authorization, change resources/roles, enable SentinelHealth or introduce a schedule. Unknown telemetry/runtime/export evidence must remain explicit. Local fault injection must not affect Azure collection.
 
+Phase 4 risk correlation is synthetic and offline only. Findings are local investigation artifacts, not Sentinel incidents. Keep canonical identity joins explicit, preserve source-event lineage, reject conflicting duplicates and keep health uncertainty separate from risk. Baseline exceptions do not authorize Azure operations. No new cloud workflow, connector, role, rule activation or automated containment is authorized by this phase.
+
 Run `python -m unittest discover -s tests -v` and `python -m scripts.validate_detection`.
 Document purpose, data sources, KQL, MITRE mapping, entities, false positives,
 testing, actual deployment evidence and limitations. Offline simulation is not Kusto execution.

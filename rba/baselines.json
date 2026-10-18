@@ -1,0 +1,4 @@
+[
+  {"change_id":"lab-change-001","actor":"synthetic-user-01","source":"azure-activity","kind":"rbac_assignment","resource":"lab-resource-workspace-02","start":"2026-10-18T11:50:00Z","end":"2026-10-18T12:20:00Z","factor":0.25},
+  {"change_id":"lab-change-001","actor":"synthetic-user-01","source":"azure-activity","kind":"diagnostic_change","resource":"lab-resource-workspace-02","start":"2026-10-18T11:50:00Z","end":"2026-10-18T12:20:00Z","factor":0.25}
+]

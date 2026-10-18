@@ -1,0 +1,1164 @@
+{
+  "schema_version": "1.0",
+  "evidence": "synthetic",
+  "customer": "Atlas Financial",
+  "as_of": "2026-10-18T12:20:00Z",
+  "policy_version": "atlas-rba-1.0",
+  "configuration_sha256": "73b8c0f021567a89c8d9ff3ec6c24149c0f03e32d764416548639271350b4921",
+  "dataset_sha256": "24788dcaae44b0184badec1e533afa4f5116131b2e07bca1b0986c45d40108ad",
+  "counts": {
+    "input": 18,
+    "unique": 16,
+    "duplicates": 2,
+    "outside_lookback": 0,
+    "entities": 3,
+    "findings": 1
+  },
+  "policy": {
+    "window_minutes": 60,
+    "lookback_minutes": 240,
+    "half_life_minutes": 30,
+    "finding_threshold": 60
+  },
+  "health_context": {
+    "evidence": "synthetic",
+    "observed_at": "2026-10-18T12:20:00Z",
+    "fresh": true,
+    "states": {
+      "azure-activity": "Healthy",
+      "synthetic-authentication": "Healthy",
+      "synthetic-endpoint": "Unknown"
+    }
+  },
+  "entities": [
+    {
+      "entity_type": "Account",
+      "entity_id": "synthetic-user-00",
+      "current": {
+        "time": "2026-10-18T12:20:00Z",
+        "score": 64.411,
+        "eligible": true,
+        "priority": "High",
+        "families": [
+          "authentication",
+          "authorization",
+          "execution",
+          "monitoring"
+        ],
+        "sources": [
+          "azure-activity",
+          "synthetic-authentication",
+          "synthetic-endpoint"
+        ],
+        "sequence_bonus": 13.6107,
+        "chain_event_ids": [
+          "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+          "synthetic-efc879683f4c51cd8ec068a875b85a81",
+          "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+          "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+          "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+          "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+          "synthetic-c83d9c1a12e754c180d07420d03e1977"
+        ],
+        "contributions": [
+          {
+            "event_id": "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+            "source_event_id": "synthetic-c64f7c2e9d345bf3bf3ffe2ac2e351ee",
+            "time": "2026-10-18T12:00:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.629961,
+            "before_caps": 1.889882,
+            "points": 1.889882
+          },
+          {
+            "event_id": "synthetic-efc879683f4c51cd8ec068a875b85a81",
+            "source_event_id": "synthetic-4a2560675cfe59acba23f631abdd8ecf",
+            "time": "2026-10-18T12:01:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.644685,
+            "before_caps": 1.934055,
+            "points": 1.934055
+          },
+          {
+            "event_id": "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+            "source_event_id": "synthetic-c3a0ef01e87256beac60d46fb15073b7",
+            "time": "2026-10-18T12:02:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.659754,
+            "before_caps": 1.979262,
+            "points": 1.979262
+          },
+          {
+            "event_id": "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+            "source_event_id": "synthetic-7d06fa7fcd4d55ec818743e95df001ff",
+            "time": "2026-10-18T12:03:00.000Z",
+            "kind": "authentication_success",
+            "source": "synthetic-authentication",
+            "base_points": 12,
+            "signal_confidence": 0.35,
+            "severity": "Informational",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.675175,
+            "before_caps": 2.835735,
+            "points": 2.835735
+          },
+          {
+            "event_id": "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+            "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+            "time": "2026-10-18T12:06:00.000Z",
+            "kind": "rbac_assignment",
+            "source": "azure-activity",
+            "base_points": 30,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.723635,
+            "before_caps": 11.939971,
+            "points": 11.939971
+          },
+          {
+            "event_id": "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+            "source_event_id": "synthetic-ea74aa22f86a594baada1941fded4a60",
+            "time": "2026-10-18T12:10:00.000Z",
+            "kind": "diagnostic_change",
+            "source": "azure-activity",
+            "base_points": 40,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.793701,
+            "before_caps": 17.461412,
+            "points": 17.461412
+          },
+          {
+            "event_id": "synthetic-c83d9c1a12e754c180d07420d03e1977",
+            "source_event_id": "synthetic-ca247f45c8fa567998f2e3bfb354bcb7",
+            "time": "2026-10-18T12:13:00.000Z",
+            "kind": "endpoint_execution",
+            "source": "synthetic-endpoint",
+            "base_points": 30,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.850667,
+            "before_caps": 12.760007,
+            "points": 12.760007
+          }
+        ]
+      },
+      "peak": {
+        "time": "2026-10-18T12:13:00Z",
+        "score": 75.7182,
+        "eligible": true,
+        "priority": "High",
+        "families": [
+          "authentication",
+          "authorization",
+          "execution",
+          "monitoring"
+        ],
+        "sources": [
+          "azure-activity",
+          "synthetic-authentication",
+          "synthetic-endpoint"
+        ],
+        "sequence_bonus": 16.0,
+        "chain_event_ids": [
+          "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+          "synthetic-efc879683f4c51cd8ec068a875b85a81",
+          "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+          "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+          "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+          "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+          "synthetic-c83d9c1a12e754c180d07420d03e1977"
+        ],
+        "contributions": [
+          {
+            "event_id": "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+            "source_event_id": "synthetic-c64f7c2e9d345bf3bf3ffe2ac2e351ee",
+            "time": "2026-10-18T12:00:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.740549,
+            "before_caps": 2.221646,
+            "points": 2.221646
+          },
+          {
+            "event_id": "synthetic-efc879683f4c51cd8ec068a875b85a81",
+            "source_event_id": "synthetic-4a2560675cfe59acba23f631abdd8ecf",
+            "time": "2026-10-18T12:01:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.757858,
+            "before_caps": 2.273575,
+            "points": 2.273575
+          },
+          {
+            "event_id": "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+            "source_event_id": "synthetic-c3a0ef01e87256beac60d46fb15073b7",
+            "time": "2026-10-18T12:02:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.775572,
+            "before_caps": 2.326717,
+            "points": 2.326717
+          },
+          {
+            "event_id": "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+            "source_event_id": "synthetic-7d06fa7fcd4d55ec818743e95df001ff",
+            "time": "2026-10-18T12:03:00.000Z",
+            "kind": "authentication_success",
+            "source": "synthetic-authentication",
+            "base_points": 12,
+            "signal_confidence": 0.35,
+            "severity": "Informational",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.793701,
+            "before_caps": 3.333542,
+            "points": 3.333542
+          },
+          {
+            "event_id": "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+            "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+            "time": "2026-10-18T12:06:00.000Z",
+            "kind": "rbac_assignment",
+            "source": "azure-activity",
+            "base_points": 30,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.850667,
+            "before_caps": 14.036008,
+            "points": 14.036008
+          },
+          {
+            "event_id": "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+            "source_event_id": "synthetic-ea74aa22f86a594baada1941fded4a60",
+            "time": "2026-10-18T12:10:00.000Z",
+            "kind": "diagnostic_change",
+            "source": "azure-activity",
+            "base_points": 40,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.933033,
+            "before_caps": 20.526726,
+            "points": 20.526726
+          },
+          {
+            "event_id": "synthetic-c83d9c1a12e754c180d07420d03e1977",
+            "source_event_id": "synthetic-ca247f45c8fa567998f2e3bfb354bcb7",
+            "time": "2026-10-18T12:13:00.000Z",
+            "kind": "endpoint_execution",
+            "source": "synthetic-endpoint",
+            "base_points": 30,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 1.0,
+            "before_caps": 15.0,
+            "points": 15.0
+          }
+        ]
+      },
+      "related_entities": [
+        {
+          "type": "host",
+          "value": "lab-auth-00"
+        },
+        {
+          "type": "resource",
+          "value": "lab-resource-workspace-01"
+        },
+        {
+          "type": "source_ip",
+          "value": "192.0.2.10"
+        }
+      ],
+      "timeline": [
+        {
+          "time": "2026-10-18T12:00:00Z",
+          "score": 3.0,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:01:00Z",
+          "score": 5.9315,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:02:00Z",
+          "score": 8.796,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:03:00Z",
+          "score": 12.7951,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:06:00Z",
+          "score": 28.4383,
+          "eligible": false,
+          "priority": "Low",
+          "families": [
+            "authentication",
+            "authorization"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:10:00Z",
+          "score": 47.9278,
+          "eligible": false,
+          "priority": "Medium",
+          "families": [
+            "authentication",
+            "authorization",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:13:00Z",
+          "score": 75.7182,
+          "eligible": true,
+          "priority": "High",
+          "families": [
+            "authentication",
+            "authorization",
+            "execution",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication",
+            "synthetic-endpoint"
+          ],
+          "sequence_bonus": 16.0
+        },
+        {
+          "time": "2026-10-18T12:20:00Z",
+          "score": 64.411,
+          "eligible": true,
+          "priority": "High",
+          "families": [
+            "authentication",
+            "authorization",
+            "execution",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication",
+            "synthetic-endpoint"
+          ],
+          "sequence_bonus": 13.6107
+        }
+      ]
+    },
+    {
+      "entity_type": "Account",
+      "entity_id": "synthetic-user-01",
+      "current": {
+        "time": "2026-10-18T12:20:00Z",
+        "score": 28.7493,
+        "eligible": false,
+        "priority": "Low",
+        "families": [
+          "authentication",
+          "authorization",
+          "execution",
+          "monitoring"
+        ],
+        "sources": [
+          "azure-activity",
+          "synthetic-authentication",
+          "synthetic-endpoint"
+        ],
+        "sequence_bonus": 0,
+        "chain_event_ids": [],
+        "contributions": [
+          {
+            "event_id": "synthetic-9fa2832381825effa31f66e66a024a33",
+            "source_event_id": "synthetic-040beef0a07f50bb80e71ebe75e17932",
+            "time": "2026-10-18T12:00:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.629961,
+            "before_caps": 1.889882,
+            "points": 1.889882
+          },
+          {
+            "event_id": "synthetic-50e4f67e16f25074bc2255dbc9376a08",
+            "source_event_id": "synthetic-eb0e1a41ba2c5570a1d0dd3515fefcd9",
+            "time": "2026-10-18T12:01:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.644685,
+            "before_caps": 1.934055,
+            "points": 1.934055
+          },
+          {
+            "event_id": "synthetic-0a3f32aee0bc57b78a7464518812fa50",
+            "source_event_id": "synthetic-30e04880a2fc535cb43d26313ee7363d",
+            "time": "2026-10-18T12:02:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.659754,
+            "before_caps": 1.979262,
+            "points": 1.979262
+          },
+          {
+            "event_id": "synthetic-8939080450a15d118fd86ae654ca478e",
+            "source_event_id": "synthetic-1f0b6d89269451358d126f27d56627f7",
+            "time": "2026-10-18T12:03:00.000Z",
+            "kind": "authentication_success",
+            "source": "synthetic-authentication",
+            "base_points": 12,
+            "signal_confidence": 0.35,
+            "severity": "Informational",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.675175,
+            "before_caps": 2.835735,
+            "points": 2.835735
+          },
+          {
+            "event_id": "synthetic-8d637e5ec1aa55d5a611d99161b99e86",
+            "source_event_id": "synthetic-7732eb4f12f65bf89ed98d1e174a8b60",
+            "time": "2026-10-18T12:06:00.000Z",
+            "kind": "rbac_assignment",
+            "source": "azure-activity",
+            "base_points": 30,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": "lab-change-001",
+            "baseline_factor": 0.25,
+            "decay_factor": 0.723635,
+            "before_caps": 2.984993,
+            "points": 2.984993
+          },
+          {
+            "event_id": "synthetic-fc5f582101a959ebb56e0bfc98ee0e67",
+            "source_event_id": "synthetic-ce0ea663bc355c08bd6c31423ddffbc2",
+            "time": "2026-10-18T12:10:00.000Z",
+            "kind": "diagnostic_change",
+            "source": "azure-activity",
+            "base_points": 40,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": "lab-change-001",
+            "baseline_factor": 0.25,
+            "decay_factor": 0.793701,
+            "before_caps": 4.365353,
+            "points": 4.365353
+          },
+          {
+            "event_id": "synthetic-5e295296ffee544a81c67240594eeed3",
+            "source_event_id": "synthetic-3daaf17cad1b583b8cb9a31d26577ddb",
+            "time": "2026-10-18T12:13:00.000Z",
+            "kind": "endpoint_execution",
+            "source": "synthetic-endpoint",
+            "base_points": 30,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.850667,
+            "before_caps": 12.760007,
+            "points": 12.760007
+          }
+        ]
+      },
+      "peak": {
+        "time": "2026-10-18T12:13:00Z",
+        "score": 33.7962,
+        "eligible": false,
+        "priority": "Low",
+        "families": [
+          "authentication",
+          "authorization",
+          "execution",
+          "monitoring"
+        ],
+        "sources": [
+          "azure-activity",
+          "synthetic-authentication",
+          "synthetic-endpoint"
+        ],
+        "sequence_bonus": 0,
+        "chain_event_ids": [],
+        "contributions": [
+          {
+            "event_id": "synthetic-9fa2832381825effa31f66e66a024a33",
+            "source_event_id": "synthetic-040beef0a07f50bb80e71ebe75e17932",
+            "time": "2026-10-18T12:00:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.740549,
+            "before_caps": 2.221646,
+            "points": 2.221646
+          },
+          {
+            "event_id": "synthetic-50e4f67e16f25074bc2255dbc9376a08",
+            "source_event_id": "synthetic-eb0e1a41ba2c5570a1d0dd3515fefcd9",
+            "time": "2026-10-18T12:01:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.757858,
+            "before_caps": 2.273575,
+            "points": 2.273575
+          },
+          {
+            "event_id": "synthetic-0a3f32aee0bc57b78a7464518812fa50",
+            "source_event_id": "synthetic-30e04880a2fc535cb43d26313ee7363d",
+            "time": "2026-10-18T12:02:00.000Z",
+            "kind": "authentication_failure",
+            "source": "synthetic-authentication",
+            "base_points": 10,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.775572,
+            "before_caps": 2.326717,
+            "points": 2.326717
+          },
+          {
+            "event_id": "synthetic-8939080450a15d118fd86ae654ca478e",
+            "source_event_id": "synthetic-1f0b6d89269451358d126f27d56627f7",
+            "time": "2026-10-18T12:03:00.000Z",
+            "kind": "authentication_success",
+            "source": "synthetic-authentication",
+            "base_points": 12,
+            "signal_confidence": 0.35,
+            "severity": "Informational",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.793701,
+            "before_caps": 3.333542,
+            "points": 3.333542
+          },
+          {
+            "event_id": "synthetic-8d637e5ec1aa55d5a611d99161b99e86",
+            "source_event_id": "synthetic-7732eb4f12f65bf89ed98d1e174a8b60",
+            "time": "2026-10-18T12:06:00.000Z",
+            "kind": "rbac_assignment",
+            "source": "azure-activity",
+            "base_points": 30,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": "lab-change-001",
+            "baseline_factor": 0.25,
+            "decay_factor": 0.850667,
+            "before_caps": 3.509002,
+            "points": 3.509002
+          },
+          {
+            "event_id": "synthetic-fc5f582101a959ebb56e0bfc98ee0e67",
+            "source_event_id": "synthetic-ce0ea663bc355c08bd6c31423ddffbc2",
+            "time": "2026-10-18T12:10:00.000Z",
+            "kind": "diagnostic_change",
+            "source": "azure-activity",
+            "base_points": 40,
+            "signal_confidence": 0.55,
+            "severity": "Medium",
+            "baseline_change": "lab-change-001",
+            "baseline_factor": 0.25,
+            "decay_factor": 0.933033,
+            "before_caps": 5.131681,
+            "points": 5.131681
+          },
+          {
+            "event_id": "synthetic-5e295296ffee544a81c67240594eeed3",
+            "source_event_id": "synthetic-3daaf17cad1b583b8cb9a31d26577ddb",
+            "time": "2026-10-18T12:13:00.000Z",
+            "kind": "endpoint_execution",
+            "source": "synthetic-endpoint",
+            "base_points": 30,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 1.0,
+            "before_caps": 15.0,
+            "points": 15.0
+          }
+        ]
+      },
+      "related_entities": [
+        {
+          "type": "host",
+          "value": "lab-auth-01"
+        },
+        {
+          "type": "resource",
+          "value": "lab-resource-workspace-02"
+        },
+        {
+          "type": "source_ip",
+          "value": "192.0.2.10"
+        }
+      ],
+      "timeline": [
+        {
+          "time": "2026-10-18T12:00:00Z",
+          "score": 3.0,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:01:00Z",
+          "score": 5.9315,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:02:00Z",
+          "score": 8.796,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:03:00Z",
+          "score": 12.7951,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication"
+          ],
+          "sources": [
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:06:00Z",
+          "score": 16.0633,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "authentication",
+            "authorization"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:10:00Z",
+          "score": 20.1452,
+          "eligible": false,
+          "priority": "Low",
+          "families": [
+            "authentication",
+            "authorization",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:13:00Z",
+          "score": 33.7962,
+          "eligible": false,
+          "priority": "Low",
+          "families": [
+            "authentication",
+            "authorization",
+            "execution",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication",
+            "synthetic-endpoint"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:20:00Z",
+          "score": 28.7493,
+          "eligible": false,
+          "priority": "Low",
+          "families": [
+            "authentication",
+            "authorization",
+            "execution",
+            "monitoring"
+          ],
+          "sources": [
+            "azure-activity",
+            "synthetic-authentication",
+            "synthetic-endpoint"
+          ],
+          "sequence_bonus": 0
+        }
+      ]
+    },
+    {
+      "entity_type": "Account",
+      "entity_id": "synthetic-user-02",
+      "current": {
+        "time": "2026-10-18T12:20:00Z",
+        "score": 10.9652,
+        "eligible": false,
+        "priority": "Informational",
+        "families": [
+          "administration",
+          "policy"
+        ],
+        "sources": [
+          "azure-activity"
+        ],
+        "sequence_bonus": 0,
+        "chain_event_ids": [],
+        "contributions": [
+          {
+            "event_id": "synthetic-2a5819ea3aa558a7bdb01af744685123",
+            "source_event_id": "synthetic-e247aa16d76252cb80672e6d167e55be",
+            "time": "2026-10-18T12:04:00.000Z",
+            "kind": "administrative_failure",
+            "source": "azure-activity",
+            "base_points": 8,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.690956,
+            "before_caps": 1.658295,
+            "points": 1.658295
+          },
+          {
+            "event_id": "synthetic-e6b92b7ddfaa5dd4912178bf350b078a",
+            "source_event_id": "synthetic-01f7b2bccf705d16b419bbe5fdeeb524",
+            "time": "2026-10-18T12:09:00.000Z",
+            "kind": "policy_change",
+            "source": "azure-activity",
+            "base_points": 24,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.775572,
+            "before_caps": 9.306869,
+            "points": 9.306869
+          }
+        ]
+      },
+      "peak": {
+        "time": "2026-10-18T12:09:00Z",
+        "score": 14.1382,
+        "eligible": false,
+        "priority": "Informational",
+        "families": [
+          "administration",
+          "policy"
+        ],
+        "sources": [
+          "azure-activity"
+        ],
+        "sequence_bonus": 0,
+        "chain_event_ids": [],
+        "contributions": [
+          {
+            "event_id": "synthetic-2a5819ea3aa558a7bdb01af744685123",
+            "source_event_id": "synthetic-e247aa16d76252cb80672e6d167e55be",
+            "time": "2026-10-18T12:04:00.000Z",
+            "kind": "administrative_failure",
+            "source": "azure-activity",
+            "base_points": 8,
+            "signal_confidence": 0.3,
+            "severity": "Low",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 0.890899,
+            "before_caps": 2.138157,
+            "points": 2.138157
+          },
+          {
+            "event_id": "synthetic-e6b92b7ddfaa5dd4912178bf350b078a",
+            "source_event_id": "synthetic-01f7b2bccf705d16b419bbe5fdeeb524",
+            "time": "2026-10-18T12:09:00.000Z",
+            "kind": "policy_change",
+            "source": "azure-activity",
+            "base_points": 24,
+            "signal_confidence": 0.5,
+            "severity": "Medium",
+            "baseline_change": null,
+            "baseline_factor": 1,
+            "decay_factor": 1.0,
+            "before_caps": 12.0,
+            "points": 12.0
+          }
+        ]
+      },
+      "related_entities": [
+        {
+          "type": "resource",
+          "value": "lab-resource-workspace-03"
+        },
+        {
+          "type": "source_ip",
+          "value": "192.0.2.10"
+        }
+      ],
+      "timeline": [
+        {
+          "time": "2026-10-18T12:04:00Z",
+          "score": 2.4,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "administration"
+          ],
+          "sources": [
+            "azure-activity"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:09:00Z",
+          "score": 14.1382,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "administration",
+            "policy"
+          ],
+          "sources": [
+            "azure-activity"
+          ],
+          "sequence_bonus": 0
+        },
+        {
+          "time": "2026-10-18T12:20:00Z",
+          "score": 10.9652,
+          "eligible": false,
+          "priority": "Informational",
+          "families": [
+            "administration",
+            "policy"
+          ],
+          "sources": [
+            "azure-activity"
+          ],
+          "sequence_bonus": 0
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "synthetic-finding-a6aafdcb87445aab99dd098b59198236",
+      "evidence": "synthetic",
+      "entity_id": "synthetic-user-00",
+      "rule": "AF-RBA-001",
+      "first_detected": "2026-10-18T12:13:00Z",
+      "first_score": 75.7182,
+      "peak_score": 75.7182,
+      "current_score": 64.411,
+      "priority": "High",
+      "confidence": "Low",
+      "confidence_is_calibrated": false,
+      "health_limitations": [
+        "synthetic-endpoint"
+      ],
+      "chain_event_ids": [
+        "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+        "synthetic-efc879683f4c51cd8ec068a875b85a81",
+        "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+        "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+        "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+        "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+        "synthetic-c83d9c1a12e754c180d07420d03e1977"
+      ],
+      "evidence_chain": [
+        {
+          "synthetic": true,
+          "event_id": "synthetic-9cfccc16bcf05a3b98d38c114274203e",
+          "source_event_id": "synthetic-c64f7c2e9d345bf3bf3ffe2ac2e351ee",
+          "time": "2026-10-18T12:00:00.000Z",
+          "source": "synthetic-authentication",
+          "kind": "authentication_failure",
+          "actor": "synthetic-user-00",
+          "host": "lab-auth-00",
+          "source_ip": "192.0.2.10",
+          "resource": null
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-efc879683f4c51cd8ec068a875b85a81",
+          "source_event_id": "synthetic-4a2560675cfe59acba23f631abdd8ecf",
+          "time": "2026-10-18T12:01:00.000Z",
+          "source": "synthetic-authentication",
+          "kind": "authentication_failure",
+          "actor": "synthetic-user-00",
+          "host": "lab-auth-00",
+          "source_ip": "192.0.2.10",
+          "resource": null
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-2c5be1cc6dff54d9a21147cfbb46b11b",
+          "source_event_id": "synthetic-c3a0ef01e87256beac60d46fb15073b7",
+          "time": "2026-10-18T12:02:00.000Z",
+          "source": "synthetic-authentication",
+          "kind": "authentication_failure",
+          "actor": "synthetic-user-00",
+          "host": "lab-auth-00",
+          "source_ip": "192.0.2.10",
+          "resource": null
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-742a1a0130455f3aa74dcf2f45ac94df",
+          "source_event_id": "synthetic-7d06fa7fcd4d55ec818743e95df001ff",
+          "time": "2026-10-18T12:03:00.000Z",
+          "source": "synthetic-authentication",
+          "kind": "authentication_success",
+          "actor": "synthetic-user-00",
+          "host": "lab-auth-00",
+          "source_ip": "192.0.2.10",
+          "resource": null
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-c16844a06f4e5c02a1475783ac7b9e1c",
+          "source_event_id": "synthetic-3aa1200931e85003896fab27113d0c73",
+          "time": "2026-10-18T12:06:00.000Z",
+          "source": "azure-activity",
+          "kind": "rbac_assignment",
+          "actor": "synthetic-user-00",
+          "host": null,
+          "source_ip": "192.0.2.10",
+          "resource": "lab-resource-workspace-01"
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-fdb7ef877b8e5d12a7e7027265051ec3",
+          "source_event_id": "synthetic-ea74aa22f86a594baada1941fded4a60",
+          "time": "2026-10-18T12:10:00.000Z",
+          "source": "azure-activity",
+          "kind": "diagnostic_change",
+          "actor": "synthetic-user-00",
+          "host": null,
+          "source_ip": "192.0.2.10",
+          "resource": "lab-resource-workspace-01"
+        },
+        {
+          "synthetic": true,
+          "event_id": "synthetic-c83d9c1a12e754c180d07420d03e1977",
+          "source_event_id": "synthetic-ca247f45c8fa567998f2e3bfb354bcb7",
+          "time": "2026-10-18T12:13:00.000Z",
+          "source": "synthetic-endpoint",
+          "kind": "endpoint_execution",
+          "actor": "synthetic-user-00",
+          "host": "lab-auth-00",
+          "source_ip": null,
+          "resource": null
+        }
+      ],
+      "techniques": [
+        "T1059.001",
+        "T1098.003",
+        "T1110",
+        "T1685.002"
+      ],
+      "investigation_steps": [
+        "Verify identity mapping and original event IDs.",
+        "Check the exact role, scope and change approval.",
+        "Confirm diagnostic changes reduced visibility before alleging tampering.",
+        "Review authentication context and endpoint process evidence.",
+        "Treat Unknown collection health as an evidence gap; preserve event order and timestamps."
+      ],
+      "sentinel_incident_created": false
+    }
+  ],
+  "limits": {
+    "network_calls": 0,
+    "azure_changes": 0,
+    "sentinel_incidents_created": 0,
+    "live_telemetry_validated": false
+  },
+  "scenario_checks": [
+    {
+      "scenario": "multi-stage-compromise",
+      "findings": 1,
+      "expected_findings": 1
+    },
+    {
+      "scenario": "approved-maintenance-lookalike",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "single-role-grant",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "authentication-failures-only",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "wrong-stage-order",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "unrelated-resource-scope",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "unrelated-endpoint-host",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "shared-ip-different-actors",
+      "findings": 0,
+      "expected_findings": 0
+    },
+    {
+      "scenario": "duplicate-replay",
+      "findings": 1,
+      "expected_findings": 1
+    }
+  ]
+}
