@@ -22,9 +22,28 @@ def az_json(*args):
         raise ValueError("Azure request timed out; no automatic retry was attempted") from None
     # Azure errors can contain identities, resource IDs and KQL. Never echo them.
     if result.returncode:
-        match = re.search(r"\(([A-Za-z][A-Za-z0-9]+)\)", result.stderr)
+        match = re.search(r'''["']code["']\s*:\s*["']([A-Za-z][A-Za-z0-9]+)["']''', result.stderr)
+        if not match:
+            match = re.search(r"\(([A-Za-z][A-Za-z0-9]+)\)", result.stderr)
         code = match[1] if match else "AzureCLIError"
-        raise ValueError(f"Azure request failed ({code}). Check identity, MFA and target privately; no permission escalation was attempted.")
+        detail = ""
+        try:
+            start = result.stderr.index("{")
+            payload, _ = json.JSONDecoder().raw_decode(result.stderr[start:])
+            message = payload.get("error", payload).get("message", "")
+            if isinstance(message, str):
+                message = re.sub(r"[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}", "[identifier]", message)
+                message = re.sub(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[identity]", message)
+                message = re.sub(r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", "[token]", message)
+                detail = " " + message[:500]
+        except (ValueError, AttributeError, TypeError):
+            pass
+        stage = "CLI context"
+        if "--url" in args:
+            url = args[args.index("--url") + 1]
+            stage = "analytics rule" if "/alertRules" in url else "workspace metadata"
+        verb = args[args.index("--method") + 1].upper() if "--method" in args else "READ"
+        raise ValueError(f"Azure {verb} {stage} failed ({code}).{detail} No permission escalation was attempted.")
     return json.loads(result.stdout)
 
 

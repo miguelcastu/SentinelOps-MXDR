@@ -46,8 +46,19 @@ jobs:
           python -m scripts.validate_detection
           python -m unittest discover -s tests -v
       - name: Check second-detection prerequisites
-        run: python -m scripts.check_prerequisites --mode additional
+        id: approval
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${SENTINEL_AZ_DET_002_APPROVED:-}" != "true" ]; then
+            echo 'approved=false' >> "$GITHUB_OUTPUT"
+            echo 'AZ-DET-002 deployment is not requested; no Azure authentication or write performed.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            python -m scripts.check_prerequisites --mode additional
+            echo 'approved=true' >> "$GITHUB_OUTPUT"
+          fi
       - name: Azure login using dedicated additional-rule identity
+        if: steps.approval.outputs.approved == 'true'
         uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -55,4 +66,5 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           enable-AzPSSession: false
       - name: Deploy fixed disabled AZ-DET-002 and verify persisted Azure state
+        if: steps.approval.outputs.approved == 'true'
         run: python -m scripts.deploy_additional_rule

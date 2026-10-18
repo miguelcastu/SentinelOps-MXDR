@@ -53,3 +53,14 @@ class TestDrift(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "AuthorizationFailed") as caught:
                 az_json("rest", "--method", "get")
         self.assertNotIn("sensitive", str(caught.exception))
+
+    def test_json_wrapped_azure_error_is_diagnosable_without_identifiers(self):
+        identity = "11111111-1111-4111-8111-111111111111"
+        result = subprocess.CompletedProcess([], 1, stdout="", stderr='ERROR: Bad Request({"error":{"code":"BadRequest","message":"Invalid payload for ' + identity + ' synthetic@example.invalid"}})')
+        with patch("scripts.azure_guard.subprocess.run", return_value=result):
+            with self.assertRaises(ValueError) as caught:
+                az_json("rest", "--method", "put", "--url", "https://management.azure.com/example/alertRules/synthetic")
+        self.assertIn("PUT analytics rule failed (BadRequest)", str(caught.exception))
+        self.assertIn("Invalid payload", str(caught.exception))
+        self.assertNotIn(identity, str(caught.exception))
+        self.assertNotIn("synthetic@example.invalid", str(caught.exception))
