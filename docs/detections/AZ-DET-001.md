@@ -21,7 +21,7 @@ Microsoft documents the [AzureActivity columns](https://learn.microsoft.com/en-u
 
 ## MITRE ATT&CK and entities
 
-REST mapping: `DefenseEvasion`, `T1562.008` (the historical Impair Defenses / Disable Cloud Logs mapping used by Sentinel content). The checked [Sentinel API schema](https://learn.microsoft.com/en-us/rest/api/securityinsights/alert-rules/create-or-update?view=rest-securityinsights-2025-09-01) still exposes `DefenseEvasion`. MITRE's current catalog [maps cloud-log impairment to T1685.002](https://attack.mitre.org/wiki/Technique/T1562/008/). Catalog migrations need a separately reviewed Sentinel compatibility check; this definition does not claim the historical ID is the latest MITRE catalog ID.
+REST mapping: `DefenseEvasion`, **`T1562`**, preserving the existing Azure rule's parent technique. The actual 2025-09-01 API rejected T1562.008 with BadRequest and required the T#### format. The historical cloud-logs subtactic is documented as T1562.008, with current MITRE catalog migration discussed at [MITRE](https://attack.mitre.org/wiki/Technique/T1562/008/). Subtechnique semantics belong in documentation; the API payload uses the verified supported parent format.
 
 | Entity | Identifier | Output column | Handling |
 |---|---|---|---|

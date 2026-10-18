@@ -3,36 +3,134 @@
   "title": "Approved AZ-DET-001 REST body (restricted 2025-09-01 ScheduledAlertRule subset)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["kind", "properties"],
+  "required": [
+    "kind",
+    "properties"
+  ],
   "properties": {
-    "kind": {"const": "Scheduled"},
+    "kind": {
+      "const": "Scheduled"
+    },
     "properties": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["displayName", "description", "enabled", "severity", "query", "queryFrequency", "queryPeriod", "triggerOperator", "triggerThreshold", "suppressionEnabled", "suppressionDuration", "tactics", "techniques", "entityMappings", "customDetails", "eventGroupingSettings", "incidentConfiguration"],
+      "required": [
+        "displayName",
+        "description",
+        "enabled",
+        "severity",
+        "query",
+        "queryFrequency",
+        "queryPeriod",
+        "triggerOperator",
+        "triggerThreshold",
+        "suppressionEnabled",
+        "suppressionDuration",
+        "tactics",
+        "techniques",
+        "entityMappings",
+        "customDetails",
+        "eventGroupingSettings",
+        "incidentConfiguration"
+      ],
       "properties": {
-        "displayName": {"const": "AZ-DET-001 - Azure Diagnostic Settings Modified"},
-        "description": {"type": "string", "minLength": 20, "maxLength": 1000},
-        "enabled": {"const": false},
-        "severity": {"const": "Medium"},
-        "query": {"type": "string", "minLength": 100, "maxLength": 10000},
-        "queryFrequency": {"const": "PT15M"},
-        "queryPeriod": {"const": "PT1H"},
-        "triggerOperator": {"const": "GreaterThan"},
-        "triggerThreshold": {"const": 0},
-        "suppressionEnabled": {"const": false},
-        "suppressionDuration": {"const": "PT1H"},
-        "tactics": {"const": ["DefenseEvasion"]},
-        "techniques": {"const": ["T1562.008"]},
-        "entityMappings": {
+        "displayName": {
+          "const": "AZ-DET-001 - Azure Diagnostic Settings Modified"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 1000
+        },
+        "enabled": {
+          "const": false
+        },
+        "severity": {
+          "const": "Medium"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 100,
+          "maxLength": 10000
+        },
+        "queryFrequency": {
+          "const": "PT15M"
+        },
+        "queryPeriod": {
+          "const": "PT1H"
+        },
+        "triggerOperator": {
+          "const": "GreaterThan"
+        },
+        "triggerThreshold": {
+          "const": 0
+        },
+        "suppressionEnabled": {
+          "const": false
+        },
+        "suppressionDuration": {
+          "const": "PT1H"
+        },
+        "tactics": {
           "const": [
-            {"entityType": "AzureResource", "fieldMappings": [{"identifier": "ResourceId", "columnName": "TargetResourceId"}]},
-            {"entityType": "IP", "fieldMappings": [{"identifier": "Address", "columnName": "SourceIPAddress"}]}
+            "DefenseEvasion"
           ]
         },
-        "customDetails": {"const": {"Operation": "OperationNameValue", "Status": "ActivityStatusValue", "Caller": "Caller", "CorrelationId": "CorrelationId", "EventDataId": "EventDataId"}},
-        "eventGroupingSettings": {"const": {"aggregationKind": "SingleAlert"}},
-        "incidentConfiguration": {"const": {"createIncident": false, "groupingConfiguration": {"enabled": false, "reopenClosedIncident": false, "lookbackDuration": "PT1H", "matchingMethod": "AllEntities"}}}
+        "techniques": {
+          "const": [
+            "T1562"
+          ]
+        },
+        "entityMappings": {
+          "const": [
+            {
+              "entityType": "AzureResource",
+              "fieldMappings": [
+                {
+                  "identifier": "ResourceId",
+                  "columnName": "TargetResourceId"
+                }
+              ]
+            },
+            {
+              "entityType": "IP",
+              "fieldMappings": [
+                {
+                  "identifier": "Address",
+                  "columnName": "SourceIPAddress"
+                }
+              ]
+            }
+          ]
+        },
+        "customDetails": {
+          "const": {
+            "Operation": "OperationNameValue",
+            "Status": "ActivityStatusValue",
+            "Caller": "Caller",
+            "CorrelationId": "CorrelationId",
+            "EventDataId": "EventDataId"
+          }
+        },
+        "eventGroupingSettings": {
+          "const": {
+            "aggregationKind": "SingleAlert"
+          }
+        },
+        "incidentConfiguration": {
+          "const": {
+            "createIncident": false,
+            "groupingConfiguration": {
+              "enabled": false,
+              "reopenClosedIncident": false,
+              "lookbackDuration": "PT1H",
+              "matchingMethod": "AllEntities",
+              "groupByEntities": [],
+              "groupByAlertDetails": [],
+              "groupByCustomDetails": []
+            }
+          }
+        }
       }
     }
   }

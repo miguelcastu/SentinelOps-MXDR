@@ -1,5 +1,6 @@
 """OIDC format compatibility, drift visibility and sanitized diagnostics."""
 import copy
+import re
 import unittest
 from unittest.mock import patch
 import subprocess
@@ -7,7 +8,7 @@ import subprocess
 from scripts.azure_guard import az_json
 from scripts.bootstrap_oidc import oidc_subject
 from scripts.check_drift import changed_properties
-from scripts.validate_detection import validate_rule
+from scripts.validate_detection import DETECTIONS, validate_rule
 
 
 class TestOidcSubject(unittest.TestCase):
@@ -35,6 +36,11 @@ class TestOidcSubject(unittest.TestCase):
 
 
 class TestDrift(unittest.TestCase):
+    def test_api_techniques_use_verified_parent_format(self):
+        for detection in DETECTIONS:
+            rule = validate_rule(detection=detection)
+            self.assertTrue(all(re.fullmatch(r"T\d{4}", value) for value in rule["properties"]["techniques"]))
+
     def test_matching_state_is_not_drift(self):
         desired = validate_rule()
         self.assertEqual(changed_properties(copy.deepcopy(desired), desired), [])

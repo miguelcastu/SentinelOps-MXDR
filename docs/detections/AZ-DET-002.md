@@ -10,7 +10,7 @@ The [KQL](../../detections/azure/AZ-DET-002.kql) and [REST definition](../../det
 
 ## MITRE and entities
 
-[T1098.003 Additional Cloud Roles](https://attack.mitre.org/techniques/T1098/003/) maps to Persistence and Privilege Escalation. Successful Azure RBAC changes are a relevant observation; this query alone does not establish the actor's intent or whether privileges increased.
+[T1098.003 Additional Cloud Roles](https://attack.mitre.org/techniques/T1098/003/) maps to Persistence and Privilege Escalation. The REST payload uses its parent **T1098**, because the observed Sentinel API accepts T#### technique values rather than subtechnique IDs. Successful Azure RBAC changes are a relevant observation; this query alone does not establish the actor's intent or whether privileges increased.
 
 AzureResource maps `TargetResourceId` to `ResourceId`; IP maps the validated `SourceIPAddress` to `Address`, excluding invalid/CIDR input. `Caller` remains a custom detail because it can represent users or services. The resource can identify the role-assignment object rather than the underlying permission scope. No grantee account, assigned role name or privilege level is inferred from absent fields.
 
