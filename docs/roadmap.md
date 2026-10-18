@@ -3,7 +3,7 @@
 | Version | Deliverable | Gate |
 |---|---|---|
 | **v0.1** | Azure platform + Azure Activity onboarding | KQL ingested records and policy remediation (complete) |
-| **v0.2** | Detection engineering | Rule definitions, controlled test events, MITRE mapping, alert and incident evidence |
+| **v0.2** | Detection engineering + guarded CI/CD | Disabled rule, tests and workflows implemented; restricted prerequisites, approved merge and actual REST/Kusto evidence pending. Enabling rules and alert/incident evidence require separate approval. |
 | **v0.3** | Platform health | Source inventories, missing telemetry detection and fault-injection runbook |
 | **v0.4** | SOAR and automation | Logic App/Python integration, failure behavior, test evidence and cost controls |
 | **v0.5** | Infrastructure as Code | Bicep deployment and validated workflow with secure credentials |
