@@ -1,4 +1,4 @@
-# Platform setup evidence ? 18 October 2026
+# Platform setup evidence - 18 October 2026
 
 Baseline: existing id-sentinelops-ci, one disabled Scheduled AZ-DET-001, one existing enabled Fusion rule, no Sentinel repository synchronization, no ARM connector resources and one subscription diagnostic export. No duplicate identity/rule was provisioned in setup.
 
