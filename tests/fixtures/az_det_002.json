@@ -1,0 +1,19 @@
+[
+  {"id":"write-success","offset":-600,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","expected":true},
+  {"id":"write-succeeded","offset":-900,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Succeeded","expected":true},
+  {"id":"mixed-case","offset":-100,"operation":"MICROSOFT.AUTHORIZATION/ROLEASSIGNMENTS/WRITE","status":"sUcCeSs","expected":true},
+  {"id":"approved-admin-also-matches","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","expected":true},
+  {"id":"failure","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Failure","expected":false},
+  {"id":"failed","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Failed","expected":false},
+  {"id":"start","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Start","expected":false},
+  {"id":"accepted","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Accept","expected":false},
+  {"id":"delete","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/delete","status":"Success","expected":false},
+  {"id":"read","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/read","status":"Success","expected":false},
+  {"id":"role-definition-not-assignment","offset":-60,"operation":"Microsoft.Authorization/roleDefinitions/write","status":"Success","expected":false},
+  {"id":"unrelated-diagnostic-change","offset":-60,"operation":"Microsoft.Insights/diagnosticSettings/write","status":"Success","expected":false},
+  {"id":"substring","offset":-60,"operation":"Microsoft.Authorization/roleAssignments/write/extra","status":"Success","expected":false},
+  {"id":"boundary","offset":-3600,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","expected":true},
+  {"id":"stale","offset":-3601,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","expected":false},
+  {"id":"future","offset":1,"operation":"Microsoft.Authorization/roleAssignments/write","status":"Success","expected":false},
+  {"id":"missing-operation","offset":-60,"operation":"","status":"Success","expected":false}
+]

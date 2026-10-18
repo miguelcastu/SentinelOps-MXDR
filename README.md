@@ -58,6 +58,8 @@ python -m unittest discover -s tests -v
 
 The pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
 
+The operator also authorized [AZ-DET-002 — Azure Role Assignment Created](docs/detections/AZ-DET-002.md), deployed disabled through a separate fixed-target workflow. Its [one-time connection runbook](docs/deployment/second-detection-test.md) provides a single operator-run command to configure restricted OIDC without sending identifiers through chat. Azure deployment remains pending until that prerequisite and the reviewed PR merge are complete.
+
 ## Project organization
 
 ```text

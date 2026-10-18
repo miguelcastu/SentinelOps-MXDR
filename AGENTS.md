@@ -24,12 +24,14 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 
 ## Deployment boundary
 
-- Only update the existing AZ-DET-001 rule at the configured UUID. Never discover a new target by guesswork.
+- Update AZ-DET-001 only at its configured existing UUID.
+- The operator authorized one additional disabled detection, AZ-DET-002 (Azure Role Assignment Created), on 18 October 2026. Its dedicated workflow may create/update only its fixed, reviewed UUID. No other resource creation is authorized.
 - Keep the rule disabled. Stop if its existing cloud state is enabled, missing, ambiguous or managed by another deployment system.
 - Reject resource templates, other resource types, arbitrary query input and enabled rules.
 - Do not bypass environment protections or merge a PR on the operator's behalf.
 - Live KQL validation is manual, opt-in, aggregate-only, with no raw log/identity output.
 - Never commit credentials, subscription/tenant identifiers or sensitive telemetry.
+- Administrative bootstrap scripts are for the operator to review and execute personally. Do not run them using the personal Azure session. Their preparation does not authorize the agent to grant Azure permissions.
 
 ## Validation and documentation
 

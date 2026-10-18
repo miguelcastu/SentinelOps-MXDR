@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Approved AZ-DET-002 REST body (restricted 2025-09-01 ScheduledAlertRule subset)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "properties"
+  ],
+  "properties": {
+    "kind": {
+      "const": "Scheduled"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "displayName",
+        "description",
+        "enabled",
+        "severity",
+        "query",
+        "queryFrequency",
+        "queryPeriod",
+        "triggerOperator",
+        "triggerThreshold",
+        "suppressionEnabled",
+        "suppressionDuration",
+        "tactics",
+        "techniques",
+        "entityMappings",
+        "customDetails",
+        "eventGroupingSettings",
+        "incidentConfiguration"
+      ],
+      "properties": {
+        "displayName": {
+          "const": "AZ-DET-002 - Azure Role Assignment Created"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 1000
+        },
+        "enabled": {
+          "const": false
+        },
+        "severity": {
+          "const": "Medium"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 100,
+          "maxLength": 10000
+        },
+        "queryFrequency": {
+          "const": "PT15M"
+        },
+        "queryPeriod": {
+          "const": "PT1H"
+        },
+        "triggerOperator": {
+          "const": "GreaterThan"
+        },
+        "triggerThreshold": {
+          "const": 0
+        },
+        "suppressionEnabled": {
+          "const": false
+        },
+        "suppressionDuration": {
+          "const": "PT1H"
+        },
+        "tactics": {
+          "const": [
+            "Persistence",
+            "PrivilegeEscalation"
+          ]
+        },
+        "techniques": {
+          "const": [
+            "T1098.003"
+          ]
+        },
+        "entityMappings": {
+          "const": [
+            {
+              "entityType": "AzureResource",
+              "fieldMappings": [
+                {
+                  "identifier": "ResourceId",
+                  "columnName": "TargetResourceId"
+                }
+              ]
+            },
+            {
+              "entityType": "IP",
+              "fieldMappings": [
+                {
+                  "identifier": "Address",
+                  "columnName": "SourceIPAddress"
+                }
+              ]
+            }
+          ]
+        },
+        "customDetails": {
+          "const": {
+            "Operation": "OperationNameValue",
+            "Status": "ActivityStatusValue",
+            "Caller": "Caller",
+            "CorrelationId": "CorrelationId",
+            "EventDataId": "EventDataId"
+          }
+        },
+        "eventGroupingSettings": {
+          "const": {
+            "aggregationKind": "SingleAlert"
+          }
+        },
+        "incidentConfiguration": {
+          "const": {
+            "createIncident": false,
+            "groupingConfiguration": {
+              "enabled": false,
+              "reopenClosedIncident": false,
+              "lookbackDuration": "PT1H",
+              "matchingMethod": "AllEntities"
+            }
+          }
+        }
+      }
+    }
+  }
+}
