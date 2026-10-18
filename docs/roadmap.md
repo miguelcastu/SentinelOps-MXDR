@@ -1,12 +1,16 @@
 # Roadmap and acceptance criteria
 
-| Version | Deliverable | Gate |
-|---|---|---|
-| **v0.1** | Azure platform + Azure Activity onboarding | KQL ingested records and policy remediation (complete) |
-| **v0.2** | Detection engineering + guarded CI/CD | Two disabled rules, tests, restricted OIDC setup, protected merges, actual REST deployment and clean drift verified. Live telemetry false-positive analysis, activation and alert/incident evidence require separate review. |
-| **v0.3** | Platform health | Source inventories, missing telemetry detection and fault-injection runbook |
-| **v0.4** | SOAR and automation | Logic App/Python integration, failure behavior, test evidence and cost controls |
-| **v0.5** | Infrastructure as Code | Bicep deployment and validated workflow with secure credentials |
-| **v1.0** | Operations | Documentation, reports, operational KPIs and repeatable demo |
+The eight-phase mission is tracked in [PROJECT_STATUS.md](PROJECT_STATUS.md), the authoritative resume checkpoint.
 
-Future entries are **plans only**, not completed tasks. Each phase should include actual implementation, reproduction instructions, validation and troubleshooting.
+| Phase | Implemented | Remaining gate |
+|---|---|---|
+| 1. Detection engineering | Two disabled rules, scoped OIDC CI/CD, fresh drift audit and synthetic triage | Actual alert -> incident -> investigation -> classification; activation/query/test approval required |
+| 2. Advanced ingestion | Synthetic source, normalization, schema, bounded client, DCR/table REST bodies, tests and runbook | Explicit resource/cost/RBAC approval before provision/upload and destination verification |
+| 3. Platform health | Source-specific expectations recorded | Health evaluator, safe fault injection and diagnostics |
+| 4. Risk-based detection | Planned | Multi-signal scoring, deduplication and tests |
+| 5. SOAR | Planned | Offline orchestration/audit; paid services require approval |
+| 6. IaC and advanced CI/CD | Existing restricted rule CI/CD | Platform Bicep, preview, recovery and authorized deployment |
+| 7. Customer operations | Initial onboarding | Fictional customer package and service tickets |
+| 8. Portfolio completion | Existing technical README/evidence | Final acceptance, demo and verified release |
+
+Earlier AzureActivity ingestion and disabled-rule deployment evidence remain valid. Offline ingestion does not complete Phase 1 or establish a second cloud source. Every increment must preserve the subscription, protections and spending controls.

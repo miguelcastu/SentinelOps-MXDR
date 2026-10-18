@@ -28,3 +28,7 @@ jobs:
         run: python -m scripts.validate_detection
       - name: Run offline tests
         run: python -m unittest discover -s tests -v
+      - name: Validate synthetic ingestion and triage offline
+        run: |
+          python -m ingestion
+          python -m scripts.assess_detections

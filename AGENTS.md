@@ -13,7 +13,7 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 ## Subscription and cost constraints
 
 - Preserve the existing Azure subscription and its plan. Never switch subscriptions or upgrade billing.
-- The operator reports approximately 175 EUR of promotional credit; balance and expiry are unverified.
+- On 18 October 2026, the credit API reported EUR 175.99436818021823 closed balance, expiry 12 November 2026 18:00:16 UTC. Reverify before any proposed paid component; published balances can lag usage.
 - Prefer offline work and free public-repository standard GitHub runners. Do not consume credit for experiments.
 - Never create VMs, databases, workspaces, connectors, Logic Apps, paid resources or Defender plans.
 - Never change pricing, retention, ingestion, daily caps, budgets or diagnostic settings.
@@ -34,6 +34,8 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 - Reproducible bootstrap scripts must default to preview, pin the existing subscription, reuse discovered resources and surface Azure error codes without publishing identifiers or tokens. The latest explicit setup authorization supersedes the earlier operator-only bootstrap restriction.
 
 ## Validation and documentation
+
+Read `docs/PROJECT_STATUS.md` first on subsequent sessions. Phase 2 synthetic ingestion is offline only: local code and REST resource bodies are permitted, but DCR/table provisioning, live ingestion, new roles and rule activation still require explicit approval. Do not infer approval from a cost estimate or create a live sender workflow until its scope is authorized.
 
 Run `python -m unittest discover -s tests -v` and `python -m scripts.validate_detection`.
 Document purpose, data sources, KQL, MITRE mapping, entities, false positives,

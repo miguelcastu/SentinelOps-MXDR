@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **18 October 2026 - GitHub-to-Sentinel OIDC deployment verified.** AZ-DET-001 and AZ-DET-002 are deployed and disabled; API state matches code and the manual drift check passes. IaC, SOAR, activation and real-data false-positive measurement remain future work.
+> **18 October 2026 - Phase 2 ingestion implemented offline.** Both detections remain disabled and match Azure. Synthetic generation, normalization, bounded transport, DCR/table configuration and tests are implemented. A second live source and the alert/incident lifecycle require explicit approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -54,11 +54,27 @@ Run the dependency-free offline checks with Python 3.12+:
 ```powershell
 python -m scripts.validate_detection
 python -m unittest discover -s tests -v
+python -m ingestion
+python -m scripts.assess_detections
 ```
 
 The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
 
 The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/detections/AZ-DET-002.md), now deployed disabled through its fixed-target workflow using the same existing identity. [Setup and scope](docs/deployment/detection-cicd.md), [security](docs/security.md), [reusable templates](templates/) and [actual Azure evidence](docs/validation/platform-setup.md) document the implementation. No paid service, connector or billing change was introduced.
+
+## Advanced ingestion: offline implementation
+
+The fictional **Atlas Financial** customer now has a second source format: explicitly synthetic Windows-style authentication. The dependency-free Python pipeline generates stable IDs, validates its schema, normalizes UTC timestamps and ASIM-shaped fields, and prepares bounded batches. Its real HTTPS transport has finite retries, rate limits, no redirects, sanitized errors and explicit approval before network access; HTTP behavior is tested with mocks. The offline CLI makes zero Azure calls.
+
+```mermaid
+flowchart LR
+    GEN[Local synthetic authentication generator] --> CHECK[Schema validation and UTC normalization]
+    CHECK --> BATCH[Bounded batches: offline verified]
+    BATCH -. Approval required .-> DCR[Proposed Direct DCR]
+    DCR -. Not deployed .-> TABLE[Proposed SentinelOpsAuth_CL]
+```
+
+[Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. No DCR/table or ingestion workload was created. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
 
 ## Project organization
 
@@ -66,7 +82,8 @@ The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/d
 docs/         Architecture, onboarding, deployment, validation, troubleshooting
 hunting/      Reusable KQL queries
 evidence/     Sanitized Azure screenshots
-infrastructure/  Reserved for future Bicep implementation
+infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
+ingestion/    Synthetic generator, normalization, bounded client and source inventory
 tests/        Lightweight offline project validation
 detections/azure/  Disabled REST rule definition and synchronized KQL
 schemas/      Restricted approved-rule JSON Schema
@@ -85,5 +102,7 @@ Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.9
 - [x] Azure foundation, source onboarding, policy remediation and working Azure Activity ingestion evidence.
 - [x] Exact-resource RBAC, MFA-protected initial setup, immutable GitHub OIDC and protected PR validation.
 - [x] Two disabled detections, synthetic cases, actual deployment/REST verification and a clean manual drift check.
+- [x] Ingestion offline: synthetic source, normalization, bounded transport, configuration and tests.
+- [ ] Approved DCR/table deployment, one upload and destination verification for a second cloud source.
 - [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
 - [ ] Broader platform health, SOAR, Bicep and operational handover.

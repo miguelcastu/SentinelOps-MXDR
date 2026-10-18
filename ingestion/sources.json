@@ -1,0 +1,33 @@
+{
+  "customer": "Atlas Financial (fictional)",
+  "sources": [
+    {
+      "id": "azure-activity",
+      "owner": "Lab platform operator",
+      "type": "Azure subscription management-plane activity",
+      "table": "AzureActivity",
+      "pipeline": "Existing subscription diagnostic export to existing workspace",
+      "state": "existing-cloud-source",
+      "event_types": ["Administrative operation success", "Administrative operation failure"],
+      "heartbeat": "event-driven",
+      "silent_window_minutes": null,
+      "acceptance": "Diagnostic destination matches workspace; a known approved administrative event is queryable; preserve original evidence and timestamps",
+      "last_verification": "2026-10-18: export configuration preserved; historical ingestion evidence exists; no fresh log query executed",
+      "data_classification": "private administrative telemetry"
+    },
+    {
+      "id": "synthetic-authentication",
+      "owner": "Lab detection engineer",
+      "type": "Locally generated synthetic Windows-style authentication",
+      "table": "SentinelOpsAuth_CL",
+      "pipeline": "Local Python -> proposed direct DCR endpoint -> custom Analytics table",
+      "state": "offline-validated-cloud-not-authorized",
+      "event_types": ["Synthetic 4624 Logon Success", "Synthetic 4625 Logon Failure"],
+      "heartbeat": "single-approved-test-batch-only",
+      "silent_window_minutes": null,
+      "acceptance": "24 expected unique synthetic IDs, no invalid events, reconcile duplicates, timestamps and billed bytes; measure latency before claiming an SLI",
+      "last_verification": "2026-10-18: generator, normalization, batching, transport mocks and infrastructure contracts tested offline",
+      "data_classification": "synthetic documentation-range addresses and fictional identities"
+    }
+  ]
+}

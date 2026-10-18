@@ -1,0 +1,108 @@
+{
+  "location": "westeurope",
+  "kind": "Direct",
+  "properties": {
+    "streamDeclarations": {
+      "Custom-SentinelOpsAuth": {
+        "columns": [
+          {
+            "name": "TimeGenerated",
+            "type": "datetime"
+          },
+          {
+            "name": "EventStartTime",
+            "type": "datetime"
+          },
+          {
+            "name": "EventEndTime",
+            "type": "datetime"
+          },
+          {
+            "name": "EventCount",
+            "type": "int"
+          },
+          {
+            "name": "EventType",
+            "type": "string"
+          },
+          {
+            "name": "EventResult",
+            "type": "string"
+          },
+          {
+            "name": "EventVendor",
+            "type": "string"
+          },
+          {
+            "name": "EventProduct",
+            "type": "string"
+          },
+          {
+            "name": "EventSchema",
+            "type": "string"
+          },
+          {
+            "name": "EventSchemaVersion",
+            "type": "string"
+          },
+          {
+            "name": "EventOriginalUid",
+            "type": "string"
+          },
+          {
+            "name": "EventOriginalType",
+            "type": "string"
+          },
+          {
+            "name": "Dvc",
+            "type": "string"
+          },
+          {
+            "name": "DvcHostname",
+            "type": "string"
+          },
+          {
+            "name": "TargetUsername",
+            "type": "string"
+          },
+          {
+            "name": "SrcIpAddr",
+            "type": "string"
+          },
+          {
+            "name": "Synthetic",
+            "type": "boolean"
+          },
+          {
+            "name": "BatchId",
+            "type": "string"
+          },
+          {
+            "name": "CustomerName",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    "destinations": {
+      "logAnalytics": [
+        {
+          "name": "lab-workspace",
+          "workspaceResourceId": "<PINNED_EXISTING_WORKSPACE_RESOURCE_ID>"
+        }
+      ]
+    },
+    "dataFlows": [
+      {
+        "streams": [
+          "Custom-SentinelOpsAuth"
+        ],
+        "destinations": [
+          "lab-workspace"
+        ],
+        "transformKql": "source",
+        "outputStream": "Custom-SentinelOpsAuth_CL"
+      }
+    ]
+  }
+}

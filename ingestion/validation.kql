@@ -1,0 +1,13 @@
+// NOT EXECUTED: after approval only. Set BatchId from the private run manifest.
+// Use current UTC timestamps for a live run; the offline fixture is intentionally historical.
+let ExpectedEvents = 24;
+let ApprovedBatchId = "REPLACE_WITH_APPROVED_SYNTHETIC_BATCH_ID";
+let Events = materialize(SentinelOpsAuth_CL
+    | where TimeGenerated between (ago(1h) .. now())
+    | where Synthetic == true and BatchId == ApprovedBatchId
+    | extend LatencySeconds = datetime_diff('second', ingestion_time(), TimeGenerated));
+let UniqueEvents = toscalar(Events | summarize by EventOriginalUid | count);
+Events
+| summarize TotalEvents=count(), InvalidEvents=countif(isempty(EventOriginalUid) or EventType != "Logon" or EventResult !in ("Success", "Failure") or EventCount != 1 or EventSchema != "Authentication" or EventSchemaVersion != "1.0.0" or isempty(Dvc) or isempty(TargetUsername) or isempty(SrcIpAddr) or EventStartTime != TimeGenerated or EventEndTime != TimeGenerated), Failures=countif(EventResult == "Failure"), Successes=countif(EventResult == "Success"), MaxLatencySeconds=max(LatencySeconds), NegativeLatencyEvents=countif(LatencySeconds < 0), BilledBytes=sum(_BilledSize)
+| extend UniqueEvents=UniqueEvents, ExpectedEvents=ExpectedEvents
+| extend DuplicateRows=TotalEvents-UniqueEvents, Complete=(UniqueEvents == ExpectedEvents and InvalidEvents == 0)
