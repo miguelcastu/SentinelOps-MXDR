@@ -19,6 +19,13 @@ python -m platform_health --snapshot .local/approved-health-snapshot.json
 
 The input limit is 128 KiB. Imported data is always relabeled `external-aggregate`, even if it claims to be Azure-verified. Evaluation uses current UTC time unless `--as-of` supplies an explicit historical timestamp. Snapshot contracts reject raw fields, unrecognized sources/checks, invalid counts, unbounded windows, ambiguous timestamps and contradictory totals. The CLI prints only the normalized, allowlisted report; it does not echo a failed input or an Azure exception.
 
+Input snapshots follow the observation contract in `engine.py`; generated `report.json` files are output reports, not input snapshots. To create a labeled example and re-evaluate its historical window:
+
+```powershell
+python -c "import json; from pathlib import Path; from platform_health.demo import baseline; Path('.local/health-snapshot.json').write_text(json.dumps(baseline()), encoding='utf-8')"
+python -m platform_health --snapshot .local/health-snapshot.json --as-of 2026-10-18T12:00:00Z --output .local/health-import-example
+```
+
 ## Collection and evidence boundaries
 
 | Area | Implemented measurement | Actual access boundary |

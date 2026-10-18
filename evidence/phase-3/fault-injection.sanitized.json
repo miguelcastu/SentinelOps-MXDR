@@ -1,0 +1,61 @@
+{
+  "evidence": "synthetic",
+  "scenario_time": "2026-10-18T12:00:00Z",
+  "scenarios": [
+    {
+      "scenario": "healthy-batch",
+      "state": "Healthy",
+      "expected": "Healthy"
+    },
+    {
+      "scenario": "missing-approved-batch",
+      "state": "Missing",
+      "expected": "Missing"
+    },
+    {
+      "scenario": "quiet-activity-is-unknown",
+      "state": "Unknown",
+      "expected": "Unknown"
+    },
+    {
+      "scenario": "delayed-events",
+      "state": "Delayed",
+      "expected": "Delayed"
+    },
+    {
+      "scenario": "malformed-event",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "wrong-field-mapping",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "schema-evolution",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "duplicate-event",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "configuration-drift",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "failed-deployment",
+      "state": "Misconfigured",
+      "expected": "Misconfigured"
+    },
+    {
+      "scenario": "partial-query-is-unknown",
+      "state": "Unknown",
+      "expected": "Unknown"
+    }
+  ]
+}

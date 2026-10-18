@@ -83,7 +83,9 @@ flowchart LR
 
 `python -m platform_health` runs eleven synthetic scenarios and writes JSON, Markdown and a standalone filterable dashboard under `.local/platform-health/`. The default demonstration performs no network calls. The manual **Read-only Platform Health** GitHub workflow reuses existing OIDC permissions to inspect workspace/rule configuration and workflow history; it executes no KQL or recurring workload. Configuration agreement is separate from active detection coverage and actual ingestion/runtime health.
 
-See the [health runbook and SLIs](docs/operations/platform-health.md), [KQL library](platform_health/queries/) and [validation evidence](docs/validation/phase-3.md). Azure telemetry/export/runtime components remain Unknown when current permissions cannot establish their health. No SentinelHealth export, resources or roles were added.
+The [actual OIDC health audit](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39153342114) succeeded: workspace and both managed rule configurations match, and latest observed validation/deployment runs passed. Overall health remains **Unknown** because telemetry/export/runtime were not measured; this is distinct from a failed audit. [Sanitized evidence](evidence/phase-3/health-report.sanitized.json) and [synthetic fault outcomes](evidence/phase-3/fault-injection.sanitized.json) are separate.
+
+See the [health runbook and SLIs](docs/operations/platform-health.md), [KQL library](platform_health/queries/) and [validation evidence](docs/validation/phase-3.md). No SentinelHealth export, resources or roles were added.
 
 ## Project organization
 
