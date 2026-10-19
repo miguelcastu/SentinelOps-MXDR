@@ -1,0 +1,27 @@
+{
+  "evidence": "independent-azure-rest-control-plane-audit",
+  "observed_at": "2026-10-19T10:15:42.819767+00:00",
+  "subscription_and_tenant_match_private_pin": true,
+  "existing_plan_not_changed_by_this_increment": true,
+  "workspace_protected_settings_unchanged": true,
+  "region": "westeurope",
+  "pricing_tier": "pergb2018",
+  "retention_days": 30,
+  "daily_cap_gb": 0.1,
+  "total_rules": 13,
+  "managed_rules_present": 12,
+  "managed_rules_disabled": 12,
+  "existing_rules_unchanged": true,
+  "fusion_enabled": true,
+  "sentinel_data_connector_resources": 0,
+  "existing_export_not_read_or_changed": true,
+  "log_queries_executed": 0,
+  "incidents_created": 0,
+  "new_paid_components": 0,
+  "billing_balance_refreshed": false,
+  "limitations": [
+    "Disabled rules provide no active alerting.",
+    "Control-plane verification is not Kusto execution or live telemetry/accuracy validation.",
+    "Existing resource usage may still accrue charges."
+  ]
+}
