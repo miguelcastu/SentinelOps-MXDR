@@ -41,9 +41,11 @@ class TestPortfolioSemantics(unittest.TestCase):
         key = "AZ-DET-011"
         events = [event(SPECS[key][4][0], suffix=str(i), status="Failed") for i in range(5)]
         self.assertEqual(len(evaluate(key, events, AS_OF)), 1)
+        self.assertEqual(len(evaluate(key, [dict(e, Caller=e["Caller"].upper(), ResourceGroup=e["ResourceGroup"].upper()) if i % 2 else e for i, e in enumerate(events)], AS_OF)), 1)
         for changed in (events[:4], [events[0]] * 100,
                         events[:4] + [dict(events[4], Caller="another-actor")],
                         events[:4] + [dict(events[4], ResourceGroup="another-scope")],
+                        events[:4] + [dict(events[4], SubscriptionId="another-subscription")],
                         events[:4] + [dict(events[4], TimeGenerated="2026-10-19T12:10:00Z")],
                         [dict(e, ActivityStatusValue="Succeeded") for e in events]):
             self.assertEqual(evaluate(key, changed, AS_OF), [])
@@ -57,6 +59,7 @@ class TestPortfolioSemantics(unittest.TestCase):
                         dict(diag, TimeGenerated="2026-10-19T11:59:59Z"),
                         dict(diag, TimeGenerated="2026-10-19T12:15:00.001Z"),
                         dict(diag, Caller="another-actor"), dict(diag, ResourceGroup="another-scope"),
+                        dict(diag, SubscriptionId="another-subscription"), dict(diag, SubscriptionId=""),
                         dict(diag, Caller=""), dict(diag, ActivityStatusValue="Failed")):
             self.assertEqual(evaluate(key, [grant, changed], AS_OF), [])
         self.assertEqual(len(evaluate(key, [grant, dict(diag, Caller=diag["Caller"].upper(), ResourceGroup=diag["ResourceGroup"].upper())], AS_OF)), 1)

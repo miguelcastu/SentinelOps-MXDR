@@ -43,8 +43,8 @@ DESCRIPTIONS = {
     "AZ-DET-008": "Successful resource lock deletion. Check authorization and subsequent writes/deletions; this does not prove destruction.",
     "AZ-DET-009": "Successful Activity Log alert deletion. Check ownership and replacement monitoring; deletion does not stop Activity Log collection.",
     "AZ-DET-010": "Successful Azure Policy assignment deletion. Inspect the removed policy and exemptions; the assignment may be unrelated to security.",
-    "AZ-DET-011": "At least five distinct failed RBAC assignment/role definition writes by one caller in one resource group and fixed ten-minute bin. These are operational failures, not necessarily authorization denials or an attack.",
-    "AZ-DET-012": "Successful role assignment followed strictly within fifteen minutes by a diagnostic setting write/delete by the same caller in the same resource group. Resource-group correlation does not prove equal RBAC/diagnostic target scope or causal privilege use.",
+    "AZ-DET-011": "At least five distinct failed RBAC assignment/role definition writes by one caller in one subscription/resource group and fixed ten-minute bin. These are operational failures, not necessarily authorization denials or an attack.",
+    "AZ-DET-012": "Successful role assignment followed strictly within fifteen minutes by a diagnostic setting write/delete by the same caller in the same subscription/resource group. Resource-group correlation does not prove equal RBAC/diagnostic target scope or causal privilege use.",
 }
 PROJECTION = ("TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, "
               "TargetResourceId, ResourceGroup, CorrelationId, EventDataId")
@@ -68,12 +68,14 @@ def query_for(key):
              "| summarize arg_max(TimeGenerated, *) by EventDataId"]
     if kind == "single":
         return "\n".join(lines) + "\n"
-    lines += ['| where isnotempty(Caller) and isnotempty(ResourceGroup)',
-              '| extend CallerKey = tolower(Caller), ScopeKey = tolower(ResourceGroup)']
+    # Subscription must survive projection: equal RG names in different subscriptions are unrelated.
+    lines[7] += ", SubscriptionId"
+    lines += ['| where isnotempty(Caller) and isnotempty(ResourceGroup) and isnotempty(SubscriptionId)',
+              '| extend CallerKey = tolower(Caller), ScopeKey = tolower(strcat(SubscriptionId, "/", ResourceGroup))']
     if kind == "burst":
-        lines += ["| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)",
+        lines += ["| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), ResourceGroup=take_any(ResourceGroup), SubscriptionId=take_any(SubscriptionId), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)",
                   "| where FailureCount >= 5",
-                  "| project TimeGenerated, FirstSeen, Caller=CallerKey, ResourceGroup=ScopeKey, FailureCount, WindowStart, EventIds, Operations"]
+                  "| project TimeGenerated, FirstSeen, Caller=CallerKey, SubscriptionId, ResourceGroup, FailureCount, WindowStart, EventIds, Operations"]
         return "\n".join(lines) + "\n"
     return ("let activity = materialize(\n" + "\n".join(lines) + "\n);\n"
             'let grants = activity\n| where OperationNameValue =~ "Microsoft.Authorization/roleAssignments/write"\n'

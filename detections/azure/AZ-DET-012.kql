@@ -6,10 +6,10 @@ AzureActivity
 | where isnotempty(EventDataId)
 | extend TargetResourceId = coalesce(ResourceId, _ResourceId)
 | extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")
-| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId, SubscriptionId
 | summarize arg_max(TimeGenerated, *) by EventDataId
-| where isnotempty(Caller) and isnotempty(ResourceGroup)
-| extend CallerKey = tolower(Caller), ScopeKey = tolower(ResourceGroup)
+| where isnotempty(Caller) and isnotempty(ResourceGroup) and isnotempty(SubscriptionId)
+| extend CallerKey = tolower(Caller), ScopeKey = tolower(strcat(SubscriptionId, "/", ResourceGroup))
 );
 let grants = activity
 | where OperationNameValue =~ "Microsoft.Authorization/roleAssignments/write"

@@ -1,6 +1,6 @@
 # AZ-DET-011 - Repeated Failed Privileged Operations
 
-Purpose: At least five distinct failed RBAC assignment/role definition writes by one caller in one resource group and fixed ten-minute bin. These are operational failures, not necessarily authorization denials or an attack.
+Purpose: At least five distinct failed RBAC assignment/role definition writes by one caller in one subscription/resource group and fixed ten-minute bin. These are operational failures, not necessarily authorization denials or an attack.
 
 | Property | Contract |
 |---|---|
@@ -23,7 +23,7 @@ False positives: Broken CI deployments, stale role references and transient serv
 
 Investigation: Inspect the exact failure/substatus with authorized private evidence, intended role/scope, caller ownership and recent legitimate changes. Use authorized private evidence; do not block an account, remove permissions or delete resources automatically.
 
-Limitations: Five unique failures per caller/resource group in a UTC fixed ten-minute bin, not a sliding window. Failures across a bin boundary can be missed; empty caller/group/ID is excluded. Failed does not mean authorization denied. These rules share overlapping one-hour lookbacks and fifteen-minute schedules. Per-run deduplication does not suppress repeats across executions; incident grouping is disabled. There is no lateness guarantee or proof of fresh telemetry. Broad single-event rules are deliberately lower-priority candidates for investigation.
+Limitations: Five unique failures per caller/resource group in a UTC fixed ten-minute bin, not a sliding window. Failures across a bin boundary can be missed; empty subscription/caller/group/ID is excluded. Failed does not mean authorization denied. These rules share overlapping one-hour lookbacks and fifteen-minute schedules. Per-run deduplication does not suppress repeats across executions; incident grouping is disabled. There is no lateness guarantee or proof of fresh telemetry. Broad single-event rules are deliberately lower-priority candidates for investigation.
 
 Testing: `python -m portfolio` exercises explicit positive, replay, started, wrong-operation, stale and missing-lineage controls. `tests/test_portfolio.py` adds thresholds, identity/scope separation, boundary/order/tie handling and deployment fault cases. The Python reference model is not Kusto execution or live detection validation. The [portfolio validation record](../validation/detection-portfolio.md) tracks deployment evidence separately.
 

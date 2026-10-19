@@ -30,11 +30,11 @@ def evaluate(key, events, as_of):
                 and e["OperationNameValue"].casefold() in operations and e["ActivityStatusValue"].casefold() in statuses]
     if kind == "single":
         return sorted((e["EventDataId"],) for e in selected)
-    selected = [e for e in selected if e.get("Caller") and e.get("ResourceGroup")]
+    selected = [e for e in selected if e.get("Caller") and e.get("ResourceGroup") and e.get("SubscriptionId")]
     if kind == "burst":
         groups = defaultdict(list)
         for event in selected:
-            group = (event["Caller"].casefold(), event["ResourceGroup"].casefold(),
+            group = (event["Caller"].casefold(), event["SubscriptionId"].casefold() + "/" + event["ResourceGroup"].casefold(),
                      int(stamp(event["TimeGenerated"]).timestamp() // 600))
             groups[group].append(event["EventDataId"])
         return sorted(tuple(sorted(ids)) for ids in groups.values() if len(ids) >= 5)
@@ -45,6 +45,7 @@ def evaluate(key, events, as_of):
         grants = [e for e in selected if e["OperationNameValue"].casefold() == "microsoft.authorization/roleassignments/write"
                   and e["Caller"].casefold() == diagnostic["Caller"].casefold()
                   and e["ResourceGroup"].casefold() == diagnostic["ResourceGroup"].casefold()
+                  and e["SubscriptionId"].casefold() == diagnostic["SubscriptionId"].casefold()
                   and 0 < (stamp(diagnostic["TimeGenerated"]) - stamp(e["TimeGenerated"])).total_seconds() <= 900]
         if grants:
             latest = max(grants, key=lambda e: (stamp(e["TimeGenerated"]), e["EventDataId"]))
@@ -54,7 +55,8 @@ def evaluate(key, events, as_of):
 
 def event(operation, *, suffix="1", time="2026-10-19T12:05:00Z", status="Succeeded", caller="synthetic-principal-00", scope="synthetic-rg-00"):
     return {"synthetic": True, "EventDataId": "synthetic-event-" + suffix, "TimeGenerated": time,
-            "OperationNameValue": operation, "ActivityStatusValue": status, "Caller": caller, "ResourceGroup": scope}
+            "OperationNameValue": operation, "ActivityStatusValue": status, "Caller": caller, "ResourceGroup": scope,
+            "SubscriptionId": "synthetic-subscription-00"}
 
 
 def scenarios():
