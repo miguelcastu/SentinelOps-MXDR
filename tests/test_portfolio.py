@@ -175,6 +175,9 @@ class TestPortfolioDeployment(unittest.TestCase):
                  patch("platform_health.collect.context", return_value=WORKSPACE), \
                  patch("platform_health.collect.az_json", side_effect=[workspace, {"value": original + [cloud(k) for k in SPECS]}]) as az:
                 value = collect()
+                from platform_health.engine import report
+                rendered = report(value, value["observed_at"])
+                self.assertEqual(rendered["rules"]["expected"], count)
                 self.assertEqual(value["rules"]["expected"], count)
                 self.assertEqual(value["rules"]["matching"], count)
                 self.assertEqual(value["rules"]["active"], 0)
@@ -183,7 +186,7 @@ class TestPortfolioDeployment(unittest.TestCase):
                     self.assertIn("Misconfigured", [c["state"] for c in value["checks"] if c["id"] == "portfolio-approval"])
 
     def test_setup_preview_and_pin_mismatch_never_request_token_or_cloud(self):
-        with tempfile.TemporaryDirectory() as directory:
+        with patch.dict(os.environ, {}, clear=True), tempfile.TemporaryDirectory() as directory:
             pin = Path(directory) / "pin.json"
             pin.write_text(json.dumps({"subscription_id": "11111111-1111-4111-8111-111111111111", "tenant_id": "22222222-2222-4222-8222-222222222222"}))
             with patch("scripts.prepare_portfolio.PIN", pin), patch("scripts.prepare_portfolio.Arm") as arm, \
