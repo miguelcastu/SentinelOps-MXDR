@@ -3,6 +3,7 @@ import json
 import math
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from portfolio.catalog import SPECS
 
 ROOT = Path(__file__).resolve().parents[1]
 STATES = ("Healthy", "Delayed", "Missing", "Misconfigured", "Unknown")
@@ -191,9 +192,9 @@ def report(snapshot, now=None):
         source.update(table=entry["table"], owner=entry["owner"], onboarding_state=entry["state"],
                       collection_model=config["sources"][source["source_id"]]["collection_model"])
     checks = snapshot["checks"]
-    require(isinstance(checks, list) and len(checks) <= 12)
     allowed_checks = {"workspace", "AZ-DET-001", "AZ-DET-002", "rule-runtime", "activity-export",
-                      "validate.yml", "deploy-sentinel.yml", "deploy-additional-detection.yml"}
+                      "validate.yml", "deploy-sentinel.yml", "deploy-additional-detection.yml", "portfolio-approval", *SPECS}
+    require(isinstance(checks, list) and len(checks) <= len(allowed_checks))
     require(len({c["id"] for c in checks}) == len(checks))
     for check in checks:
         require(set(check) == {"id", "state", "reason"} and check["id"] in allowed_checks and
@@ -204,7 +205,9 @@ def report(snapshot, now=None):
     rules = snapshot["rules"]
     require(isinstance(rules, dict) and set(rules) == {"expected", "present", "matching", "active", "intentionally_disabled"})
     require(all(v is None or integer(v, 100) for v in rules.values()))
-    require(rules["expected"] == 2)
+    require(rules["expected"] in (2, 2 + len(SPECS)))
+    if rules["expected"] > 2:
+        require(set(SPECS) <= {c["id"] for c in checks})
     if all(v is not None for v in rules.values()):
         require(rules["matching"] <= rules["present"] and
                 rules["active"] + rules["intentionally_disabled"] <= rules["present"])

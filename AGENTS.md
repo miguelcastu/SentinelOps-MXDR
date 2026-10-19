@@ -26,6 +26,7 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 
 - Update AZ-DET-001 only at its configured existing UUID.
 - The operator authorized one additional disabled detection, AZ-DET-002 (Azure Role Assignment Created), on 18 October 2026. Its dedicated workflow may create/update only its fixed, reviewed UUID. No other resource creation is authorized.
+- On 19 October 2026 the operator prioritized a larger detection portfolio before SOAR and requested implementation under the existing subscription/budget limits. This authorizes the ten fixed disabled AZ-DET-003 through AZ-DET-012 definitions in `portfolio/catalog.py`, reviewed and merged through the protected PR path, then manually deployed by `deploy-portfolio.yml` through existing OIDC. Its fingerprint must match the environment approval. Reuse the existing identity, trust and writer role with only ten exact rule assignments; no broad role, activation, incident creation, live query, paid component or additional source is included. This specific increment extends the earlier two-rule creation boundary.
 - Keep the rule disabled. Stop if its existing cloud state is enabled, missing, ambiguous or managed by another deployment system.
 - Reject resource templates, other resource types, arbitrary query input and enabled rules.
 - Do not bypass environment protections. Under the latest explicit end-to-end setup authorization, configuration changes may be reviewed and merged through the protected PR path after required CI passes; never force-push or bypass required checks.

@@ -9,6 +9,7 @@ from platform_health.engine import blank_observation, policies
 from scripts.azure_guard import API_VERSION, az_json, canonical_uuid, context
 from scripts.check_drift import changed_properties
 from scripts.validate_detection import DETECTIONS, validate_rule
+from portfolio.catalog import SPECS, definition, fingerprint, resource_uuid
 
 WORKFLOWS = ("validate.yml", "deploy-sentinel.yml", "deploy-additional-detection.yml")
 REPO = "miguelcastu/SentinelOps-MXDR"
@@ -56,16 +57,23 @@ def collect():
     # Context failures stop before requests; never use a personal account fallback.
     workspace_id = context("check-health.yml")
     first_id = canonical_uuid(os.environ.get("SENTINEL_RULE_ID", ""))
+    expected_rules = [("AZ-DET-001", first_id, validate_rule()),
+                      ("AZ-DET-002", DETECTIONS["AZ-DET-002"]["resource_uuid"], validate_rule(detection="AZ-DET-002"))]
+    portfolio_approval = os.environ.get("SENTINEL_PORTFOLIO_APPROVED_SHA256", "")
+    if portfolio_approval == fingerprint():
+        expected_rules.extend((key, resource_uuid(key), definition(key)) for key in SPECS)
     config, inventory = policies()
     now = datetime.now(timezone.utc)
     stamp = now.isoformat().replace("+00:00", "Z")
     start = (now - timedelta(hours=1)).isoformat().replace("+00:00", "Z")
     snapshot = {"schema_version": "1.0", "evidence": "azure-control-plane", "observed_at": stamp,
                 "sources": [blank_observation(s["id"], stamp, start) for s in inventory], "checks": [],
-                "rules": {"expected": 2, "present": None, "matching": None, "active": None, "intentionally_disabled": None}}
+                "rules": {"expected": len(expected_rules), "present": None, "matching": None, "active": None, "intentionally_disabled": None}}
     for source in snapshot["sources"]:
         source["query_status"] = "not_authorized" if source["source_id"] == "azure-activity" else "not_collected"
     checks = snapshot["checks"]
+    if portfolio_approval and portfolio_approval != fingerprint():
+        checks.append({"id": "portfolio-approval", "state": "Misconfigured", "reason": "configuration_drift"})
     try:
         workspace = az_json("rest", "--method", "get", "--url",
                             f"https://management.azure.com{workspace_id}?api-version=2025-02-01")
@@ -90,11 +98,10 @@ def collect():
                 len(listing["value"]) > 1000 or any(not isinstance(r, dict) for r in listing["value"])):
             raise ValueError("Incomplete inventory")
         present = matching = active = intentionally_disabled = 0
-        for key, rule_id in (("AZ-DET-001", first_id), ("AZ-DET-002", DETECTIONS["AZ-DET-002"]["resource_uuid"])):
-            desired = validate_rule(detection=key)
+        for key, rule_id, desired in expected_rules:
             expected_id = workspace_id + "/providers/Microsoft.SecurityInsights/alertRules/" + rule_id
             candidates = [r for r in listing["value"] if r.get("name", "").lower() == rule_id or
-                          r.get("properties", {}).get("displayName", "").casefold() == DETECTIONS[key]["name"].casefold()]
+                          r.get("properties", {}).get("displayName", "").casefold() == desired["properties"]["displayName"].casefold()]
             current = candidates[0] if len(candidates) == 1 else {}
             valid = (len(candidates) == 1 and current.get("id", "").lower() == expected_id.lower() and
                      current.get("kind") == "Scheduled" and not changed_properties(current, desired))
@@ -104,9 +111,9 @@ def collect():
             intentionally_disabled += valid and current.get("properties", {}).get("enabled") is False
             checks.append({"id": key, "state": "Healthy" if valid else "Misconfigured",
                            "reason": "configuration_matches" if valid else "configuration_drift"})
-        snapshot["rules"] = dict(expected=2, present=present, matching=matching, active=active, intentionally_disabled=intentionally_disabled)
+        snapshot["rules"] = dict(expected=len(expected_rules), present=present, matching=matching, active=active, intentionally_disabled=intentionally_disabled)
     except (ValueError, OSError):
-        checks.extend({"id": key, "state": "Unknown", "reason": "metadata_unavailable"} for key in DETECTIONS)
+        checks.extend({"id": key, "state": "Unknown", "reason": "metadata_unavailable"} for key, _, _ in expected_rules)
     checks.extend([{"id": "activity-export", "state": "Unknown", "reason": "export_not_authorized"},
                    {"id": "rule-runtime", "state": "Unknown", "reason": "runtime_not_collected"}])
     token = os.environ.get("GH_TOKEN", "")

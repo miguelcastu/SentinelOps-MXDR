@@ -1,0 +1,65 @@
+{
+  "kind": "Scheduled",
+  "properties": {
+    "displayName": "AZ-DET-005 - Key Vault Access Policy Changed",
+    "enabled": false,
+    "severity": "Medium",
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT1H",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "suppressionEnabled": false,
+    "suppressionDuration": "PT1H",
+    "tactics": [
+      "Persistence",
+      "PrivilegeEscalation"
+    ],
+    "techniques": [
+      "T1098"
+    ],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "SourceIPAddress"
+          }
+        ]
+      }
+    ],
+    "customDetails": {
+      "Operation": "OperationNameValue",
+      "Status": "ActivityStatusValue",
+      "Caller": "Caller",
+      "CorrelationId": "CorrelationId",
+      "EventDataId": "EventDataId"
+    },
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "incidentConfiguration": {
+      "createIncident": false,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT1H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "description": "Successful legacy Key Vault access policy write. Inspect principal and permission deltas; this does not observe secret reads or Azure RBAC assignments. Disabled lab definition; no incident creation or automation.",
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.KeyVault/vaults/accessPolicies/write\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n"
+  }
+}

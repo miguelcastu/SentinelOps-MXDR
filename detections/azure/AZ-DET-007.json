@@ -1,0 +1,62 @@
+{
+  "kind": "Scheduled",
+  "properties": {
+    "displayName": "AZ-DET-007 - Storage Account Keys Listed",
+    "enabled": false,
+    "severity": "Low",
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT1H",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "suppressionEnabled": false,
+    "suppressionDuration": "PT1H",
+    "tactics": [
+      "CredentialAccess"
+    ],
+    "techniques": [],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "SourceIPAddress"
+          }
+        ]
+      }
+    ],
+    "customDetails": {
+      "Operation": "OperationNameValue",
+      "Status": "ActivityStatusValue",
+      "Caller": "Caller",
+      "CorrelationId": "CorrelationId",
+      "EventDataId": "EventDataId"
+    },
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "incidentConfiguration": {
+      "createIncident": false,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT1H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "description": "Successful storage account key-list action. Ordinary portal/automation also matches; no key material is queried or included. Disabled lab definition; no incident creation or automation.",
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Storage/storageAccounts/listKeys/action\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n"
+  }
+}
