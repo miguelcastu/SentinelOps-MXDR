@@ -75,7 +75,8 @@ def query_for(key):
     if kind == "burst":
         lines += ["| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), ResourceGroup=take_any(ResourceGroup), SubscriptionId=take_any(SubscriptionId), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)",
                   "| where FailureCount >= 5",
-                  "| project TimeGenerated, FirstSeen, Caller=CallerKey, SubscriptionId, ResourceGroup, FailureCount, WindowStart, EventIds, Operations"]
+                  '| extend TargetResourceId = strcat("/subscriptions/", SubscriptionId, "/resourceGroups/", ResourceGroup)',
+                  "| project TimeGenerated, FirstSeen, Caller=CallerKey, SubscriptionId, ResourceGroup, TargetResourceId, FailureCount, WindowStart, EventIds, Operations"]
         return "\n".join(lines) + "\n"
     return ("let activity = materialize(\n" + "\n".join(lines) + "\n);\n"
             'let grants = activity\n| where OperationNameValue =~ "Microsoft.Authorization/roleAssignments/write"\n'
@@ -97,7 +98,10 @@ def definition(key):
                  description=DESCRIPTIONS[key] + " Disabled lab definition; no incident creation or automation.", query=query_for(key))
     if kind == "burst":
         # Caller may be a GUID, UPN or application claim. Do not invent Account identifiers.
-        props["entityMappings"] = []
+        # Azure requires 1..5 mappings. The aggregate represents an actual RG
+        # context from the event, rather than guessing a caller's Account type.
+        props["entityMappings"] = [{"entityType": "AzureResource", "fieldMappings": [
+            {"identifier": "ResourceId", "columnName": "TargetResourceId"}]}]
         props["customDetails"] = {"Caller": "Caller", "FailureCount": "FailureCount", "ResourceGroup": "ResourceGroup"}
     if kind == "sequence":
         props["customDetails"]["RoleEventDataId"] = "RoleEventDataId"
@@ -116,5 +120,6 @@ def validate():
         rule = json.loads((ROOT / f"detections/azure/{key}.json").read_text(encoding="utf-8"))
         query = (ROOT / f"detections/azure/{key}.kql").read_text(encoding="utf-8")
         require(rule == definition(key), f"{key}: definition differs from the reviewed fixed contract")
+        require(1 <= len(rule["properties"]["entityMappings"]) <= 5, f"{key}: Azure requires one to five entity mappings")
         require(query == query_for(key), f"{key}: KQL differs from the reviewed fixed contract")
     return fingerprint()

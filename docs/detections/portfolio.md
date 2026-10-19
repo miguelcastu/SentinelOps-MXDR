@@ -61,7 +61,7 @@ The existing read-only health workflow includes all twelve managed definitions w
 | AZ-DET-011 | `ed65b130-b1e9-540e-8015-b09bd9797d80` |
 | AZ-DET-012 | `eed467bf-df6d-5fa9-8957-6c916e680bcc` |
 
-Portfolio fingerprint: `ab94e1d820b99347300d556d36c5ff6364ea04749e000c9c3ad780e124cf6153`.
+Portfolio fingerprint: `6b56d6e2b2dde1e215b4d644723828e81c41b32ef6c46b38655cced80a63e37e`.
 
 ## MITRE and primary references
 

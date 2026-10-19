@@ -12,7 +12,17 @@
     "suppressionDuration": "PT1H",
     "tactics": [],
     "techniques": [],
-    "entityMappings": [],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      }
+    ],
     "customDetails": {
       "Caller": "Caller",
       "FailureCount": "FailureCount",
@@ -34,6 +44,6 @@
       }
     },
     "description": "At least five distinct failed RBAC assignment/role definition writes by one caller in one subscription/resource group and fixed ten-minute bin. These are operational failures, not necessarily authorization denials or an attack. Disabled lab definition; no incident creation or automation.",
-    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Authorization/roleAssignments/write\", \"Microsoft.Authorization/roleDefinitions/write\")\n| where ActivityStatusValue in~ (\"Failed\", \"Failure\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId, SubscriptionId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n| where isnotempty(Caller) and isnotempty(ResourceGroup) and isnotempty(SubscriptionId)\n| extend CallerKey = tolower(Caller), ScopeKey = tolower(strcat(SubscriptionId, \"/\", ResourceGroup))\n| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), ResourceGroup=take_any(ResourceGroup), SubscriptionId=take_any(SubscriptionId), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)\n| where FailureCount >= 5\n| project TimeGenerated, FirstSeen, Caller=CallerKey, SubscriptionId, ResourceGroup, FailureCount, WindowStart, EventIds, Operations\n"
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Authorization/roleAssignments/write\", \"Microsoft.Authorization/roleDefinitions/write\")\n| where ActivityStatusValue in~ (\"Failed\", \"Failure\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId, SubscriptionId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n| where isnotempty(Caller) and isnotempty(ResourceGroup) and isnotempty(SubscriptionId)\n| extend CallerKey = tolower(Caller), ScopeKey = tolower(strcat(SubscriptionId, \"/\", ResourceGroup))\n| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), ResourceGroup=take_any(ResourceGroup), SubscriptionId=take_any(SubscriptionId), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)\n| where FailureCount >= 5\n| extend TargetResourceId = strcat(\"/subscriptions/\", SubscriptionId, \"/resourceGroups/\", ResourceGroup)\n| project TimeGenerated, FirstSeen, Caller=CallerKey, SubscriptionId, ResourceGroup, TargetResourceId, FailureCount, WindowStart, EventIds, Operations\n"
   }
 }
