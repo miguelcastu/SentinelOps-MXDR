@@ -10,14 +10,14 @@ Purpose: At least five distinct failed RBAC assignment/role definition writes by
 | State | Disabled; incident creation false; no automation |
 | Schedule / lookback | PT15M / PT1H; bounded inclusive event-time filter |
 | MITRE in REST | Unmapped: this management event alone does not support a precise technique claim |
-| Entity handling | Caller and resource group as investigation context; no invented Account or IP mapping for aggregated evidence |
+| Entity handling | AzureResource for the subscription/resource-group context derived from event fields; no invented Account or aggregate IP mapping |
 
 [KQL](../../detections/azure/AZ-DET-011.kql) and [REST body](../../detections/azure/AZ-DET-011.json) are bound to the reviewed fixed contract. Only exact case-insensitive operation names and terminal statuses match. The operation identifiers are:
 
 - `Microsoft.Authorization/roleAssignments/write`
 - `Microsoft.Authorization/roleDefinitions/write`
 
-Original EventDataId is mandatory; per-run deduplication selects the latest row for each source ID. Empty original IDs are omitted and must be counted during a separately authorized live quality assessment. Caller is kept as context because its GUID/UPN/application meaning is not established by this query. IPv4/IPv6 values are mapped only when valid and not CIDR ranges; keys, claims, request bodies and secret values are never projected. AZ-DET-011 deliberately has no IP mapping after aggregation.
+Original EventDataId is mandatory; per-run deduplication selects the latest row for each source ID. Empty original IDs are omitted and must be counted during a separately authorized live quality assessment. Caller is kept as context because its GUID/UPN/application meaning is not established by this query. IPv4/IPv6 values are mapped only when valid and not CIDR ranges; keys, claims, request bodies and secret values are never projected. AZ-DET-011 deliberately has no IP mapping after aggregation. Its AzureResource entity is the group context, not an individual failed target; original EventIds support investigation. Azure requires at least one entity mapping.
 
 False positives: Broken CI deployments, stale role references and transient service failures. There is no unconditional CI/administrator allowlist. Proposed exceptions must bind actor, exact scope, operation, change authorization and expiry, with regression cases. No real-data precision or false-positive rate has been measured.
 

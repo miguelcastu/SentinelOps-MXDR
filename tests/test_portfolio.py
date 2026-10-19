@@ -50,6 +50,13 @@ class TestPortfolioSemantics(unittest.TestCase):
                         [dict(e, ActivityStatusValue="Succeeded") for e in events]):
             self.assertEqual(evaluate(key, changed, AS_OF), [])
 
+    def test_aggregate_maps_resource_group_context_without_guessing_caller_or_ip(self):
+        body = definition("AZ-DET-011")["properties"]
+        self.assertEqual(body["entityMappings"], [{"entityType": "AzureResource", "fieldMappings": [{"identifier": "ResourceId", "columnName": "TargetResourceId"}]}])
+        self.assertIn('strcat("/subscriptions/", SubscriptionId, "/resourceGroups/", ResourceGroup)', body["query"])
+        for key in SPECS:
+            self.assertGreaterEqual(len(definition(key)["properties"]["entityMappings"]), 1)
+
     def test_sequence_strict_order_identity_scope_and_fifteen_minute_bound(self):
         key = "AZ-DET-012"
         grant = event(SPECS[key][4][0], suffix="grant", time="2026-10-19T12:00:00Z")

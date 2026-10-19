@@ -1,7 +1,7 @@
 {
   "evidence": "synthetic-python-reference-model",
   "version": "azure-activity-portfolio-1.0",
-  "portfolio_sha256": "ab94e1d820b99347300d556d36c5ff6364ea04749e000c9c3ad780e124cf6153",
+  "portfolio_sha256": "6b56d6e2b2dde1e215b4d644723828e81c41b32ef6c46b38655cced80a63e37e",
   "new_definitions": 10,
   "cases": [
     {
