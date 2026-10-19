@@ -1,0 +1,14 @@
+AzureActivity
+| where TimeGenerated between (ago(1h) .. now())
+| where OperationNameValue in~ ("Microsoft.Authorization/roleAssignments/write", "Microsoft.Authorization/roleDefinitions/write")
+| where ActivityStatusValue in~ ("Failed", "Failure")
+| where isnotempty(EventDataId)
+| extend TargetResourceId = coalesce(ResourceId, _ResourceId)
+| extend SourceIPAddress = iff(CallerIpAddress !contains "/" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, "")
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId
+| summarize arg_max(TimeGenerated, *) by EventDataId
+| where isnotempty(Caller) and isnotempty(ResourceGroup)
+| extend CallerKey = tolower(Caller), ScopeKey = tolower(ResourceGroup)
+| summarize FailureCount=count(), FirstSeen=min(TimeGenerated), TimeGenerated=max(TimeGenerated), EventIds=make_set(EventDataId, 100), Operations=make_set(OperationNameValue, 10) by CallerKey, ScopeKey, WindowStart=bin(TimeGenerated, 10m)
+| where FailureCount >= 5
+| project TimeGenerated, FirstSeen, Caller=CallerKey, ResourceGroup=ScopeKey, FailureCount, WindowStart, EventIds, Operations

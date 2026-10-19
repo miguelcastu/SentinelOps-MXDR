@@ -1,0 +1,64 @@
+{
+  "kind": "Scheduled",
+  "properties": {
+    "displayName": "AZ-DET-003 - Custom Role Definition Changed",
+    "enabled": false,
+    "severity": "Medium",
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT1H",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "suppressionEnabled": false,
+    "suppressionDuration": "PT1H",
+    "tactics": [
+      "PrivilegeEscalation"
+    ],
+    "techniques": [
+      "T1098"
+    ],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "SourceIPAddress"
+          }
+        ]
+      }
+    ],
+    "customDetails": {
+      "Operation": "OperationNameValue",
+      "Status": "ActivityStatusValue",
+      "Caller": "Caller",
+      "CorrelationId": "CorrelationId",
+      "EventDataId": "EventDataId"
+    },
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "incidentConfiguration": {
+      "createIncident": false,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT1H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "description": "Successful custom role definition write. Inspect permission deltas and existing assignments; a write does not prove new privileges. Disabled lab definition; no incident creation or automation.",
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Authorization/roleDefinitions/write\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n"
+  }
+}

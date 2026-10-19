@@ -36,3 +36,5 @@ jobs:
         run: python -m platform_health
       - name: Validate synthetic risk correlation and control scenarios offline
         run: python -m rba
+      - name: Validate AzureActivity portfolio contracts and synthetic scenarios
+        run: python -m portfolio

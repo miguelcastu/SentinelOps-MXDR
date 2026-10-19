@@ -1,0 +1,315 @@
+{
+  "evidence": "synthetic-python-reference-model",
+  "version": "azure-activity-portfolio-1.0",
+  "portfolio_sha256": "e19d19d8add91a46edc4f23cb39c9ea695c9480faf9d729e54e0748b84b989a1",
+  "new_definitions": 10,
+  "cases": [
+    {
+      "id": "AZ-DET-003/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-003/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-003/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-003/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-003/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-003/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-004/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-005/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-006/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-007/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-008/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-009/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-010/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-011/missing-lineage",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/positive",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/replayed",
+      "matches": 1,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/started",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/wrong-operation",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/stale",
+      "matches": 0,
+      "passed": true
+    },
+    {
+      "id": "AZ-DET-012/missing-lineage",
+      "matches": 0,
+      "passed": true
+    }
+  ],
+  "kusto_executed": false,
+  "azure_requests": 0,
+  "measured_false_positive_rate": null,
+  "limitations": [
+    "Definition validation and reference simulation are not live KQL validation.",
+    "Legitimate administration can match; no real-data accuracy rate was measured."
+  ]
+}

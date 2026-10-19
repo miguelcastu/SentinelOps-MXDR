@@ -1,0 +1,60 @@
+{
+  "kind": "Scheduled",
+  "properties": {
+    "displayName": "AZ-DET-008 - Resource Lock Removed",
+    "enabled": false,
+    "severity": "Low",
+    "queryFrequency": "PT15M",
+    "queryPeriod": "PT1H",
+    "triggerOperator": "GreaterThan",
+    "triggerThreshold": 0,
+    "suppressionEnabled": false,
+    "suppressionDuration": "PT1H",
+    "tactics": [],
+    "techniques": [],
+    "entityMappings": [
+      {
+        "entityType": "AzureResource",
+        "fieldMappings": [
+          {
+            "identifier": "ResourceId",
+            "columnName": "TargetResourceId"
+          }
+        ]
+      },
+      {
+        "entityType": "IP",
+        "fieldMappings": [
+          {
+            "identifier": "Address",
+            "columnName": "SourceIPAddress"
+          }
+        ]
+      }
+    ],
+    "customDetails": {
+      "Operation": "OperationNameValue",
+      "Status": "ActivityStatusValue",
+      "Caller": "Caller",
+      "CorrelationId": "CorrelationId",
+      "EventDataId": "EventDataId"
+    },
+    "eventGroupingSettings": {
+      "aggregationKind": "SingleAlert"
+    },
+    "incidentConfiguration": {
+      "createIncident": false,
+      "groupingConfiguration": {
+        "enabled": false,
+        "reopenClosedIncident": false,
+        "lookbackDuration": "PT1H",
+        "matchingMethod": "AllEntities",
+        "groupByEntities": [],
+        "groupByAlertDetails": [],
+        "groupByCustomDetails": []
+      }
+    },
+    "description": "Successful resource lock deletion. Check authorization and subsequent writes/deletions; this does not prove destruction. Disabled lab definition; no incident creation or automation.",
+    "query": "AzureActivity\n| where TimeGenerated between (ago(1h) .. now())\n| where OperationNameValue in~ (\"Microsoft.Authorization/locks/delete\")\n| where ActivityStatusValue in~ (\"Success\", \"Succeeded\")\n| where isnotempty(EventDataId)\n| extend TargetResourceId = coalesce(ResourceId, _ResourceId)\n| extend SourceIPAddress = iff(CallerIpAddress !contains \"/\" and isnotempty(parse_ipv6(CallerIpAddress)), CallerIpAddress, \"\")\n| project TimeGenerated, OperationNameValue, ActivityStatusValue, Caller, SourceIPAddress, TargetResourceId, ResourceGroup, CorrelationId, EventDataId\n| summarize arg_max(TimeGenerated, *) by EventDataId\n"
+  }
+}

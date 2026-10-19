@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **18 October 2026 - Phase 4 offline risk correlation implemented.** Entity scoring now combines a reproducible synthetic authentication/RBAC/logging/endpoint sequence, with deduplication, decay, maintenance controls and a replay report. Existing managed rules remain disabled; live telemetry/ingestion/incident work still needs approval. Resume from [PROJECT_STATUS.md](docs/PROJECT_STATUS.md).
+> **19 October 2026 - Detection portfolio prioritized before SOAR.** Ten additional AzureActivity definitions and their investigation runbooks are prepared, with fixed targets and disabled-only OIDC deployment. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md) for actual delivery evidence; disabled rules do not provide active alerting.
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -58,11 +58,18 @@ python -m ingestion
 python -m scripts.assess_detections
 python -m platform_health
 python -m rba
+python -m portfolio
 ```
 
 The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
 
 The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/detections/AZ-DET-002.md), now deployed disabled through its fixed-target workflow using the same existing identity. [Setup and scope](docs/deployment/detection-cicd.md), [security](docs/security.md), [reusable templates](templates/) and [actual Azure evidence](docs/validation/platform-setup.md) document the implementation. No paid service, connector or billing change was introduced.
+
+## Detection portfolio before SOAR
+
+The [AzureActivity portfolio](docs/detections/portfolio.md) adds ten reviewed disabled definitions for custom roles, network rules, Key Vault access policies, VM Run Command, storage key listing, removed locks/alerts/policies, repeated failed privileged operations and ordered role-grant/diagnostic changes. All reuse the existing source. Each has synchronized KQL/REST, investigation guidance, benign matches, MITRE/coverage limitations and original-event lineage. Disabled definitions do not provide active coverage.
+
+`python -m portfolio` checks complete fixed contracts and 60 synthetic controls. The manual-only main OIDC workflow requires a fingerprint-bound approval and exact target-scoped permissions using the existing identity. [Validation and actual deployment status](docs/validation/detection-portfolio.md) distinguish local checks from Azure evidence; no new source, activation, incident, paid resource or subscription change is included.
 
 ## Advanced ingestion: offline implementation
 

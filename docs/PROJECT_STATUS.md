@@ -1,6 +1,6 @@
 # SentinelOps MXDR project status
 
-Last updated: 18 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: Phase 4 offline risk correlation. The eight-phase mission remains incomplete.
+Last updated: 19 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: AzureActivity detection portfolio, prioritized by the operator before SOAR. The eight-phase mission remains incomplete.
 
 | Phase | State | Acceptance evidence / blocker |
 |---|---|---|
@@ -13,7 +13,14 @@ Last updated: 18 October 2026. Read this file first when resuming. Atlas Financi
 | 7. Customer operations | Pending | Initial source onboarding and fictional customer context only. |
 | 8. Portfolio completion | Pending | No final release or full completion claim. |
 
-## Current increment: Phase 4
+## Current increment: Detection portfolio before SOAR
+
+- The operator requested developing and implementing more detections under the existing subscription and budget constraints. [Portfolio coverage and runbooks](detections/portfolio.md): ten additional fixed disabled definitions, AZ-DET-003 through AZ-DET-012, using existing AzureActivity. No new source is necessary for this increment.
+- Eight management-event signals, one repeated-failure threshold and one ordered role-grant/diagnostic-change correlation. Purpose, original-event lineage, entity limitations, MITRE mapping uncertainty, legitimate matches and coverage gaps are documented individually.
+- Fixed-contract validation, 60 synthetic controls and 129 passing unit tests. Preview-first administrative reuse of existing identity/trust/roles, ten exact rule-scoped assignments and manual-only main OIDC deployment with a complete portfolio approval fingerprint. No activation, incidents, queries or paid workload.
+- Fresh read-only Azure inventory: three existing rules, Fusion enabled and AZ-DET-001/002 disabled. [Validation record](validation/detection-portfolio.md). New portfolio cloud delivery is pending; do not confuse local definitions with deployed or active rules.
+
+## Previous increment: Phase 4
 
 - [Risk package](../rba/), versioned signal catalog, explicit fictional identity mapping, synthetic source adapters and [signal schema](../schemas/rba-signal.schema.json).
 - AF-RBA-001: one account's ordered failed authentication -> success -> role grant -> diagnostic change -> endpoint execution; exact host/scope joins, bounded windows and deterministic original-event deduplication.
@@ -58,6 +65,6 @@ Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branc
 
 ## Next executable task
 
-Phase 4 is implemented and verified offline, with delivery through protected PR #9. The next independent phase when requested is **Phase 5: offline SOAR and case management**, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization.
+The operator prioritized the detection portfolio before automation. Complete its protected PR delivery, exact scope setup and actual disabled OIDC deployment verification first. After that, Phase 5 remains **offline SOAR and case management** when requested, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization.
 
 For live acceptance: approve the concrete [Phase 1 test](detections/lifecycle-validation.md) or [Phase 2 cloud design](onboarding/synthetic-authentication.md), then implement/review the gated workflows and narrow OIDC roles, recheck finances and execute only the approved bounded test. Existing detection deployment roles remain unchanged. Current authorization does not permit those cloud expansions.
