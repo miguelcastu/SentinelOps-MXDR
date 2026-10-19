@@ -1,6 +1,6 @@
 # AzureActivity detection portfolio
 
-The operator requested detection breadth before SOAR on 19 October 2026. The portfolio adds ten fixed disabled definitions to the two existing disabled rules. Existing Fusion remains outside managed scope. A deployed disabled definition is not active coverage or an emitted alert.
+The operator requested detection breadth before SOAR on 19 October 2026. The portfolio adds ten fixed disabled definitions to the two existing disabled rules. All twelve are now verified in Azure through [actual deployment and preservation evidence](../validation/detection-portfolio.md). Existing Fusion remains outside managed scope. A deployed disabled definition is not active coverage or an emitted alert.
 
 | Detection | Behavior | Priority | Logic |
 |---|---|---|---|

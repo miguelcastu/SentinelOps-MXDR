@@ -1,0 +1,84 @@
+{
+  "evidence": "azure-rest-control-plane",
+  "observed_at": "2026-10-19T10:14:14.464100+00:00",
+  "portfolio_sha256": "6b56d6e2b2dde1e215b4d644723828e81c41b32ef6c46b38655cced80a63e37e",
+  "rules": [
+    {
+      "detection": "AZ-DET-003",
+      "uuid": "9816cc5e-3304-5e27-b7a2-8d4a267c812b",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-004",
+      "uuid": "f99041ea-187d-5462-9fb7-6c29f431b515",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-005",
+      "uuid": "2c1170e0-1592-57b7-8b8e-bd3e0178cb0b",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-006",
+      "uuid": "8e0e18f1-1d32-5c54-9f6a-98f52ef3ea6e",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-007",
+      "uuid": "4045d337-3c91-50c6-9a6d-cb434cd985d6",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-008",
+      "uuid": "11169c66-cfdb-5b40-94ec-4d01c3845503",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-009",
+      "uuid": "765a60b1-d0e9-5cac-9baf-c790fd2e80cf",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-010",
+      "uuid": "5eee8a54-76d0-53a6-8262-29b34d3bd7b9",
+      "enabled": false,
+      "action": "already-matching",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-011",
+      "uuid": "ed65b130-b1e9-540e-8015-b09bd9797d80",
+      "enabled": false,
+      "action": "created-disabled",
+      "persisted_properties_match": true
+    },
+    {
+      "detection": "AZ-DET-012",
+      "uuid": "eed467bf-df6d-5fa9-8957-6c916e680bcc",
+      "enabled": false,
+      "action": "created-disabled",
+      "persisted_properties_match": true
+    }
+  ],
+  "existing_rules_unchanged": true,
+  "log_queries_executed": 0,
+  "incidents_created": 0,
+  "new_sources": 0,
+  "kusto_executed": false,
+  "workflow_url": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39235924991",
+  "commit": "38f1627848b3b894b46033e4e71aa7a1aae0bc3a"
+}

@@ -2,7 +2,7 @@
 
 **Microsoft Sentinel platform-engineering lab**
 
-> **19 October 2026 - Detection portfolio prioritized before SOAR.** Ten additional AzureActivity definitions and their investigation runbooks are prepared, with fixed targets and disabled-only OIDC deployment. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md) for actual delivery evidence; disabled rules do not provide active alerting.
+> **19 October 2026 - Twelve managed detections deployed disabled.** Ten additional AzureActivity definitions now have actual OIDC/REST verification and investigation runbooks. Existing Fusion remains enabled; subscription and workspace settings are preserved. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md); disabled rules do not provide active alerting.
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -69,7 +69,7 @@ The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/d
 
 The [AzureActivity portfolio](docs/detections/portfolio.md) adds ten reviewed disabled definitions for custom roles, network rules, Key Vault access policies, VM Run Command, storage key listing, removed locks/alerts/policies, repeated failed privileged operations and ordered role-grant/diagnostic changes. All reuse the existing source. Each has synchronized KQL/REST, investigation guidance, benign matches, MITRE/coverage limitations and original-event lineage. Disabled definitions do not provide active coverage.
 
-`python -m portfolio` checks complete fixed contracts and 60 synthetic controls. The manual-only main OIDC workflow requires a fingerprint-bound approval and exact target-scoped permissions using the existing identity. [Validation and actual deployment status](docs/validation/detection-portfolio.md) distinguish local checks from Azure evidence; no new source, activation, incident, paid resource or subscription change is included.
+`python -m portfolio` checks complete fixed contracts and 60 synthetic controls; 130 tests pass. The [successful main OIDC deployment](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39235924991) verified all ten additional disabled definitions after a fingerprint-bound approval and exact target-scoped permissions using the existing identity. [Validation and actual deployment evidence](docs/validation/detection-portfolio.md) distinguish source agreement from runtime/accuracy evidence; no new source, activation, incident, paid resource or subscription change is included.
 
 ## Advanced ingestion: offline implementation
 
