@@ -1,4 +1,4 @@
-# Approved one-time AMA initialization exception
+# Completed one-time AMA initialization exception
 
 **Explicitly approved on 28 October 2026:** the operator answered
 "Autorizar esa inicialización única de los tres recursos" after reviewing
@@ -10,7 +10,10 @@ Actual Azure REST rejected the exact DCR-scoped role assignment with HTTP 404
 `ResourceNotFound`, explicitly identifying the not-yet-existing DCR. Both the
 CLI scope approach and direct ARM RBAC approach were tried. No group-scoped
 writer was granted. The owned machine is already connected to Arc; its
-read-only CI assignment exists. AMA and live ingestion remain pending.
+read-only CI assignment existed at that checkpoint. The approved exception
+subsequently completed at 21:41:24 UTC; [actual initialization evidence](../../evidence/local-linux-ama/initialization.sanitized.json).
+Exact-resource RBAC, main OIDC verification and ten-message Syslog acceptance
+then succeeded. The guest is stopped; [final validation](../validation/local-linux-ama.md).
 
 The approved exception is **one initialization of only these existing approved
 resource targets using the current pinned personal MFA session**, from reviewed
@@ -22,7 +25,7 @@ merged main:
 | Arc AMA extension | `lab-sentinelops-linux-01/AzureMonitorLinuxAgent` |
 | DCR association | `lab-sentinelops-linux-01/sentinelops-ama-linux` |
 
-Use the same [reviewed contract](../../ama/cloud.py) and provisioning/read-back
+The execution used the same [reviewed contract](../../ama/cloud.py) and provisioning/read-back
 checks as OIDC. Only local4 Warning and above, one existing workspace and no
 additional source, paid plan, activation, diagnostic or billing change. Possible
 ingestion charges remain within the already approved single pilot scope; this
@@ -37,16 +40,17 @@ this execution. A completion ledger
 prevents using the initializer again after success. Partial failure preserves
 reviewable fixed resources; no deletion, broader grant or automatic sender.
 
-After initialization, run the existing administrative RBAC setup to attach
-only the four exact-resource assignments. Then dispatch the protected main
-OIDC workflow, which must verify actual persisted matching resources and the
-unchanged workspace/rule inventory. Future routine verification/deployment
-continues through OIDC; the personal exception is not permanent. Execute the
-already approved ten-message pilot once, aggregate verification at most three
-times, and gracefully stop the guest, including on failure.
+The completed post-initialization sequence used administrative RBAC setup to attach
+only the four exact-resource assignments. The protected main
+OIDC workflow subsequently verified actual persisted matching resources and the
+unchanged workspace/rule inventory. [Successful OIDC run](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40774219658).
+Future routine verification/deployment continues through OIDC.
+The approved ten-message pilot ran once, reconciled on the second aggregate
+query, and the guest shut down gracefully. Both completion/attempt ledgers are
+consumed: do not delete/reset them or rerun personal bootstrap or the sender.
+The exception is completed, not a reusable personal deployment route.
 
 This avoids giving CI write permission across all DCRs in the resource group
 or all extensions on the machine. It adds no identity or service-principal
 secret, changes no MFA rule, and does not upgrade/switch the subscription.
-If the exception is declined, leave the owned guest stopped and report that
-Arc is connected but AMA ingestion is not complete.
+No further personal initialization or collection expansion is authorized.

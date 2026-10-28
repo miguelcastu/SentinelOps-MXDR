@@ -1,0 +1,33 @@
+{
+  "evidence": "actual-azure-rest-control-plane",
+  "auth_mode": "github-oidc",
+  "verified_utc": "2026-10-28T21:43:24.628855+00:00",
+  "approved_sha256": "91bc37df629c80efa6e0b63593111e8a662cca0d06e9759da547cbd80b4217e2",
+  "resources": [
+    {
+      "kind": "dcr",
+      "action": "already-matching",
+      "persisted_contract_match": true,
+      "provisioning": "Succeeded"
+    },
+    {
+      "kind": "extension",
+      "action": "already-matching",
+      "persisted_contract_match": true,
+      "provisioning": "Succeeded"
+    },
+    {
+      "kind": "association",
+      "action": "already-matching",
+      "persisted_contract_match": true,
+      "provisioning": "not-reported"
+    }
+  ],
+  "workspace_settings_unchanged": true,
+  "analytics_rules_unchanged": true,
+  "queries_executed": 0,
+  "messages_sent": 0,
+  "ingestion_verified": false,
+  "workflow_run": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40774219658",
+  "source_sha": "e2a2439ea785a1ace7b3554b272c4b4bad176acb"
+}

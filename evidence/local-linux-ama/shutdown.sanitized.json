@@ -1,0 +1,9 @@
+{
+  "evidence": "actual-local-hypervisor",
+  "observed_utc": "2026-10-28T21:58:02.689815+00:00",
+  "machine": "lab-sentinelops-linux-01",
+  "shutdown_method": "guest-sudo-shutdown",
+  "vm_state": "poweroff",
+  "azure_compute_created": false,
+  "pilot_replayed": false
+}

@@ -1,0 +1,31 @@
+{
+  "evidence": "actual-azure-rest-control-plane",
+  "auth_mode": "one-time-personal-bootstrap",
+  "verified_utc": "2026-10-28T21:41:24.365112+00:00",
+  "approved_sha256": "91bc37df629c80efa6e0b63593111e8a662cca0d06e9759da547cbd80b4217e2",
+  "resources": [
+    {
+      "kind": "dcr",
+      "action": "already-matching",
+      "persisted_contract_match": true,
+      "provisioning": "Succeeded"
+    },
+    {
+      "kind": "extension",
+      "action": "already-matching",
+      "persisted_contract_match": true,
+      "provisioning": "Succeeded"
+    },
+    {
+      "kind": "association",
+      "action": "created",
+      "persisted_contract_match": true,
+      "provisioning": "not-reported"
+    }
+  ],
+  "workspace_settings_unchanged": true,
+  "analytics_rules_unchanged": true,
+  "queries_executed": 0,
+  "messages_sent": 0,
+  "ingestion_verified": false
+}
