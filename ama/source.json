@@ -1,6 +1,6 @@
 {
   "id": "ama-linux-syslog",
-  "state": "arc-connected-ama-provisioning-and-ingestion-pending",
+  "state": "arc-registered-guest-stopped-ama-bootstrap-exception-pending",
   "owner": "Lab operator; personally owned machine",
   "machine": "lab-sentinelops-linux-01",
   "operating_system": "Ubuntu 24.04 LTS amd64",
