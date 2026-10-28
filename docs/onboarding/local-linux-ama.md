@@ -2,9 +2,10 @@
 
 The operator requested a machine that sends its own logs through Azure Monitor
 Agent (AMA), rejected university directory ingestion, and authorized preparing
-a VM on a personally owned Windows computer on 28 October 2026. This increment
-prepares that local machine and a fixed cloud design. It does not claim that
-the machine is already registered in Azure or that Sentinel receives its logs.
+a VM on a personally owned Windows computer on 28 October 2026. After reviewing
+the concrete proposal in PR #13, the operator explicitly approved only the
+one-machine Arc/AMA pilot below. Local preparation is verified; cloud execution
+and ingestion must still be established through actual evidence.
 See the [actual validation record](../validation/local-linux-ama.md).
 
 ## Architecture and scope
@@ -120,9 +121,9 @@ The first attempt stopped before sending because systemctl uses exit 1 for an
 absent unit; the wrapper now handles that expected absence and rejects other
 errors. The successful batch contained 900 message bytes.
 
-## Concrete cloud rollout proposal: not executed
+## Approved fixed cloud rollout: verify execution evidence separately
 
-The [fixed contract](../../ama/plan.py) renders only the following targets in
+The [offline source contract](../../ama/plan.py) and [approved cloud contract](../../ama/cloud.py) render only the following targets in
 the existing `rg-sentinelops-mxdr`, West Europe. Subscription identifiers are
 read from the ignored existing pin; they are never committed.
 
@@ -140,7 +141,10 @@ Render private resource bodies without contacting Azure:
 python -m ama --render-private
 ```
 
-The fixed pilot selects only facility **local4**, minimum **Warning**:
+The cloud contract additionally marks DCR/extension ownership, makes the pass-through
+Syslog output explicit, and disables background extension auto-upgrades. It binds
+the complete resource bodies, versions and four exact-role definitions to an
+environment approval fingerprint. The fixed pilot selects only facility **local4**, minimum **Warning**:
 Warning, Error, Critical, Alert and Emergency. No wildcard, Info/Debug,
 auth/authpriv, performance counters, extra workspace, custom table, DCE,
 VM Insights, Defender, Update Manager or Change Tracking is included. The
@@ -156,8 +160,9 @@ MITRE mapping and false-positive accuracy are **not applicable** to its ten
 synthetic transport checks. The existing twelve disabled AzureActivity rules
 do not gain endpoint coverage by adding this source.
 
-Before creating or connecting cloud resources, the operator must approve this
-specific exception to the current [deployment/ingestion boundary](../../AGENTS.md):
+The operator explicitly approved the following specific exception to the
+[deployment/ingestion boundary](../../AGENTS.md) on 28 October; it grants no
+additional source, repeat batch, rule activation or recurring workload:
 
 1. Register only missing Arc prerequisite providers: `Microsoft.HybridCompute`,
    `Microsoft.GuestConfiguration`, `Microsoft.HybridConnectivity`. Read-only
@@ -169,14 +174,21 @@ specific exception to the current [deployment/ingestion boundary](../../AGENTS.m
 3. Review and merge a fixed-target, manual-main OIDC deployment implementation
    through the protected PR path, with the existing CI identity, exact narrow
    permissions and actual REST read-back. Current rule-deployment permissions
-   do not authorize Arc/DCR/extension deployment. No live sender workflow or
-   new role has been added by this preparation.
+   do not authorize Arc/DCR/extension deployment. The reviewed
+   [manual configuration workflow](../../.github/workflows/deploy-ama-pilot.yml)
+   sends no logs. The preview-first [administrative setup](../../scripts/prepare_ama.py)
+   reuses the existing identity/trust and adds three fixed child-resource
+   writers plus one machine metadata reader at four exact resource scopes.
 4. Approve the one-time local `azcmagent connect` administrative setup exception
    as well. The private guest is not reachable from a public GitHub runner.
    Use the existing pinned subscription and legitimate MFA authentication;
    do not expose SSH to the Internet, create a self-hosted runner, use Cloud
    Shell, weaken Conditional Access or create a long-lived service-principal
    secret. Never put a token in command history, arguments or public job logs.
+   [Local connection tooling](../../scripts/connect_local_arc.py) transfers the
+   short-lived token over SSH into a root-only temporary JSON under `/run`,
+   removes it in `finally`, suppresses raw authentication output, and checks
+   the actual Azure response. It refuses an already-existing machine resource.
 5. Deploy/read back only the fixed DCR, AMA extension and association. Confirm
    the Arc/AMA services, their provisioning results and the exact collection
    contract. Stop on conflicting ownership, an extra DCR/destination, a paid
@@ -184,13 +196,17 @@ specific exception to the current [deployment/ingestion boundary](../../AGENTS.m
 6. Generate **one batch of ten** labeled messages using [the bounded generator](../../ama/pilot.py),
    then send them with Linux `logger`, facility `local4.warning`, tag
    `sentinelops-lab`. Payloads include a unique run ID and `seq=01/10` through
-   `seq=10/10`, at most 4,096 message bytes. There is no executable sender in
-   this increment. Do not send again just because ingestion is delayed.
+   `seq=10/10`, at most 4,096 message bytes. The
+   [manual local pilot](../../scripts/run_ama_pilot.py) verifies the live fixed
+   configuration, guest Arc identity, active AMA and downloaded local4 DCR.
+   A persistent attempt ledger blocks automatic replay after an ambiguous
+   failure. Do not reset it or send again because ingestion is delayed.
 7. Execute the [one-hour aggregate query](../../ama/validation.kql) manually
    with the exact private machine ID and run ID. Expected: ten total and ten
    distinct messages, last-seen time and billable bytes. Extra rows indicate
    duplication; missing rows indicate incomplete acceptance. No raw log,
-   account or IP output; no recurring query. Query/ingestion costs are not
+   account or IP output; at most three manual-run queries after bounded delays,
+   no recurring query. Query/ingestion costs are not
    established by local tests.
 8. Shut down the local guest; verify it is powered off. Record sanitized
    Azure REST, agent and query evidence separately. Only then promote this
@@ -217,6 +233,27 @@ If authentication, policy, budget or permissions block onboarding, keep the
 guest stopped and report the exact stage. A successful package install,
 agent heartbeat, green connector UI or local `logger` command alone is not
 proof that the messages reached `Syslog`.
+
+Execution order, only from reviewed merged main after the in-session approval
+has been recorded privately under `.local/ama/rollout-approved.json` with the
+matching `ama.cloud.fingerprint()`:
+
+```powershell
+python -m scripts.prepare_ama
+python -m scripts.prepare_ama --apply
+# Start the prepared local guest with the command above.
+python -m scripts.connect_local_arc --apply
+# Manually dispatch deploy-ama-pilot.yml on main with its confirmation enabled.
+# Verify successful actual REST read-back and that the guest downloaded its DCR.
+python -m scripts.run_ama_pilot --apply
+# Gracefully shut down and verify poweroff, including after a failed pilot.
+```
+
+Read-only policy preflight found the two existing MFA enforcement policies and
+the existing AzureActivity export policy; no add-on deployment policy was
+identified. The Defender pricing API returned HTTP 404 while Microsoft.Security
+was NotRegistered. That is an explicit inspection limitation, not proof that
+all Defender plans are free. Do not register that provider or enable a plan.
 
 ## Troubleshooting and evidence
 

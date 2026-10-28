@@ -1,6 +1,6 @@
 {
   "id": "ama-linux-syslog",
-  "state": "local-prepared-arc-disconnected-cloud-rollout-pending-approval",
+  "state": "local-prepared-cloud-pilot-authorized-execution-pending",
   "owner": "Lab operator; personally owned machine",
   "machine": "lab-sentinelops-linux-01",
   "operating_system": "Ubuntu 24.04 LTS amd64",
