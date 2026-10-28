@@ -79,6 +79,15 @@ rate, active endpoint detection, Sentinel alert or incident evidence.
 
 ## Remaining acceptance
 
+The ARM RBAC alternative also returned actual HTTP 404 `ResourceNotFound`,
+identifying the missing DCR; a same-scope retry confirmed the response. The
+machine reader assignment succeeded, while no resource-group writer was
+created. The [one-time bootstrap proposal](../deployment/ama-bootstrap-exception.md)
+would initialize the same three fixed resources through the current personal
+MFA session and then keep routine operations on exact-scoped OIDC. It remains
+separately approval-gated. Tests validate its refusal before authentication
+when that additional approval is absent or invalid (142 total unit tests).
+
 Subsequent approved execution: the three Arc providers are now Registered.
 At **21:03:24 UTC**, the local Arc agent and actual Azure REST both confirmed
 the one owned machine Connected. Its system-assigned machine identity is part

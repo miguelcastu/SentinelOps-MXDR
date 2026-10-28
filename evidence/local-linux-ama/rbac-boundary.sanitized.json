@@ -1,0 +1,15 @@
+{
+  "evidence": "actual-azure-rest-error",
+  "date": "2026-10-28",
+  "operation": "exact DCR resource role assignment PUT",
+  "target_type": "Microsoft.Insights/dataCollectionRules",
+  "target_name": "dcr-sentinelops-ama-linux",
+  "http_status": 404,
+  "azure_code": "ResourceNotFound",
+  "response_mentions_missing_dcr": true,
+  "same_scope_retry_confirmed": true,
+  "scope_widened": false,
+  "ama_installed": false,
+  "messages_sent_to_azure": 0,
+  "new_exception_approved": false
+}
