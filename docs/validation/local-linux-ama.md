@@ -35,9 +35,9 @@ returned exit 1 for an absent AMA unit. After handling that expected absence,
 the single successful batch reconciled all ten messages. No Azure ingestion
 retry or cloud sender was executed.
 
-## Cloud evidence and unchanged boundaries
+## PR #13 preparation snapshot and unchanged boundaries
 
-No Arc registration, AMA extension, DCR, DCR association, table, connector,
+At the PR #13 local-preparation checkpoint, no Arc registration, AMA extension, DCR, DCR association, table, connector,
 role, identity, Azure VM, diagnostic change, rule activation or cloud ingestion
 was performed. No KQL query was executed. Existing subscription, plan, budget,
 workspace pricing, retention and cap were not changed. Local verification's
@@ -78,6 +78,16 @@ There is no measured AMA latency, billable volume, production false-positive
 rate, active endpoint detection, Sentinel alert or incident evidence.
 
 ## Remaining acceptance
+
+Subsequent approved execution: the three Arc providers are now Registered.
+At **21:03:24 UTC**, the local Arc agent and actual Azure REST both confirmed
+the one owned machine Connected. Its system-assigned machine identity is part
+of Arc onboarding, not a university device join. AMA, DCR and live messages
+remain pending. The administrative RBAC setup stopped when Azure CLI attempted
+to inspect a resource that had not yet been provisioned. The fix lists the
+existing principal's assignments through ARM and creates only deterministic
+exact-resource assignments; it adds no action or broader scope. Two regression
+tests cover future-resource/idempotent setup and duplicate/wrong-principal stops.
 
 The operator explicitly approved the concrete [cloud exception](../onboarding/local-linux-ama.md)
 after reviewing PR #13. Local preparation was merged as `344e1fb` after

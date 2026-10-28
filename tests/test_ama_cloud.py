@@ -9,6 +9,7 @@ from unittest.mock import patch
 
 from ama.cloud import Client, MARKER, ROLES, contract, fingerprint, matches
 from scripts import deploy_ama_pilot as deployment
+from scripts.prepare_ama import ensure_exact_assignment
 
 WORKSPACE = "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/rg-sentinelops-mxdr/providers/Microsoft.OperationalInsights/workspaces/law-sentinelops-mxdr-euw"
 
@@ -36,6 +37,42 @@ class CloudMemory:
 
 
 class TestAMACloud(unittest.TestCase):
+    def test_exact_rbac_future_resource_uses_arm_once_without_cli_scope_resolution(self):
+        principal = "22222222-2222-4222-8222-222222222222"
+        role = {"id": "/synthetic-role"}
+        scope = contract(WORKSPACE)["dcr_id"]
+        rows, writes = [], []
+        class ArmMemory:
+            def request(self, method, path, body=None):
+                if method == "GET":
+                    self_test.assertEqual(path, "/synthetic-principal-assignment-list")
+                    return {"value": copy.deepcopy(rows)}
+                self_test.assertTrue(path.startswith(scope + "/providers/Microsoft.Authorization/roleAssignments/"))
+                writes.append(path)
+                result = {"properties": body["properties"] | {"scope": scope}}
+                rows.append(result)
+                return result
+        self_test = self
+        arm = ArmMemory()
+        with patch("scripts.prepare_ama.az_json") as cli:
+            ensure_exact_assignment(arm, "/synthetic-principal-assignment-list", principal, role, scope)
+            ensure_exact_assignment(arm, "/synthetic-principal-assignment-list", principal, role, scope)
+            cli.assert_not_called()
+        self.assertEqual(len(writes), 1)
+        self.assertEqual(rows[0]["properties"]["principalId"], principal)
+
+    def test_rbac_duplicate_or_different_principal_stops_without_put(self):
+        principal = "22222222-2222-4222-8222-222222222222"
+        scope = contract(WORKSPACE)["dcr_id"]
+        row = {"properties": {"scope": scope, "roleDefinitionId": "/synthetic-role", "principalId": principal}}
+        from unittest.mock import Mock
+        for rows in ([row, row], [{"properties": row["properties"] | {"principalId": "other"}}]):
+            arm = Mock()
+            arm.request.return_value = {"value": rows}
+            with self.assertRaises(ValueError):
+                ensure_exact_assignment(arm, "/synthetic-list", principal, {"id": "/synthetic-role"}, scope)
+            self.assertEqual(arm.request.call_count, 1)
+
     def test_missing_approval_stops_before_authentication_or_network(self):
         with patch.dict(os.environ, {}, clear=True), patch.object(deployment, "Client") as client, patch.object(deployment, "context") as context:
             with self.assertRaises(ValueError):

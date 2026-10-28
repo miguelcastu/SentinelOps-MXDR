@@ -12,9 +12,27 @@ import uuid
 from ama.cloud import ROLES, fingerprint, contract
 from scripts.azure_guard import RG, WORKSPACE, az_json, canonical_uuid
 from scripts.bootstrap_oidc import (PIN, IDENTITY, ENVIRONMENT, check_role, github, github_token,
-                                    oidc_subject, set_variable, ensure_assignment)
+                                    oidc_subject, set_variable)
 from scripts.prepare_portfolio import Arm
 from scripts.validate_detection import require
+
+
+def ensure_exact_assignment(arm, listing_path, principal, role, scope):
+    # Do not use a CLI scope lookup: the target may not exist until OIDC
+    # provisions it. ARM RBAC can assign the reviewed future resource scope.
+    listing = arm.request("GET", listing_path)
+    require(isinstance(listing.get("value"), list) and not listing.get("nextLink"), "Complete exact-assignment preflight required")
+    require(all(a["properties"].get("principalId", "").lower() == principal for a in listing["value"]), "Assignment principal filter mismatch")
+    exact = [a for a in listing["value"] if a["properties"].get("scope", "").lower() == scope.lower() and
+             a["properties"].get("roleDefinitionId", "").lower() == role["id"].lower()]
+    require(len(exact) <= 1, "Duplicate AMA assignment; do not add another")
+    if not exact:
+        assignment_id = str(uuid.uuid5(uuid.NAMESPACE_URL, (principal + scope + role["id"]).lower()))
+        created = arm.request("PUT", scope + "/providers/Microsoft.Authorization/roleAssignments/" + assignment_id + "?api-version=2022-04-01",
+                     {"properties": {"roleDefinitionId": role["id"], "principalId": principal, "principalType": "ServicePrincipal"}})
+        props = created.get("properties", {})
+        require(props.get("principalId", "").lower() == principal and props.get("scope", "").lower() == scope.lower() and
+                props.get("roleDefinitionId", "").lower() == role["id"].lower(), "Persisted exact AMA assignment mismatch")
 
 
 def prepare(apply=False):
@@ -81,9 +99,7 @@ def prepare(apply=False):
             role = dict(created["properties"], id=created["id"])
         check_role(role, group, name, actions)
         scope = targets[kind + "_id"]
-        ensure_assignment(principal, role, scope)
-        assigned = az_json("role", "assignment", "list", "--scope", scope, "--fill-principal-name", "false")
-        require(sum(a.get("principalId", "").lower() == principal and a.get("scope", "").lower() == scope.lower() and a.get("roleDefinitionId", "").lower() == role["id"].lower() for a in assigned) == 1, "Exact AMA assignment not persisted")
+        ensure_exact_assignment(arm, assignments_path, principal, role, scope)
         added.append((role["id"].lower(), scope.lower()))
         print("VERIFIED narrow AMA role/assignment: " + kind)
     listing = arm.request("GET", assignments_path)
