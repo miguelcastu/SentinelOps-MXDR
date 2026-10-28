@@ -21,11 +21,9 @@ def workspace_settings(value):
     return {"sku": props.get("sku"), "retention": props.get("retentionInDays"), "cap": props.get("workspaceCapping")}
 
 
-def deploy():
-    require(os.environ.get("SENTINEL_AMA_APPROVED_SHA256") == fingerprint(), "Exact AMA approval fingerprint required")
-    workspace = context("deploy-ama-pilot.yml")
+def configure(client, workspace, auth_mode="github-oidc"):
+    require(auth_mode in {"github-oidc", "one-time-personal-bootstrap"}, "Unapproved configuration mode")
     spec = contract(workspace)
-    client = Client()
     metadata = client.request("GET", workspace + "?api-version=2025-02-01")
     require(metadata.get("location") == "westeurope", "Existing workspace region mismatch")
     baseline_settings = workspace_settings(metadata)
@@ -68,8 +66,15 @@ def deploy():
     require(workspace_settings(client.request("GET", workspace + "?api-version=2025-02-01")) == baseline_settings, "Workspace settings changed")
     require(complete_inventory(workspace) == baseline_rules, "Analytics rule inventory changed")
     require(len(inventory(client, extensions_path)) == 1 and len(inventory(client, associations_path)) == 1, "Unexpected final machine inventory")
-    report = {"evidence": "actual-azure-rest-control-plane", "verified_utc": datetime.now(timezone.utc).isoformat(), "approved_sha256": fingerprint(), "resources": results,
+    report = {"evidence": "actual-azure-rest-control-plane", "auth_mode": auth_mode, "verified_utc": datetime.now(timezone.utc).isoformat(), "approved_sha256": fingerprint(), "resources": results,
               "workspace_settings_unchanged": True, "analytics_rules_unchanged": True, "queries_executed": 0, "messages_sent": 0, "ingestion_verified": False}
+    return report
+
+
+def deploy():
+    require(os.environ.get("SENTINEL_AMA_APPROVED_SHA256") == fingerprint(), "Exact AMA approval fingerprint required")
+    workspace = context("deploy-ama-pilot.yml")
+    report = configure(Client(), workspace)
     print("AMA_EVIDENCE=" + json.dumps(report, separators=(",", ":")))
 
 

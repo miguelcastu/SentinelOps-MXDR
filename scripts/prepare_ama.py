@@ -18,8 +18,8 @@ from scripts.validate_detection import require
 
 
 def ensure_exact_assignment(arm, listing_path, principal, role, scope):
-    # Do not use a CLI scope lookup: the target may not exist until OIDC
-    # provisions it. ARM RBAC can assign the reviewed future resource scope.
+    # Inspect RBAC directly, keeping the exact scope. Azure can still require
+    # the target resource to exist; ResourceNotFound must never widen the scope.
     listing = arm.request("GET", listing_path)
     require(isinstance(listing.get("value"), list) and not listing.get("nextLink"), "Complete exact-assignment preflight required")
     require(all(a["properties"].get("principalId", "").lower() == principal for a in listing["value"]), "Assignment principal filter mismatch")

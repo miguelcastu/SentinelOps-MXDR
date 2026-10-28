@@ -5,11 +5,14 @@ import io
 import os
 import unittest
 import urllib.error
+import tempfile
+from pathlib import Path
 from unittest.mock import patch
 
 from ama.cloud import Client, MARKER, ROLES, contract, fingerprint, matches
 from scripts import deploy_ama_pilot as deployment
 from scripts.prepare_ama import ensure_exact_assignment
+from scripts import bootstrap_ama_resources as bootstrap_resources
 
 WORKSPACE = "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/rg-sentinelops-mxdr/providers/Microsoft.OperationalInsights/workspaces/law-sentinelops-mxdr-euw"
 
@@ -37,7 +40,22 @@ class CloudMemory:
 
 
 class TestAMACloud(unittest.TestCase):
-    def test_exact_rbac_future_resource_uses_arm_once_without_cli_scope_resolution(self):
+    def test_personal_bootstrap_missing_or_wrong_extra_approval_never_authenticates(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            approval = root / ".local/ama/one-time-bootstrap-approved.json"
+            approval.parent.mkdir(parents=True)
+            with contextlib.redirect_stdout(io.StringIO()), patch.object(bootstrap_resources, "ROOT", root), patch.object(bootstrap_resources, "Client") as client, patch.object(bootstrap_resources, "az_json") as cli:
+                bootstrap_resources.bootstrap(False)
+                with self.assertRaises(FileNotFoundError):
+                    bootstrap_resources.bootstrap(True)
+                approval.write_text('{"allow_one_time_personal_bootstrap": false, "sha256": "wrong"}')
+                with self.assertRaises(ValueError):
+                    bootstrap_resources.bootstrap(True)
+                client.assert_not_called()
+                cli.assert_not_called()
+
+    def test_exact_rbac_uses_arm_once_without_cli_scope_resolution(self):
         principal = "22222222-2222-4222-8222-222222222222"
         role = {"id": "/synthetic-role"}
         scope = contract(WORKSPACE)["dcr_id"]
