@@ -72,8 +72,10 @@ tenant and Azure access inheritance.
 The local guest, Arc package, Arc registration, AMA extension provisioning,
 DCR association and queried messages are distinct acceptance stages. Cloud
 registration and ingestion remain pending; existing source-health output
-does not claim this planned source is live. No Azure deployment workflow or
-new permissions were introduced by this local preparation. The [validation
+does not claim this planned source is live. PR #13 local preparation introduced
+no Azure workflow or permissions. The subsequently approved pilot adds a manual
+main-only OIDC configuration workflow, exact-target AMA roles and a local
+single-batch sender; actual deployment and ingestion still need verification. The [validation
 record](../validation/local-linux-ama.md) identifies the actual completed
 stages and [the runbook](../onboarding/local-linux-ama.md) specifies the cloud
-exceptions and protected PR/OIDC path still needed.
+approved exceptions and protected PR/OIDC path.

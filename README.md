@@ -4,7 +4,7 @@
 
 > **19 October 2026 - Twelve managed detections deployed disabled.** Ten additional AzureActivity definitions now have actual OIDC/REST verification and investigation runbooks. Existing Fusion remains enabled; subscription and workspace settings are preserved. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md); disabled rules do not provide active alerting.
 
-> **28 October 2026 - Personal local Linux machine added to the lab.** A dedicated Ubuntu VM, local verification tooling and a fixed Arc/AMA Syslog design now extend the documented lab. Cloud registration, AMA provisioning and live ingestion remain pending their scoped rollout approval; see the [onboarding runbook](docs/onboarding/local-linux-ama.md) and [actual local evidence](docs/validation/local-linux-ama.md).
+> **28 October 2026 - Personal local Linux machine added to the lab.** A dedicated Ubuntu VM, local verification tooling and a fixed Arc/AMA Syslog design now extend the documented lab. The operator approved only one bounded cloud pilot; execution and actual ingestion evidence remain separate acceptance stages. See the [onboarding runbook](docs/onboarding/local-linux-ama.md) and [validation](docs/validation/local-linux-ama.md).
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -92,7 +92,7 @@ flowchart LR
 
 The [local Linux source](ama/source.json) uses a dedicated VirtualBox Ubuntu 24.04 guest on the operator's personal PC, avoiding Azure compute. It has NAT, loopback-only SSH, key authentication and no shared folders. Preview-first preparation, a hash-pinned local Arc package installer and sanitized SSH verification are versioned; images, keys and raw diagnostics remain ignored. Existing VMs and Windows security settings are preserved.
 
-The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the proposed exact DCR/extension/association and the manual acceptance sequence. The initial design collects only `local4` Warning and above with ten labeled pilot messages; it does not collect native SSH authentication or university tenant logs. Offline rendering rejects broader collection. No live sender, Azure onboarding, new roles, detection activation or cloud-ingestion evidence is included. [Validation](docs/validation/local-linux-ama.md) separates local VM readiness from cloud acceptance and potential ingestion charges.
+The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the exact DCR/extension/association and the manual acceptance sequence. The approved pilot collects only `local4` Warning and above with ten labeled messages; it does not collect native SSH authentication or university tenant logs. A fingerprint-bound main-only OIDC workflow configures only the three fixed targets. The manual local sender has a persistent attempt ledger and bounded aggregate verification; there is no GitHub sender or schedule. [Validation](docs/validation/local-linux-ama.md) separates local VM readiness, mock-tested deployment and actual cloud acceptance, including possible ingestion charges. Rule activation remains outside this scope.
 
 ## Platform health and observability
 

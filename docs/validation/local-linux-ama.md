@@ -79,8 +79,22 @@ rate, active endpoint detection, Sentinel alert or incident evidence.
 
 ## Remaining acceptance
 
-Approve the concrete [cloud exception](../onboarding/local-linux-ama.md), review
-policies and finances, implement/review the exact OIDC deployment path and
+The operator explicitly approved the concrete [cloud exception](../onboarding/local-linux-ama.md)
+after reviewing PR #13. Local preparation was merged as `344e1fb` after
+[required Python 3.12 CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40765499479).
+The follow-up implementation adds five mock-tested cloud boundary cases
+(139 total), a manual main-only OIDC configuration workflow, preview-first
+provider/RBAC setup, one-time local Arc authentication and a single-attempt
+local sender with at most three aggregate queries. Mock deployment output is
+suppressed in tests to avoid presenting it as actual Azure evidence.
+
+Policy preflight identified only the two existing MFA enforcement policies and
+the existing AzureActivity export policy. Defender pricing inspection returned
+404 with Microsoft.Security NotRegistered; that plan state remains unverified,
+and no security provider/plan is enabled to work around it. Fresh closed credit
+still reported the same amount and expiry, with billing lag possible.
+
+Complete protected review/CI/merge of the OIDC deployment path and
 minimum permissions, register/connect the one machine, provision/read back AMA
 and its DCR, then reconcile one unique ten-message run by aggregate query.
 Only then mark this source active, extend platform-health policies and design
