@@ -64,7 +64,7 @@ class Client:
             raise ValueError(f"Azure {method} failed (HTTP {exc.code}, {code}); no permission or subscription fallback") from None
 
 
-def matches(current, desired, resource_id, kind):
+def matches(current, desired, resource_id, kind, workspace_customer_id=None):
     if not isinstance(current, dict) or current.get("id", "").lower() != resource_id.lower():
         return False
     if kind in ("dcr", "extension"):
@@ -76,8 +76,16 @@ def matches(current, desired, resource_id, kind):
             return False
         if any(props.get(key) for key in ("dataCollectionEndpointId", "streamDeclarations", "directDataSources", "references", "agentSettings")):
             return False
-        # Reject extras inside collection/destination/flow structures as well.
-        return all(props.get(key) == value for key, value in desired["properties"].items())
+        # Azure adds the destination's read-only workspaceId on GET. Check it
+        # against independently read workspace metadata before comparing the
+        # writable contract. All other destination/collection extras still fail.
+        projected = json.loads(json.dumps(props))
+        for destination in projected.get("destinations", {}).get("logAnalytics", []):
+            if "workspaceId" in destination:
+                if not workspace_customer_id or str(destination["workspaceId"]).lower() != str(workspace_customer_id).lower():
+                    return False
+                del destination["workspaceId"]
+        return all(projected.get(key) == value for key, value in desired["properties"].items())
     if kind == "extension":
         allowed = {"publisher", "type", "typeHandlerVersion", "autoUpgradeMinorVersion", "enableAutomaticUpgrade", "settings", "provisioningState", "instanceView"}
         if set(props) - allowed or props.get("settings", {}) != {}:
