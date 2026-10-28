@@ -79,6 +79,21 @@ rate, active endpoint detection, Sentinel alert or incident evidence.
 
 ## Remaining acceptance
 
+**Latest checkpoint:** [PR #15](https://github.com/miguelcastu/SentinelOps-MXDR/pull/15)
+and [PR #16](https://github.com/miguelcastu/SentinelOps-MXDR/pull/16) passed their
+required CI and protected merges; the final implementation has **142 passing
+tests** on Python 3.12/3.15. Proposal PR #16 merged as `47d2ac3`; [main
+CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40770436757)
+passed. This did not authorize the separate personal initialization exception.
+The extra operator answer remains pending. The [actual Arc
+read-back](../../evidence/local-linux-ama/arc-onboarding.sanitized.json),
+[actual RBAC boundary](../../evidence/local-linux-ama/rbac-boundary.sanitized.json)
+and [graceful shutdown](../../evidence/local-linux-ama/pending-approval-shutdown.sanitized.json)
+are separate records. The guest is stopped. **Zero Azure pilot messages and zero
+log queries**; the approved single cloud batch has not been consumed. No AMA
+deployment, billable volume measurement, OIDC AMA run or ingestion success is
+claimed.
+
 The ARM RBAC alternative also returned actual HTTP 404 `ResourceNotFound`,
 identifying the missing DCR; a same-scope retry confirmed the response. The
 machine reader assignment succeeded, while no resource-group writer was

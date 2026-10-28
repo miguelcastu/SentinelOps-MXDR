@@ -1,0 +1,11 @@
+{
+  "evidence": "actual-local-hypervisor-readback",
+  "machine": "lab-sentinelops-linux-01",
+  "vm_state": "poweroff",
+  "verified_utc": "2026-10-28T21:16:59.552039+00:00",
+  "arc_registration_exists": true,
+  "ama_installed": false,
+  "messages_sent_to_azure": 0,
+  "log_queries_executed": 0,
+  "reason": "Additional one-time initialization approval pending"
+}
