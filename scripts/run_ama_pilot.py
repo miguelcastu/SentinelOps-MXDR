@@ -46,12 +46,12 @@ def main():
     workspace = f"/subscriptions/{pin['subscription_id']}/resourceGroups/rg-sentinelops-mxdr/providers/Microsoft.OperationalInsights/workspaces/law-sentinelops-mxdr-euw"
     spec = contract(workspace)
     arm = Client()
+    metadata = arm.request("GET", workspace + "?api-version=2025-02-01")
     for kind in ("dcr", "extension", "association"):
         value = arm.request("GET", spec[kind + "_id"] + "?api-version=" + (ARC_API if kind == "extension" else MONITOR_API))
-        require(matches(value, spec[kind], spec[kind + "_id"], kind), "Live pilot configuration drift")
+        require(matches(value, spec[kind], spec[kind + "_id"], kind, metadata["properties"].get("customerId")), "Live pilot configuration drift")
     associations = arm.request("GET", spec["machine_id"] + "/providers/Microsoft.Insights/dataCollectionRuleAssociations?api-version=" + MONITOR_API)
     require(not associations.get("nextLink") and len(associations.get("value", [])) == 1, "Exactly one DCR association required")
-    metadata = arm.request("GET", workspace + "?api-version=2025-02-01")
     # Obtain query authorization before consuming the single sending attempt.
     log_token = az_json("account", "get-access-token", "--resource", "https://api.loganalytics.io")["accessToken"]
     run_id = "cloud-" + uuid.uuid4().hex

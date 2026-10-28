@@ -1,6 +1,8 @@
-# Proposed one-time AMA initialization exception
+# Approved one-time AMA initialization exception
 
-**Approval pending. This file grants no authorization.** The original limited
+**Explicitly approved on 28 October 2026:** the operator answered
+"Autorizar esa inicialización única de los tres recursos" after reviewing
+PR #16. The original limited
 pilot approval allows personal administrative setup/Arc connection, but requires
 the DCR, extension and association to be deployed through GitHub OIDC.
 
@@ -10,7 +12,7 @@ CLI scope approach and direct ARM RBAC approach were tried. No group-scoped
 writer was granted. The owned machine is already connected to Arc; its
 read-only CI assignment exists. AMA and live ingestion remain pending.
 
-The proposed exception is **one initialization of only these existing approved
+The approved exception is **one initialization of only these existing approved
 resource targets using the current pinned personal MFA session**, from reviewed
 merged main:
 
@@ -30,7 +32,8 @@ The [gated initializer](../../scripts/bootstrap_ama_resources.py) defaults to
 preview and fails before authentication without a separate private record at
 `.local/ama/one-time-bootstrap-approved.json` containing the exact fingerprint
 and `allow_one_time_personal_bootstrap: true`. That record may be written only
-after the operator explicitly approves this exception. A completion ledger
+after the operator explicitly approves this exception, as now recorded for
+this execution. A completion ledger
 prevents using the initializer again after success. Partial failure preserves
 reviewable fixed resources; no deletion, broader grant or automatic sender.
 

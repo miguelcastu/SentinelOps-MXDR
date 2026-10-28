@@ -79,6 +79,18 @@ rate, active endpoint detection, Sentinel alert or incident evidence.
 
 ## Remaining acceptance
 
+**New authorization:** the operator explicitly approved PR #16's single-use
+personal initialization exception. It is recorded privately and applies only
+to the same DCR/extension/association and original single-batch scope. Fresh
+preflight reconfirmed the same subscription, spending limit On, published credit
+and workspace/rule controls. The DCR is now actually created/Succeeded.
+Read-back exposed Azure's read-only destination `workspaceId`; a focused
+regression test checks it against independently read existing-workspace metadata
+while still rejecting wrong IDs and unreviewed fields (143 tests). The remaining
+cloud steps are AMA/association, exact RBAC, actual OIDC verification and the
+single bounded pilot. The pending-approval/shutdown records below describe
+earlier checkpoints rather than current consent.
+
 **Latest checkpoint:** [PR #15](https://github.com/miguelcastu/SentinelOps-MXDR/pull/15)
 and [PR #16](https://github.com/miguelcastu/SentinelOps-MXDR/pull/16) passed their
 required CI and protected merges; the final implementation has **142 passing

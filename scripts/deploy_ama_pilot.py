@@ -27,6 +27,7 @@ def configure(client, workspace, auth_mode="github-oidc"):
     metadata = client.request("GET", workspace + "?api-version=2025-02-01")
     require(metadata.get("location") == "westeurope", "Existing workspace region mismatch")
     baseline_settings = workspace_settings(metadata)
+    customer_id = metadata.get("properties", {}).get("customerId")
     baseline_rules = complete_inventory(workspace)
     machine = client.request("GET", spec["machine_id"] + "?api-version=" + ARC_API)
     require(machine.get("id", "").lower() == spec["machine_id"].lower() and machine.get("location") == "westeurope" and machine.get("properties", {}).get("status") == "Connected", "Expected owned Arc machine must already be connected")
@@ -44,7 +45,7 @@ def configure(client, workspace, auth_mode="github-oidc"):
     for kind, target, desired, version in plan:
         current = client.request("GET", target + "?api-version=" + version, missing_ok=True)
         if current is not None:
-            require(matches(current, desired, target, kind), "Existing AMA target conflicts with reviewed ownership/contract: " + kind)
+            require(matches(current, desired, target, kind, customer_id), "Existing AMA target conflicts with reviewed ownership/contract: " + kind)
         existing[kind] = current
     results = []
     for kind, target, desired, version in plan:
@@ -59,7 +60,7 @@ def configure(client, workspace, auth_mode="github-oidc"):
             if verified and state in (None, "Succeeded"):
                 break
             time.sleep(10)
-        require(matches(verified, desired, target, kind), "AMA persisted properties do not match: " + kind)
+        require(matches(verified, desired, target, kind, customer_id), "AMA persisted properties do not match: " + kind)
         require(verified.get("properties", {}).get("provisioningState") in (None, "Succeeded"), "AMA provisioning is incomplete: " + kind)
         results.append({"kind": kind, "action": "created" if existing[kind] is None else "already-matching", "persisted_contract_match": True, "provisioning": verified.get("properties", {}).get("provisioningState", "not-reported")})
         print("VERIFIED AMA: " + kind + "; persisted fixed contract, no raw machine metadata")

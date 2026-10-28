@@ -15,12 +15,13 @@ from scripts.prepare_ama import ensure_exact_assignment
 from scripts import bootstrap_ama_resources as bootstrap_resources
 
 WORKSPACE = "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/rg-sentinelops-mxdr/providers/Microsoft.OperationalInsights/workspaces/law-sentinelops-mxdr-euw"
+CUSTOMER = "33333333-3333-4333-8333-333333333333"
 
 
 class CloudMemory:
     def __init__(self):
         self.spec = contract(WORKSPACE)
-        self.values = {WORKSPACE: {"id": WORKSPACE, "location": "westeurope", "properties": {"sku": {"name": "pergb2018"}, "retentionInDays": 30, "workspaceCapping": {"dailyQuotaGb": 0.1}}},
+        self.values = {WORKSPACE: {"id": WORKSPACE, "location": "westeurope", "properties": {"customerId": CUSTOMER, "sku": {"name": "pergb2018"}, "retentionInDays": 30, "workspaceCapping": {"dailyQuotaGb": 0.1}}},
                        self.spec["machine_id"]: {"id": self.spec["machine_id"], "location": "westeurope", "properties": {"status": "Connected", "osType": "linux"}, "identity": {"type": "SystemAssigned"}}}
         self.writes = []
 
@@ -30,6 +31,8 @@ class CloudMemory:
             self.writes.append((target, copy.deepcopy(body)))
             self.values[target] = copy.deepcopy(body) | {"id": target}
             self.values[target]["properties"]["provisioningState"] = "Succeeded"
+            if target == self.spec["dcr_id"]:
+                self.values[target]["properties"]["destinations"]["logAnalytics"][0]["workspaceId"] = CUSTOMER
         if target.endswith(("/extensions", "/dataCollectionRuleAssociations")):
             return {"value": [v for k, v in self.values.items() if k.rsplit("/", 1)[0] == target]}
         if target not in self.values:
@@ -40,6 +43,16 @@ class CloudMemory:
 
 
 class TestAMACloud(unittest.TestCase):
+    def test_dcr_readonly_destination_id_must_match_workspace_and_extras_still_fail(self):
+        spec = contract(WORKSPACE)
+        current = copy.deepcopy(spec["dcr"]) | {"id": spec["dcr_id"]}
+        destination = current["properties"]["destinations"]["logAnalytics"][0]
+        destination["workspaceId"] = CUSTOMER
+        self.assertTrue(matches(current, spec["dcr"], spec["dcr_id"], "dcr", CUSTOMER))
+        self.assertFalse(matches(current, spec["dcr"], spec["dcr_id"], "dcr"))
+        self.assertFalse(matches(current, spec["dcr"], spec["dcr_id"], "dcr", "wrong"))
+        destination["unreviewedDestinationField"] = "other"
+        self.assertFalse(matches(current, spec["dcr"], spec["dcr_id"], "dcr", CUSTOMER))
     def test_personal_bootstrap_missing_or_wrong_extra_approval_never_authenticates(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
