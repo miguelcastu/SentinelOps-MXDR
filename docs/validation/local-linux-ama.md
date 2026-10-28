@@ -1,147 +1,143 @@
-# Local Linux machine / AMA preparation validation
+# Local Linux / Arc / AMA pilot validation
 
-Observed on **28 October 2026**. This record covers actual local VM work and
-offline cloud configuration. It is not a completed Azure source onboarding.
-The [runbook](../onboarding/local-linux-ama.md) contains the design, manual
-operation, cloud rollout proposal, budget controls and acceptance conditions.
+The explicitly approved one-machine pilot completed on **28 October 2026**.
+One cloud batch reconciled in Kusto; the local VM is now powered off.
+This is a bounded transport proof, not continuous monitoring or active detection.
+See the [onboarding and operation runbook](../onboarding/local-linux-ama.md).
 
-## Actual evidence
+## Actual acceptance evidence
 
-[Sanitized preparation evidence](../../evidence/local-linux-ama/preparation.sanitized.json)
-contains separate guest, local Syslog and shutdown observations:
+All times below are UTC. Public records contain counts and configuration facts,
+not raw Syslog rows, private machine/run IDs, account identities or tokens.
 
-| Stage | Result | Evidence boundary |
+| Stage | Actual result | Evidence |
 |---|---|---|
-| Host ownership | Operator confirmed personal PC and authorized local VM | No university-managed endpoint is used |
-| Image | Official Ubuntu OVA; published SHA-256 matched, 590,766,080 bytes | HTTPS manifest comparison, not an independently verified GPG signature |
-| VM | Created only `lab-sentinelops-linux-01`; 1 vCPU / 1,536 MiB | Local VirtualBox, no Azure VM |
-| Boot/guest | Ubuntu 24.04.5 LTS x86_64; cloud-init done | Actual SSH probe, 20:34:53 UTC |
-| SSH | Active; password, keyboard-interactive and root login disabled | Effective `sshd -T` policy checked |
-| Syslog | rsyslog active; ten total / ten distinct pilot messages reconciled | Local `/var/log/syslog` only, 20:32:48 UTC |
-| Local pilot | local4.warning, tag `sentinelops-lab`, 900 message bytes | Labeled synthetic messages; no native attack or real authentication test |
-| Arc package | Installed, version `1.69.03579.1568`, **Disconnected** | Agent's actual local JSON response; not an Azure registration |
-| AMA | Not installed | No collection extension or cloud destination |
-| Shutdown | **poweroff**, 20:35:19 UTC | Actual VBoxManage read-back after graceful shutdown |
-| Isolation settings | NAT; loopback SSH; clipboard/drag-drop disabled; zero shared folders | Actual hypervisor read-back; NAT still permits outbound connections |
+| Local preparation | Official hash-checked Ubuntu 24.04.5 OVA; one vCPU, 1,536 MiB RAM; completed cloud-init; key-only SSH; rsyslog active | [Preparation snapshot](../../evidence/local-linux-ama/preparation.sanitized.json) |
+| Arc registration | One owned machine Connected at 21:03:24; system-assigned machine identity, Arc package 1.69.03579.1568 | [Arc observation](../../evidence/local-linux-ama/arc-onboarding.sanitized.json) |
+| One-time personal initialization | Same fixed DCR, AMA extension and association persisted; completed at 21:41:24 under the separately approved exception | [Initialization](../../evidence/local-linux-ama/initialization.sanitized.json) |
+| Protected main OIDC verification | All three targets already matching; no creation, messages or log queries in this run | [OIDC REST evidence](../../evidence/local-linux-ama/oidc-configuration.sanitized.json) |
+| Preservation and access audit | Same pin, pricing, retention and cap; thirteen unchanged rules; four narrow AMA assignments, eighteen total; no broad writer or new CI query access | [REST/RBAC audit, 21:51:35](../../evidence/local-linux-ama/preservation.sanitized.json) |
+| Live Syslog acceptance | **10 total / 10 distinct**, **2,600 billable bytes**, latest event 21:50:00; successful query 21:55:02 | [Actual Kusto aggregate](../../evidence/local-linux-ama/ingestion.sanitized.json) |
+| Shutdown | Graceful guest shutdown; VirtualBox `poweroff` at 21:58:02 | [Hypervisor read-back](../../evidence/local-linux-ama/shutdown.sanitized.json) |
+| Post-pilot finances/settings | Enabled subscription, spending limit On; published EUR 175.99436818021823; `pergb2018`, 30 days, 0.1 GB/day unchanged | [Financial check, 21:58:34](../../evidence/local-linux-ama/financial.sanitized.json) |
 
-Three pre-existing VMs were left intact. No host hypervisor installation,
-reboot, global SSH change, security-policy relaxation or paid local software
-was required. The original two-vCPU guest panicked, a minimal-paravirtualization
-attempt stalled, and the final one-vCPU/APIC/KVM configuration booted. These
-are observed attempts; the underlying virtualization bug was not diagnosed.
+The actual AMA extension version was **1.45.1**, provisioning Succeeded. The
+DCR also reported Succeeded. The association API did not report a provisioning
+state: matching actual association metadata and successful collection establish
+the binding, rather than inventing a Succeeded field. Background extension
+automatic upgrade is disabled; minor-version resolution was allowed during
+initial installation.
 
-The first local Syslog wrapper attempt stopped before sending when systemctl
-returned exit 1 for an absent AMA unit. After handling that expected absence,
-the single successful batch reconciled all ten messages. No Azure ingestion
-retry or cloud sender was executed.
+## Single batch and Kusto boundary
 
-## PR #13 preparation snapshot and unchanged boundaries
+The guest emitted **one batch of ten** labeled synthetic local4.warning
+messages with tag `sentinelops-lab`, **900 message bytes**, within the approved
+4,096-byte allowance. The downloaded AMA config contained local4 before sending.
+Local rsyslog and its AMA forwarding listener were verified without exposing
+the event text. The persistent attempt ledger remains consumed: do not resend
+or reset it because a later query is slow.
 
-At the PR #13 local-preparation checkpoint, no Arc registration, AMA extension, DCR, DCR association, table, connector,
-role, identity, Azure VM, diagnostic change, rule activation or cloud ingestion
-was performed. No KQL query was executed. Existing subscription, plan, budget,
-workspace pricing, retention and cap were not changed. Local verification's
-`azure_requests: 0` fields describe those local commands; separate read-only
-Azure provider/credit inspection was performed for the proposed cloud plan.
+The fixed [one-hour KQL](../../ama/validation.kql) filters the exact private
+machine/run, facility and tag, and returns only count, distinct count, last-seen
+and billable bytes. Actual Kusto execution occurred twice: 21:52:01 returned
+zero; 21:55:02 returned ten total and ten distinct. The third permitted query
+was unnecessary and was not executed. No raw row was returned. This proves
+arrival and reconciliation for this run; it is not a latency benchmark, proof
+of unlimited retention, native attack test or production false-positive rate.
 
-The read-only credit observation was EUR **175.99436818021823**, with expiry
-**12 November 2026 at 18:00:16 UTC**. This is a published closed balance and
-can lag usage. It does not prove that existing Azure workloads have no charges
-or establish a guaranteed price for a future AMA pilot.
+An earlier **local-only** ten-message preparation check ran before Arc/AMA.
+Its historical local log counts do not represent a second cloud pilot. The
+cloud aggregate reconciles only the later unique run. Neither this source nor
+the twelve disabled AzureActivity definitions provides active Linux alerting.
 
-All three Arc prerequisites were NotRegistered when inspected:
-`Microsoft.HybridCompute`, `Microsoft.GuestConfiguration` and
-`Microsoft.HybridConnectivity`. Microsoft.Insights was Registered. No provider
-registration was attempted. Tenant policies, inherited add-on deployments,
-permissions for a new source and live billing effects are still pending review.
+## Initialization, OIDC and protected delivery
 
-## Local code validation
+Azure rejected RBAC against the absent DCR with actual HTTP 404
+`ResourceNotFound`. CLI and direct ARM approaches were tried; no resource-group
+writer was granted. The operator then explicitly approved [PR #16's one-time
+personal initialization](../deployment/ama-bootstrap-exception.md). Its separate
+private approval and completion ledger were honored. Some fixed resources were
+created during bounded attempts; final completion reused the matching DCR and
+extension and created the association. This was personal initialization,
+**not OIDC resource creation**.
 
-- Required `python -m unittest discover -s tests -v`: **134 tests pass** on
-  local Python 3.15, including four new AMA boundary cases.
-- Required `python -m scripts.validate_detection`: both restricted disabled
-  rule contracts pass; the ten-rule portfolio remains separately validated.
-- `python -m ama` and `python -m ama --render-private`: plan and fixed bodies
-  rendered offline; the private subscription identifier stays under `.local/`.
-- actionlint **1.7.12** passes all seven workflows; published release checksum
-  verified. Changed documentation links and `git diff --check` pass.
-- Local preparation/installer/Syslog commands default to preview. The installer
-  SHA-256 is pinned, never runs `connect`, and writes raw diagnostics privately.
-- DCR tests reject wildcard collection, Info severity, an extra stream or
-  destination, another resource group/workspace and malformed resource paths.
-  Pilot tests enforce ten unique messages, a finite byte allowance and reject
-  unsafe, too-long or invalid run IDs.
+After exact-resource RBAC setup, [main OIDC run
+40774219658](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40774219658)
+at source `e2a2439ea785a1ace7b3554b272c4b4bad176acb` independently verified
+all three persisted contracts and unchanged workspace/rules. Ownership tags
+identify the routine OIDC manager; they do not change the initial auth history.
+Four new narrow role definitions/assignments reuse the existing CI identity
+and immutable federation. Their exact read/write actions and scopes are in
+the audit record; no deletion, billing, broad collection or new CI log-query
+permission was added. The live aggregate used the approved personal session.
 
-The one-hour [aggregate KQL](../../ama/validation.kql) is proposed and has not
-been executed by Kusto. Local Python tests are not KQL runtime validation.
-There is no measured AMA latency, billable volume, production false-positive
-rate, active endpoint detection, Sentinel alert or incident evidence.
+Local preparation was reviewed in PR #13, cloud tooling in PRs #14-16, and
+the strict Azure read-back compatibility fix in [PR
+#18](https://github.com/miguelcastu/SentinelOps-MXDR/pull/18), implementation
+`31a206a`, merge `e2a2439`. Its [required Python 3.12
+CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40771934419)
+passed before cloud verification. Current evidence/documentation delivery uses
+the same protected PR path; it needs no new Azure deployment.
 
-## Remaining acceptance
+## Troubleshooting that preserved scope
 
-**New authorization:** the operator explicitly approved PR #16's single-use
-personal initialization exception. It is recorded privately and applies only
-to the same DCR/extension/association and original single-batch scope. Fresh
-preflight reconfirmed the same subscription, spending limit On, published credit
-and workspace/rule controls. The DCR is now actually created/Succeeded.
-Read-back exposed Azure's read-only destination `workspaceId`; a focused
-regression test checks it against independently read existing-workspace metadata
-while still rejecting wrong IDs and unreviewed fields (143 tests). The remaining
-cloud steps are AMA/association, exact RBAC, actual OIDC verification and the
-single bounded pilot. The pending-approval/shutdown records below describe
-earlier checkpoints rather than current consent.
+- **Guest boot:** two-vCPU boot panicked; minimal paravirtualization stalled.
+  One vCPU with KVM paravirtualization and APIC/x2APIC booted with Windows
+  hypervisor protection preserved. The underlying kernel issue was not diagnosed.
+- **DCR read-back:** Azure added a read-only destination `workspaceId`.
+  PR #18 compares it to independently read existing-workspace metadata while
+  still rejecting a wrong ID, extra destinations or unknown fields. No target
+  or approved fingerprint changed.
+- **Slow extension:** the roughly 606 MB package downloaded/unpacked slowly on
+  one vCPU. A bounded client poll expired and an immediate child-resource GET
+  briefly returned HCRP404. Private guest checks and later actual REST showed
+  the existing operation progressing; it was resumed without another creation
+  request, broader permissions or a paid machine.
+- **Configuration propagation:** AMA initially requested config before the
+  association existed. After binding, the downloaded local4 config was still
+  absent. Restarting only the guest's `azuremonitoragent` service refreshed
+  its config; the sender waited for readiness. No extra DCR or test batch.
+- **Initial zero rows:** rsyslog's forwarder and AMA listener were healthy.
+  Waiting for the second bounded aggregate query reconciled ten messages;
+  the sender was never replayed.
 
-**Latest checkpoint:** [PR #15](https://github.com/miguelcastu/SentinelOps-MXDR/pull/15)
-and [PR #16](https://github.com/miguelcastu/SentinelOps-MXDR/pull/16) passed their
-required CI and protected merges; the final implementation has **142 passing
-tests** on Python 3.12/3.15. Proposal PR #16 merged as `47d2ac3`; [main
-CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40770436757)
-passed. This did not authorize the separate personal initialization exception.
-The extra operator answer remains pending. The [actual Arc
-read-back](../../evidence/local-linux-ama/arc-onboarding.sanitized.json),
-[actual RBAC boundary](../../evidence/local-linux-ama/rbac-boundary.sanitized.json)
-and [graceful shutdown](../../evidence/local-linux-ama/pending-approval-shutdown.sanitized.json)
-are separate records. The guest is stopped. **Zero Azure pilot messages and zero
-log queries**; the approved single cloud batch has not been consumed. No AMA
-deployment, billable volume measurement, OIDC AMA run or ingestion success is
-claimed.
+Microsoft's [Linux AMA troubleshooting](https://learn.microsoft.com/azure/azure-monitor/agents/azure-monitor-agent-troubleshoot-linux-vm)
+and [rsyslog diagnostics](https://learn.microsoft.com/azure/azure-monitor/agents/azure-monitor-agent-troubleshoot-linux-vm-rsyslog)
+explain the service/configuration/forwarding checks. Raw diagnostics remain
+ignored. No Azure resource was deleted to recover.
 
-The ARM RBAC alternative also returned actual HTTP 404 `ResourceNotFound`,
-identifying the missing DCR; a same-scope retry confirmed the response. The
-machine reader assignment succeeded, while no resource-group writer was
-created. The [one-time bootstrap proposal](../deployment/ama-bootstrap-exception.md)
-would initialize the same three fixed resources through the current personal
-MFA session and then keep routine operations on exact-scoped OIDC. It remains
-separately approval-gated. Tests validate its refusal before authentication
-when that additional approval is absent or invalid (142 total unit tests).
+## Local verification and limitations
 
-Subsequent approved execution: the three Arc providers are now Registered.
-At **21:03:24 UTC**, the local Arc agent and actual Azure REST both confirmed
-the one owned machine Connected. Its system-assigned machine identity is part
-of Arc onboarding, not a university device join. AMA, DCR and live messages
-remain pending. The administrative RBAC setup stopped when Azure CLI attempted
-to inspect a resource that had not yet been provisioned. The fix lists the
-existing principal's assignments through ARM and creates only deterministic
-exact-resource assignments; it adds no action or broader scope. Two regression
-tests cover future-resource/idempotent setup and duplicate/wrong-principal stops.
+- `python -m unittest discover -s tests -v`: **143 tests pass** locally on
+  Python 3.15 and in required Python 3.12 CI / the OIDC run.
+- `python -m scripts.validate_detection`: both restricted disabled contracts
+  pass; portfolio validation also checks ten additional fixed definitions.
+- Offline AMA rendering, actionlint 1.7.12, changed documentation links,
+  evidence privacy checks and `git diff --check` pass.
+- Mock tests cover fixed-resource ownership, complete DCR/destination checks,
+  independently checked read-only metadata, exact RBAC and default-preview /
+  missing-consent refusal. They are separate from actual REST/Kusto evidence.
 
-The operator explicitly approved the concrete [cloud exception](../onboarding/local-linux-ama.md)
-after reviewing PR #13. Local preparation was merged as `344e1fb` after
-[required Python 3.12 CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40765499479).
-The follow-up implementation adds five mock-tested cloud boundary cases
-(139 total), a manual main-only OIDC configuration workflow, preview-first
-provider/RBAC setup, one-time local Arc authentication and a single-attempt
-local sender with at most three aggregate queries. Mock deployment output is
-suppressed in tests to avoid presenting it as actual Azure evidence.
+No Azure VM, custom table, Entra export/device join, university telemetry,
+Defender/Insights/Update Manager plan, rule activation or incident was added.
+Three existing local VMs and host security settings were preserved. The policy
+preflight found existing MFA and AzureActivity export assignments, with no
+identified add-on deployment policy. Defender pricing returned 404 while
+Microsoft.Security was NotRegistered; its full plan state remains unverified.
+No provider/plan was enabled to work around that inspection limitation.
 
-Policy preflight identified only the two existing MFA enforcement policies and
-the existing AzureActivity export policy. Defender pricing inspection returned
-404 with Microsoft.Security NotRegistered; that plan state remains unverified,
-and no security provider/plan is enabled to work around it. Fresh closed credit
-still reported the same amount and expiry, with billing lag possible.
+The post-pilot credit report is a **published closed balance**, expiring
+12 November 2026 18:00:16 UTC; it can lag usage. The **2,600 billable bytes are
+not a measured final monetary charge** or a guarantee of zero spend. Existing
+unrelated workloads may still accrue charges. No subscription, plan, pricing,
+retention, daily cap, budget or diagnostic setting was changed.
 
-Complete protected review/CI/merge of the OIDC deployment path and
-minimum permissions, register/connect the one machine, provision/read back AMA
-and its DCR, then reconcile one unique ten-message run by aggregate query.
-Only then mark this source active, extend platform-health policies and design
-native Linux detections. Keep the VM stopped while that rollout is pending.
+The VM is powered off, so this source has no continuous freshness guarantee;
+its installed services/DCR would resume at boot. Only local4 Warning and above
+is selected. Native SSH/authpriv, process, Windows/Sysmon and network detections
+are not covered. The [separate source inventory](../../ama/source.json) records
+verified acceptance; the existing health evaluator has no AMA freshness policy
+or automatic collector. Historical [RBAC blocker](../../evidence/local-linux-ama/rbac-boundary.sanitized.json)
+and [pending-approval shutdown](../../evidence/local-linux-ama/pending-approval-shutdown.sanitized.json)
+remain dated checkpoints, superseded by the current evidence above. Another
+batch, broader collection or active alerts require a separate approved scope.

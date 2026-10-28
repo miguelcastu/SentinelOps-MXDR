@@ -1,0 +1,20 @@
+{
+  "evidence": "actual-azure-rest-post-pilot",
+  "verified_utc": "2026-10-28T21:58:34.539783+00:00",
+  "pinned_subscription_and_tenant_unchanged": true,
+  "subscription_state": "Enabled",
+  "spending_limit": "On",
+  "pricing": "pergb2018",
+  "retention_days": 30,
+  "daily_cap_gb": 0.1,
+  "published_credit": {
+    "exchangeRate": 0.8799718409010912,
+    "exchangeRateMonth": 202610,
+    "currency": "EUR",
+    "value": 175.99436818021823
+  },
+  "credit_expiry": "2026-11-12T18:00:16.0000000Z",
+  "pilot_billable_bytes": 2600,
+  "pilot_final_monetary_charge": "unknown; closed balance can lag usage",
+  "log_queries_in_this_check": 0
+}

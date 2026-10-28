@@ -1,6 +1,6 @@
 {
   "id": "ama-linux-syslog",
-  "state": "arc-registered-guest-stopped-ama-bootstrap-exception-pending",
+  "state": "pilot-ingestion-verified-guest-stopped",
   "owner": "Lab operator; personally owned machine",
   "machine": "lab-sentinelops-linux-01",
   "operating_system": "Ubuntu 24.04 LTS amd64",
@@ -8,11 +8,18 @@
   "pipeline": "Linux rsyslog -> Azure Monitor Linux Agent -> existing Log Analytics workspace",
   "management": "Azure Arc; no Entra device join, university directory export or application registration",
   "table": "Syslog",
-  "facilities": ["local4"],
+  "facilities": [
+    "local4"
+  ],
   "minimum_severity": "Warning",
-  "acceptance": "Guest identity/agent status, persisted DCR/association and ten unique labeled pilot messages verified by aggregate query",
+  "acceptance": "Actual Arc/AMA/DCR REST verification, protected main OIDC verification, and one ten-message Syslog batch reconciled; local guest now stopped",
   "heartbeat": "Machine must be running; no availability promise while stopped",
-  "last_verification": "2026-10-28 21:03:24 UTC: actual agent and Azure REST confirm owned machine Connected; local rsyslog proof exists; AMA and Azure ingestion still pending",
+  "last_verification": "2026-10-28 21:55:02 UTC: actual Kusto aggregate reconciled 10 total / 10 distinct messages, 2600 billable bytes, after two queries; VM poweroff verified at 21:58:02 UTC",
   "privacy": "Only the dedicated local VM is in scope; public evidence excludes real identity, IP and tenant/subscription identifiers",
-  "coverage_limitations": ["No native SSH Info messages, auth/authpriv, Windows Security Events, Sysmon, performance counters or packet capture in this pilot"]
+  "coverage_limitations": [
+    "No native SSH Info messages, auth/authpriv, Windows Security Events, Sysmon, performance counters or packet capture in this pilot"
+  ],
+  "continuous_collection": "Not running while the VM is powered off; collection would resume at boot with the existing DCR",
+  "health_integration": "Separate verified source inventory; no AMA freshness policy or automatic health collector added",
+  "evidence": "../evidence/local-linux-ama/ingestion.sanitized.json"
 }

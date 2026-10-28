@@ -43,39 +43,45 @@ flowchart LR
     PR --> MAIN[Operator merges main]
     MAIN --> ENV[Main-only sentinel-lab environment]
     ENV --> OIDC[Dedicated Azure OIDC identity]
-    OIDC --> RULE[Existing AZ-DET-001 only: disabled]
+    OIDC --> RULE[Reviewed fixed analytics rules: disabled]
     RULE --> VERIFY[Azure GET verifies persisted state]
 ```
 
-No part of the control path provisions a workspace, connector, playbook or paid compute. The deployment principal's write permission is scoped to the exact existing analytics rule; workspace metadata and optional AzureActivity query permissions are separate assignments. The personal MFA session is confined to the explicitly authorized initial setup and verification; routine deployments use OIDC. Environment review flags default to false until prerequisites are reviewed. Actual Azure OIDC authentication, both disabled-rule deployments and final API comparisons have succeeded. See the [verified platform record](../validation/platform-setup.md) and [security boundary](../security.md).
+No part of the control path provisions a workspace, connector, playbook or paid compute. Analytics writes are scoped separately to the twelve reviewed rule resources; workspace metadata and optional AzureActivity query permissions are separate assignments. The personal MFA session is confined to the explicitly authorized initial setup and verification; routine deployments use OIDC. Environment review flags default to false until prerequisites are reviewed. Actual Azure OIDC authentication, disabled-rule deployments and final API comparisons have succeeded. See the [verified platform record](../validation/platform-setup.md) and [security boundary](../security.md).
 
 Offline PR CI has no OIDC permission or Azure secrets. The opt-in live validation workflow performs aggregate and synthetic queries only. Read the [deployment runbook](../deployment/detection-cicd.md) for limitations of RBAC, the upsert API, current MITRE mapping and query costs. Future phases cover data health, SOAR and reproducible Bicep deployments.
 
 ## Second source: local implementation, proposed cloud path
 
-The [synthetic authentication package](../../ingestion/) generates labeled fictional events, validates the source contract and projects ASIM-shaped fields before batching. The executable demo ends in ignored local JSON files; it does not authenticate or upload. The real transport is tested with mocks. Two source formats are demonstrable, but AzureActivity remains the only source with actual cloud ingestion evidence.
+The [synthetic authentication package](../../ingestion/) generates labeled fictional events, validates the source contract and projects ASIM-shaped fields before batching. The executable demo ends in ignored local JSON files; it does not authenticate or upload. The real transport is tested with mocks. This synthetic-authentication format remains offline. AzureActivity and the separately approved local Linux Syslog pilot have actual cloud ingestion evidence; their acceptance stages must be kept distinct.
 
 After resource/cost/RBAC approval, the proposed path uses one Direct DCR and one custom Analytics table in the existing West Europe workspace. No DCE or compute is required by this design. REST bodies are checked for exact stream/table schema agreement and one fixed destination. Provisioning, sending and query permissions must be reviewed separately from rule-deployment roles. See [onboarding](../onboarding/synthetic-authentication.md) and [acceptance status](../PROJECT_STATUS.md).
 
-## Personally owned local guest: proposed AMA data path
+## Personally owned local guest: verified AMA pilot
 
-On 28 October the operator authorized preparing a local VM on a personal PC.
-The [dedicated Ubuntu guest](../onboarding/local-linux-ama.md) has a separate
-source inventory and local SSH evidence. Its proposed cloud path is Linux
-rsyslog -> AMA -> the existing workspace's `Syslog` table. Azure Arc would
-provide machine management and identity, the DCR would select only local4
-Warning and above, and one association would bind that DCR to this guest.
-No Azure VM, tenant-wide identity log export or university device join is
-involved. Registering an Arc resource still uses the subscription's existing
-tenant and Azure access inheritance.
+The [dedicated Ubuntu guest](../onboarding/local-linux-ama.md) runs in local
+VirtualBox on a personally owned PC. Its data path is **rsyslog -> AMA -> the
+existing workspace's Syslog table**. Arc supplies machine management and a
+system-assigned identity; the DCR selects only local4 Warning and above, and
+one association binds it to the guest. This does not collect all subscription
+logs, tenant sign-ins or other students' activity. The management resources
+still use the subscription's existing tenant; there is no university device
+join, tenant migration or Azure VM.
 
-The local guest, Arc package, Arc registration, AMA extension provisioning,
-DCR association and queried messages are distinct acceptance stages. Cloud
-registration and ingestion remain pending; existing source-health output
-does not claim this planned source is live. PR #13 local preparation introduced
-no Azure workflow or permissions. The subsequently approved pilot adds a manual
-main-only OIDC configuration workflow, exact-target AMA roles and a local
-single-batch sender; actual deployment and ingestion still need verification. The [validation
-record](../validation/local-linux-ama.md) identifies the actual completed
-stages and [the runbook](../onboarding/local-linux-ama.md) specifies the cloud
-approved exceptions and protected PR/OIDC path.
+Actual REST verified registration, AMA, DCR and association. Azure rejected
+RBAC at the absent DCR, so a separately approved one-time personal bootstrap
+initialized only the three targets; exact-resource RBAC and protected main
+OIDC verification followed. The routine control path uses the existing CI
+identity with three exact child-resource writers and one machine metadata
+reader. The sender runs locally, uses a persistent single-attempt ledger and
+does not expose SSH to public runners. No GitHub sender or schedule exists.
+
+On 28 October actual Kusto reconciled one ten-message/900-message-byte batch:
+ten total and distinct, 2,600 billable bytes, two aggregate queries. The guest
+was then powered off. [Actual validation](../validation/local-linux-ama.md)
+separates personal initialization, OIDC verification, queried data and shutdown.
+The [separate source inventory](../../ama/source.json) records bounded verified
+ingestion; AMA health policies/automatic collection are not implemented in the
+existing health tool. No native SSH or active Linux detection coverage follows
+from the local4 test. Starting the guest would resume its installed collection
+services and requires attention to the approved scope and budget.

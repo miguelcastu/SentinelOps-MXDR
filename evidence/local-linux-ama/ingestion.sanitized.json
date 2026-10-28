@@ -1,0 +1,14 @@
+{
+  "evidence": "actual-log-analytics-aggregate",
+  "observed_utc": "2026-10-28T21:55:02.470859+00:00",
+  "events": 10,
+  "unique_events": 10,
+  "last_seen": "2026-10-28T21:50:00.002593Z",
+  "billable_bytes": 2600,
+  "messages_sent": 10,
+  "payload_bytes": 900,
+  "query_attempts": 2,
+  "raw_events_returned": 0,
+  "reconciled": true,
+  "kusto_executed": true
+}

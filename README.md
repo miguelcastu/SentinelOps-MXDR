@@ -4,7 +4,7 @@
 
 > **19 October 2026 - Twelve managed detections deployed disabled.** Ten additional AzureActivity definitions now have actual OIDC/REST verification and investigation runbooks. Existing Fusion remains enabled; subscription and workspace settings are preserved. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md); disabled rules do not provide active alerting.
 
-> **28 October 2026 - Personal local Linux machine added to the lab.** A dedicated Ubuntu VM, local verification tooling and a fixed Arc/AMA Syslog design now extend the documented lab. The operator approved only one bounded cloud pilot; execution and actual ingestion evidence remain separate acceptance stages. See the [onboarding runbook](docs/onboarding/local-linux-ama.md) and [validation](docs/validation/local-linux-ama.md).
+> **28 October 2026 - Local Linux AMA pilot verified.** One owned Ubuntu VM sent ten labeled messages through rsyslog/AMA to `Syslog`: ten total / ten distinct, 2,600 billable bytes, two aggregate queries. The VM is now stopped. Actual REST, main OIDC verification and [Kusto evidence](docs/validation/local-linux-ama.md) are recorded; subscription and workspace controls are preserved. This establishes bounded ingestion, not continuous endpoint alerting.
 
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
@@ -18,6 +18,7 @@ This technical lab covers SIEM platform deployment, source onboarding, troublesh
 | Existing subscription remediated: **1/1 resources** | [Remediation result](evidence/04-remediation-complete.png) |
 | Subscription-level diagnostic export to workspace | [Diagnostic setting](evidence/05-diagnostic-settings.png) |
 | Activity events queryable with KQL | [Query result](evidence/06-kql-ingestion-summary.png) |
+| Owned local Ubuntu / Arc / AMA pilot: ten Syslog messages reconciled | [Actual validation](docs/validation/local-linux-ama.md) |
 | Operations analysis and estimated ingestion latency | [Operations](evidence/07-kql-administrative-operations.png) · [Latency](evidence/08-kql-ingestion-latency.png) |
 
 **Observed snapshot:** 9 records, 3 distinct `Caller` values; mean estimated ingestion delay 7.89 min, maximum 9 min. These are *point-in-time lab observations*, **not** production performance targets or SLAs. The connector inventory itself shows a neutral Azure Activity status, so correctness is established through the diagnostic export and actual `AzureActivity` table results, not by assuming the connector UI is green.
@@ -82,17 +83,19 @@ The fictional **Atlas Financial** customer now has a second source format: expli
 flowchart LR
     GEN[Local synthetic authentication generator] --> CHECK[Schema validation and UTC normalization]
     CHECK --> BATCH[Bounded batches: offline verified]
-    BATCH -. Approval required .-> DCR[Proposed Direct DCR]
+    BATCH -. Approval required .-> DCR[Proposed synthetic-auth Direct DCR]
     DCR -. Not deployed .-> TABLE[Proposed SentinelOpsAuth_CL]
 ```
 
-[Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. No DCR/table or ingestion workload was created. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
+[Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. That synthetic-authentication design has no deployed DCR/custom table or cloud upload; it is separate from the completed Linux AMA pilot below. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
 
 ## Personally owned Linux machine and AMA
 
 The [local Linux source](ama/source.json) uses a dedicated VirtualBox Ubuntu 24.04 guest on the operator's personal PC, avoiding Azure compute. It has NAT, loopback-only SSH, key authentication and no shared folders. Preview-first preparation, a hash-pinned local Arc package installer and sanitized SSH verification are versioned; images, keys and raw diagnostics remain ignored. Existing VMs and Windows security settings are preserved.
 
-The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the exact DCR/extension/association and the manual acceptance sequence. The approved pilot collects only `local4` Warning and above with ten labeled messages; it does not collect native SSH authentication or university tenant logs. A fingerprint-bound main-only OIDC workflow configures only the three fixed targets. The manual local sender has a persistent attempt ledger and bounded aggregate verification; there is no GitHub sender or schedule. [Validation](docs/validation/local-linux-ama.md) separates local VM readiness, mock-tested deployment and actual cloud acceptance, including possible ingestion charges. Rule activation remains outside this scope.
+The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the exact DCR/extension/association and the manual acceptance sequence. The approved pilot collects only `local4` Warning and above with ten labeled messages; it does not collect native SSH authentication or university tenant logs. A fingerprint-bound main-only OIDC workflow configures only the three fixed targets. The manual local sender has a persistent attempt ledger and bounded aggregate verification; there is no GitHub sender or schedule.
+
+A separately approved one-time personal bootstrap initialized only the three fixed resources when Azure rejected RBAC at the absent DCR; routine control then returned to exact-scoped OIDC. [Validation](docs/validation/local-linux-ama.md) records actual REST verification, a successful main OIDC run and ten unique Syslog messages reconciled in Kusto. The completed sender/bootstrap ledgers prevent reuse. The VM is stopped and AMA is not yet part of the automatic health evaluator; final monetary charges remain unknown. Rule activation remains outside this scope.
 
 ## Platform health and observability
 
@@ -120,7 +123,7 @@ hunting/      Reusable KQL queries
 evidence/     Sanitized Azure records and explicitly labeled synthetic evidence
 infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
 ingestion/    Synthetic generator, normalization, bounded client and source inventory
-ama/          Planned owned Linux source, fixed AMA contract, bounded pilot and aggregate KQL
+ama/          Pilot-verified owned Linux source, fixed AMA contract, bounded pilot and aggregate KQL
 platform_health/  Source health, readonly collector, local reports, safe faults and KQL library
 rba/          Synthetic entity risk, correlation, baselines, source adapters and replay reports
 tests/        Lightweight offline project validation
@@ -134,7 +137,7 @@ scripts/      Offline validation, guarded deployment and aggregate queries
 
 Azure budgets are alerts, **not hard spending limits**. Promotional credit and product trials are subject to eligibility and expiration. Verify charges, Log Analytics ingestion, retention and workspace caps in your own subscription. Do not include secrets, tenant/subscription IDs, email identities or unredacted event logs. See [evidence guidelines](docs/evidence-handling.md).
 
-Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.99 EUR sign-up credit expiring 12 November 2026 at 18:00 UTC. The credit API reports no charges in available events; billing lag can apply. No paid service or chargeable experiment was introduced. Existing Azure resources can still accrue their own costs. See [billing and preservation evidence](docs/validation/platform-setup.md).
+Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.99 EUR sign-up credit expiring 12 November 2026 at 18:00 UTC. The post-pilot API still publishes EUR 175.99436818021823, but billing lag can apply. The single approved Syslog pilot reported 2,600 billable bytes; that is not a measured monetary charge or a zero-cost guarantee. No paid add-on or Azure compute was added. Existing workloads can still accrue costs. See [post-pilot finances](evidence/local-linux-ama/financial.sanitized.json) and [preservation evidence](evidence/local-linux-ama/preservation.sanitized.json).
 
 ## Status / roadmap
 
@@ -142,9 +145,9 @@ Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.9
 - [x] Exact-resource RBAC, MFA-protected initial setup, immutable GitHub OIDC and protected PR validation.
 - [x] Two disabled detections, synthetic cases, actual deployment/REST verification and a clean manual drift check.
 - [x] Ingestion offline: synthetic source, normalization, bounded transport, configuration and tests.
-- [ ] Approved DCR/table deployment, one upload and destination verification for a second cloud source.
+- [ ] Separate synthetic-auth custom table/DCR and upload: not deployed or authorized.
 - [x] Personal local Linux VM preparation, verification and documented Arc/AMA source design.
-- [ ] Approved Arc/AMA registration, exact cloud configuration and reconciled Syslog pilot.
+- [x] Approved Arc/AMA registration, exact cloud configuration, main OIDC verification and reconciled ten-message Syslog pilot; VM stopped.
 - [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
 - [x] Platform health evaluator, local dashboard, eleven safe faults and manual read-only OIDC audit tooling.
 - [x] Offline entity risk correlation, strict attack sequence, baseline controls and replay report.

@@ -1,0 +1,52 @@
+{
+  "evidence": "actual-azure-rest-and-rbac",
+  "verified_utc": "2026-10-28T21:51:35.269280+00:00",
+  "pinned_subscription_and_tenant_unchanged": true,
+  "workspace_pricing_unchanged": true,
+  "retention_days": 30,
+  "daily_cap_gb": 0.1,
+  "analytics_rules_unchanged": true,
+  "rule_count": 13,
+  "managed_rules_disabled": 12,
+  "ci_identity_reused": true,
+  "verified_custom_role_definitions": 7,
+  "ci_assignments_total": 18,
+  "exact_ama_assignments": 4,
+  "broader_scope_assignments": 0,
+  "new_ci_query_permissions": 0,
+  "role_scopes": [
+    {
+      "purpose": "machine",
+      "scope": "single owned machine metadata",
+      "actions": [
+        "Microsoft.HybridCompute/machines/read",
+        "Microsoft.HybridCompute/machines/extensions/read",
+        "Microsoft.Insights/dataCollectionRuleAssociations/read"
+      ]
+    },
+    {
+      "purpose": "dcr",
+      "scope": "exact fixed resource",
+      "actions": [
+        "Microsoft.Insights/dataCollectionRules/read",
+        "Microsoft.Insights/dataCollectionRules/write"
+      ]
+    },
+    {
+      "purpose": "extension",
+      "scope": "exact fixed resource",
+      "actions": [
+        "Microsoft.HybridCompute/machines/extensions/read",
+        "Microsoft.HybridCompute/machines/extensions/write"
+      ]
+    },
+    {
+      "purpose": "association",
+      "scope": "exact fixed resource",
+      "actions": [
+        "Microsoft.Insights/dataCollectionRuleAssociations/read",
+        "Microsoft.Insights/dataCollectionRuleAssociations/write"
+      ]
+    }
+  ]
+}

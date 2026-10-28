@@ -4,8 +4,8 @@ The operator requested a machine that sends its own logs through Azure Monitor
 Agent (AMA), rejected university directory ingestion, and authorized preparing
 a VM on a personally owned Windows computer on 28 October 2026. After reviewing
 the concrete proposal in PR #13, the operator explicitly approved only the
-one-machine Arc/AMA pilot below. Local preparation is verified; cloud execution
-and ingestion must still be established through actual evidence.
+one-machine Arc/AMA pilot below. The bounded pilot is complete: actual Kusto reconciled ten total / ten distinct
+messages, 2,600 billable bytes, and the guest is now powered off.
 See the [actual validation record](../validation/local-linux-ama.md).
 
 ## Architecture and scope
@@ -14,21 +14,21 @@ See the [actual validation record](../validation/local-linux-ama.md).
 flowchart LR
     HOST[Personal Windows computer] --> VM[Local Ubuntu 24.04 VM]
     VM --> RS[Local rsyslog]
-    VM -. Registration pending .-> ARC[Azure Arc machine metadata and identity]
-    RS -. AMA extension pending .-> AMA[Azure Monitor Linux Agent]
-    DCR[Fixed proposed DCR: local4 Warning and higher] -. Pending .-> AMA
-    AMA -. Destination pending .-> SYS[Existing workspace: Syslog table]
+    VM -. Management and identity .-> ARC[Azure Arc machine]
+    RS --> AMA[Azure Monitor Linux Agent]
+    DCR[Fixed DCR: local4 Warning and higher] --> AMA
+    AMA --> SYS[Existing workspace: Syslog table]
     SYS --> SENT[Sentinel hunting and future detections]
 ```
 
 VirtualBox runs the compute on the personal PC; this is not an Azure VM.
-Arc would represent this one guest as an Azure resource and give it a managed
-identity. AMA would collect the facilities and severities selected by its DCR.
+Arc represents this one guest as an Azure resource and gives it a managed
+identity. AMA collects the facilities and severities selected by its DCR.
 The DCR association connects that exact machine to that exact collection rule.
 Arc is management plumbing; it is not the log collector. Sentinel uses the
 workspace's ingested tables rather than receiving a separate copy.
 
-The proposed source is **this guest's Linux Syslog**, not all subscription,
+The verified pilot source is **this guest's Linux Syslog**, not all subscription,
 tenant or workspace logs. The subscription contains the management resources;
 the existing tenant authenticates access. This design does not join the PC or
 guest to the university directory, export Entra sign-ins, create an application
@@ -82,7 +82,10 @@ machine. The mutable Ubuntu `current` manifest must still match the downloaded
 OVA; a later release mismatch requires an explicit image refresh, not importing
 an unchecked image. `pycdlib` is an ephemeral local dependency, not a CI dependency.
 
-Normal start, verification and SSH commands:
+For a separately authorized future session, normal start, verification and SSH
+commands are below. Starting the installed guest resumes its existing local4
+collection; the completed pilot does not authorize unattended operation or a
+second batch. Leave it stopped between approved sessions:
 
 ```powershell
 & 'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe' startvm lab-sentinelops-linux-01 --type headless
@@ -110,7 +113,8 @@ The local Arc installer uses Microsoft's [published installation method](https:/
 Its script bytes are pinned to the reviewed SHA-256 in the wrapper; a changed
 download stops before execution. The wrapper runs the package installer only,
 never `azcmagent connect`. Microsoft may receive installer diagnostics on a
-failure. There are no Azure credentials in the guest during this preparation.
+failure. Before registration, this preparation places no Azure credentials in the guest;
+the connected Arc agent subsequently maintains its own machine identity.
 The Arc package is separate from AMA; installing it alone is not onboarding.
 
 The preview-first local Syslog test sends exactly ten labeled messages and
@@ -121,7 +125,7 @@ The first attempt stopped before sending because systemctl uses exit 1 for an
 absent unit; the wrapper now handles that expected absence and rejects other
 errors. The successful batch contained 900 message bytes.
 
-## Approved fixed cloud rollout: verify execution evidence separately
+## Fixed cloud configuration: actual pilot completed
 
 The [offline source contract](../../ama/plan.py) and [approved cloud contract](../../ama/cloud.py) render only the following targets in
 the existing `rg-sentinelops-mxdr`, West Europe. Subscription identifiers are
@@ -129,10 +133,10 @@ read from the ignored existing pin; they are never committed.
 
 | Target | Purpose | State in this increment |
 |---|---|---|
-| Arc machine `lab-sentinelops-linux-01` | Represent this one local guest; managed identity | Not registered |
-| DCR `dcr-sentinelops-ama-linux` | One Syslog source, one existing workspace destination | Offline body only |
-| Machine extension `AzureMonitorLinuxAgent` | Install and manage AMA | Offline body only |
-| Association `sentinelops-ama-linux` | Bind this machine to this DCR | Offline body only |
+| Arc machine `lab-sentinelops-linux-01` | Represent this one local guest; managed identity | Registered; guest now stopped |
+| DCR `dcr-sentinelops-ama-linux` | One Syslog source, one existing workspace destination | Persisted and independently verified |
+| Machine extension `AzureMonitorLinuxAgent` | Install and manage AMA | Persisted and independently verified |
+| Association `sentinelops-ama-linux` | Bind this machine to this DCR | Persisted and independently verified |
 | Existing workspace `law-sentinelops-mxdr-euw` | Destination `Syslog` table | No settings changed |
 
 Render private resource bodies without contacting Azure:
@@ -160,13 +164,14 @@ MITRE mapping and false-positive accuracy are **not applicable** to its ten
 synthetic transport checks. The existing twelve disabled AzureActivity rules
 do not gain endpoint coverage by adding this source.
 
-The operator explicitly approved the following specific exception to the
+The completed rollout used the operator's specific exception to the
 [deployment/ingestion boundary](../../AGENTS.md) on 28 October; it grants no
 additional source, repeat batch, rule activation or recurring workload:
 
 1. Register only missing Arc prerequisite providers: `Microsoft.HybridCompute`,
    `Microsoft.GuestConfiguration`, `Microsoft.HybridConnectivity`. Read-only
-   inspection on 28 October found all three unregistered; Insights was registered.
+   inspection initially found all three unregistered; the approved execution
+   registered those three only. Insights was already registered.
    Do not register SQL features or enable add-on plans.
 2. Review subscription policy/automatic onboarding effects, existing plans,
    inherited access and the fresh credit balance. Stop if an enforced policy
@@ -179,8 +184,8 @@ additional source, repeat batch, rule activation or recurring workload:
    sends no logs. The preview-first [administrative setup](../../scripts/prepare_ama.py)
    reuses the existing identity/trust and adds three fixed child-resource
    writers plus one machine metadata reader at four exact resource scopes.
-4. Approve the one-time local `azcmagent connect` administrative setup exception
-   as well. The private guest is not reachable from a public GitHub runner.
+4. Use the explicitly approved one-time local `azcmagent connect` administrative
+   setup exception. The private guest is not reachable from a public GitHub runner.
    Use the existing pinned subscription and legitimate MFA authentication;
    do not expose SSH to the Internet, create a self-hosted runner, use Cloud
    Shell, weaken Conditional Access or create a long-lived service-principal
@@ -189,7 +194,11 @@ additional source, repeat batch, rule activation or recurring workload:
    short-lived token over SSH into a root-only temporary JSON under `/run`,
    removes it in `finally`, suppresses raw authentication output, and checks
    the actual Azure response. It refuses an already-existing machine resource.
-5. Deploy/read back only the fixed DCR, AMA extension and association. Confirm
+5. Azure returned 404 for RBAC at the absent DCR. The separately approved
+   [one-time initialization exception](../deployment/ama-bootstrap-exception.md)
+   created only DCR/AMA/association using the pinned personal MFA session.
+   After completing exact-resource RBAC, main OIDC verified all three existing
+   contracts. The initializer completion ledger now blocks reuse. Confirm
    the Arc/AMA services, their provisioning results and the exact collection
    contract. Stop on conflicting ownership, an extra DCR/destination, a paid
    auto-deployment or ambiguous state.
@@ -209,8 +218,9 @@ additional source, repeat batch, rule activation or recurring workload:
    no recurring query. Query/ingestion costs are not
    established by local tests.
 8. Shut down the local guest; verify it is powered off. Record sanitized
-   Azure REST, agent and query evidence separately. Only then promote this
-   source into the active health inventory and design Syslog detections.
+   Azure REST, agent and query evidence separately. This is complete; the
+   source is recorded as pilot-verified, guest-stopped. AMA health policies and
+   detection designs remain separate offline work, not automatic activation.
 
 ## Budget and stop conditions
 
@@ -222,8 +232,10 @@ budget, subscription and plan must remain unchanged.
 
 The read-only credit API still reported **EUR 175.99436818021823** on 28 October,
 expiring **12 November 2026, 18:00:16 UTC**. Closed balances can lag actual
-usage; this is not a fresh spending guarantee. This increment creates no Azure
-resources and sends no logs to Azure. A finite 4 KiB message payload is not a
+usage; this is not a spending guarantee. The approved pilot created the fixed
+Arc/AMA management resources and sent exactly ten messages to Azure. Actual
+Kusto reported 2,600 billable bytes; its final monetary charge remains unknown.
+A finite 4 KiB message payload is not a
 4 KiB billing limit: metadata, retries, duplicates and other collected messages
 can add volume. The DCR's severity selection also admits other local4 producers.
 Do not leave the guest running unattended after an approved live pilot, and
@@ -234,20 +246,14 @@ guest stopped and report the exact stage. A successful package install,
 agent heartbeat, green connector UI or local `logger` command alone is not
 proof that the messages reached `Syslog`.
 
-Execution order, only from reviewed merged main after the in-session approval
-has been recorded privately under `.local/ama/rollout-approved.json` with the
-matching `ama.cloud.fingerprint()`:
-
-```powershell
-python -m scripts.prepare_ama
-python -m scripts.prepare_ama --apply
-# Start the prepared local guest with the command above.
-python -m scripts.connect_local_arc --apply
-# Manually dispatch deploy-ama-pilot.yml on main with its confirmation enabled.
-# Verify successful actual REST read-back and that the guest downloaded its DCR.
-python -m scripts.run_ama_pilot --apply
-# Gracefully shut down and verify poweroff, including after a failed pilot.
-```
+The completed execution used preview-first `prepare_ama`, the one-time local
+Arc connection and separately consented bootstrap, then finished exact RBAC,
+dispatched `deploy-ama-pilot.yml` on main and ran the local pilot once. The
+OIDC run only verified already-matching resources; it did not create them.
+The sender's attempt ledger records two aggregate queries and reconciliation.
+Do not rerun connection, bootstrap or sender commands, reset a ledger, or
+request the unused third query merely to repeat successful evidence. Offline
+`python -m ama` remains safe and does not query current cloud state.
 
 Read-only policy preflight found the two existing MFA enforcement policies and
 the existing AzureActivity export policy; no add-on deployment policy was
@@ -262,13 +268,14 @@ all Defender plans are free. Do not register that provider or enable a plan.
 | SSH timeout | Guest console, VM state, loopback NAT rule, cloud-init progress |
 | Boot panic/stall | The recorded one-vCPU/APIC configuration; preserve Windows protections |
 | cloud-init running/error | Local guest service and private logs; do not claim preparation complete |
-| Arc disconnected | Expected before approved registration; package installation is insufficient |
+| Arc disconnected | Expected after guest shutdown; when running inspect agent/network status without reconnecting the existing resource |
 | AMA provision failure | Exact extension REST status and private guest logs; no add-on plans |
 | No pilot rows | Machine/run filters, rsyslog facility/severity, association and ingestion delay |
 | Duplicate rows | Extra DCR associations/destinations or replay; do not resend blindly |
 | Quiet stopped machine | Expected maintenance; no continuous availability claim |
 
-The proposed source inventory is [ama/source.json](../../ama/source.json).
+The pilot-verified source inventory is [ama/source.json](../../ama/source.json).
 It remains separate from [active/synthetic inventory](../../ingestion/sources.json)
-until verified cloud ingestion and corresponding health-policy work exist.
+because AMA-specific freshness/maintenance policies and a collector have not
+been implemented. Actual pilot acceptance does not establish ongoing health.
 The existing health tool therefore does not silently report AMA as healthy.
