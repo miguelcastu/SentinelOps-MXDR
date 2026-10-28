@@ -1,11 +1,11 @@
 # SentinelOps MXDR project status
 
-Last updated: 19 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: AzureActivity detection portfolio, prioritized by the operator before SOAR. The eight-phase mission remains incomplete.
+Last updated: 28 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: personally owned local Linux VM preparation and documented Arc/AMA source design. Cloud onboarding/ingestion remain pending explicit scoped rollout approval. The eight-phase mission remains incomplete.
 
 | Phase | State | Acceptance evidence / blocker |
 |---|---|---|
 | 1. Detection engineering and incident lifecycle | Portfolio deployed; live lifecycle pending | Twelve actual disabled definitions, fresh REST verification, per-rule investigations, synthetic controls and test plan. Actual alert -> incident -> classification requires approval and narrow access. |
-| 2. Advanced ingestion | Offline complete; live blocked by approval | Generator, schema, normalization, bounded HTTP client tested with mocks, inventory, REST bodies, validation KQL and runbook. No DCR/table deployment or upload. |
+| 2. Advanced ingestion | Synthetic offline complete; personal local VM prepared; cloud acceptance pending | Existing synthetic tooling plus owned Ubuntu guest, local Arc package, SSH/rsyslog evidence and fixed AMA design. No Arc registration, AMA, DCR/table deployment or cloud upload. |
 | 3. Platform health | Implemented and verified within current scope | Eleven simulated faults and actual read-only OIDC configuration/deployment audit verified. Live telemetry/export/runtime remain Unknown; no query access or health export added. |
 | 4. Risk-based correlation | Implemented and verified offline | Bounded entity scoring, strict multi-stage sequence, decay/caps/deduplication, narrow maintenance context, health-aware confidence and replay report. No Sentinel incident or live validation. |
 | 5. SOAR | Pending | No automation/Logic App claimed. |
@@ -13,7 +13,15 @@ Last updated: 19 October 2026. Read this file first when resuming. Atlas Financi
 | 7. Customer operations | Pending | Initial source onboarding and fictional customer context only. |
 | 8. Portfolio completion | Pending | No final release or full completion claim. |
 
-## Current increment: Detection portfolio before SOAR
+## Current increment: Personal local Linux machine for AMA
+
+- The operator rejected university directory onboarding, has no existing lab machine, and explicitly confirmed that this PC is personal and authorized preparing a local VM. That local exception does not authorize an Azure VM, university source, paid plan or a change of subscription. The fixed cloud proposal and its ingestion/RBAC exception are separately reviewable in the [onboarding runbook](onboarding/local-linux-ama.md).
+- VirtualBox already existed; three existing VMs were preserved. Created only `lab-sentinelops-linux-01` inside ignored `.local/ama-vm/`: official hash-checked Ubuntu 24.04 cloud OVA, one vCPU, 1,536 MiB RAM, NAT, loopback-only key-authenticated SSH and no shared folders/clipboard. No host hypervisor install, security relaxation or reboot. Initial boot failures were addressed through this guest's CPU/APIC configuration.
+- Actual SSH verifies Ubuntu 24.04.5, completed cloud-init, active SSH/rsyslog, root/password SSH disabled and the installed Arc package `1.69.03579.1568` with state **Disconnected**. One local batch reconciled ten total/unique messages, 900 message bytes. This proves local rsyslog, not AMA or Kusto. Guest shutdown and delivery status are recorded in [validation](validation/local-linux-ama.md) and [sanitized evidence](../evidence/local-linux-ama/preparation.sanitized.json).
+- [AMA package](../ama/) adds a separate proposed-source inventory, exact DCR/extension/association bodies, ten-message bounded generator and one-hour aggregate verification KQL. `python -m ama` is offline; `--render-private` uses the existing ignored subscription pin and writes only ignored bodies. Four boundary tests cover collection/destination expansion, target mismatch and unsafe/oversized pilot IDs; 134 tests pass locally. No live sender or cloud workflow has been introduced.
+- No Azure resource mutation, new role, log query, Arc registration, AMA installation, cloud ingestion, rule activation, tenant device join or paid feature. Read-only provider/credit inspection found the three Arc prerequisites unregistered and credit still EUR 175.99436818021823 with the existing 12 November expiry; lag remains possible. Existing workspace/cost controls were not changed. The new source stays outside the active health inventory until verified ingestion and corresponding health policies exist.
+
+## Previous increment: Detection portfolio before SOAR
 
 - The operator requested developing and implementing more detections under the existing subscription and budget constraints. [Portfolio coverage and runbooks](detections/portfolio.md): ten additional fixed disabled definitions, AZ-DET-003 through AZ-DET-012, using existing AzureActivity. No new source is necessary for this increment.
 - Eight management-event signals, one repeated-failure threshold and one ordered role-grant/diagnostic-change correlation. Purpose, original-event lineage, entity limitations, MITRE mapping uncertainty, legitimate matches and coverage gaps are documented individually.
@@ -68,6 +76,8 @@ Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branc
 
 ## Next executable task
 
-The prioritized detection portfolio is implemented, deployed disabled and verified through actual OIDC/REST evidence. Active alerting and real-data false-positive assessment remain separate approval-gated acceptance work: first review a bounded main-only OIDC activation/aggregate-query test, its exact temporary permissions, costs, stop conditions and restoration. No source expansion is necessary for this portfolio. Phase 5 remains **offline SOAR and case management** when requested, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization.
+The personal Ubuntu guest is prepared and must remain stopped between sessions. The next machine increment is the fixed [Arc/AMA rollout proposal](onboarding/local-linux-ama.md): approve only the three missing provider registrations, one Arc registration and local authentication exception, one exact DCR/AMA extension/association, minimum scoped permissions and one ten-message/aggregate-query pilot. This is a concrete proposal, not an existing deployed workflow. Follow protected PR/CI/OIDC review for cloud configuration; do not use the personal session to bypass the deployment boundary. Inspect policies/add-on plans and recheck finances first. Stop on cost, authentication or inherited-policy conflicts. Never infer approval from this status file or a small volume estimate.
+
+The prioritized AzureActivity detection portfolio remains deployed disabled. Active alerting and real-data false-positive assessment still need their separate activation/query/test approval. Phase 5 remains **offline SOAR and case management** when requested, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization.
 
 For live acceptance: approve the concrete [Phase 1 test](detections/lifecycle-validation.md) or [Phase 2 cloud design](onboarding/synthetic-authentication.md), then implement/review the gated workflows and narrow OIDC roles, recheck finances and execute only the approved bounded test. Existing detection deployment roles remain unchanged. Current authorization does not permit those cloud expansions.

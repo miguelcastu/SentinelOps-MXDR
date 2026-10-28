@@ -4,6 +4,8 @@
 
 > **19 October 2026 - Twelve managed detections deployed disabled.** Ten additional AzureActivity definitions now have actual OIDC/REST verification and investigation runbooks. Existing Fusion remains enabled; subscription and workspace settings are preserved. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md); disabled rules do not provide active alerting.
 
+> **28 October 2026 - Personal local Linux machine added to the lab.** A dedicated Ubuntu VM, local verification tooling and a fixed Arc/AMA Syslog design now extend the documented lab. Cloud registration, AMA provisioning and live ingestion remain pending their scoped rollout approval; see the [onboarding runbook](docs/onboarding/local-linux-ama.md) and [actual local evidence](docs/validation/local-linux-ama.md).
+
 This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
 
 ## Proven deliverables
@@ -59,6 +61,7 @@ python -m scripts.assess_detections
 python -m platform_health
 python -m rba
 python -m portfolio
+python -m ama
 ```
 
 The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
@@ -84,6 +87,12 @@ flowchart LR
 ```
 
 [Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. No DCR/table or ingestion workload was created. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
+
+## Personally owned Linux machine and AMA
+
+The [local Linux source](ama/source.json) uses a dedicated VirtualBox Ubuntu 24.04 guest on the operator's personal PC, avoiding Azure compute. It has NAT, loopback-only SSH, key authentication and no shared folders. Preview-first preparation, a hash-pinned local Arc package installer and sanitized SSH verification are versioned; images, keys and raw diagnostics remain ignored. Existing VMs and Windows security settings are preserved.
+
+The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the proposed exact DCR/extension/association and the manual acceptance sequence. The initial design collects only `local4` Warning and above with ten labeled pilot messages; it does not collect native SSH authentication or university tenant logs. Offline rendering rejects broader collection. No live sender, Azure onboarding, new roles, detection activation or cloud-ingestion evidence is included. [Validation](docs/validation/local-linux-ama.md) separates local VM readiness from cloud acceptance and potential ingestion charges.
 
 ## Platform health and observability
 
@@ -111,6 +120,7 @@ hunting/      Reusable KQL queries
 evidence/     Sanitized Azure records and explicitly labeled synthetic evidence
 infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
 ingestion/    Synthetic generator, normalization, bounded client and source inventory
+ama/          Planned owned Linux source, fixed AMA contract, bounded pilot and aggregate KQL
 platform_health/  Source health, readonly collector, local reports, safe faults and KQL library
 rba/          Synthetic entity risk, correlation, baselines, source adapters and replay reports
 tests/        Lightweight offline project validation
@@ -133,6 +143,8 @@ Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.9
 - [x] Two disabled detections, synthetic cases, actual deployment/REST verification and a clean manual drift check.
 - [x] Ingestion offline: synthetic source, normalization, bounded transport, configuration and tests.
 - [ ] Approved DCR/table deployment, one upload and destination verification for a second cloud source.
+- [x] Personal local Linux VM preparation, verification and documented Arc/AMA source design.
+- [ ] Approved Arc/AMA registration, exact cloud configuration and reconciled Syslog pilot.
 - [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
 - [x] Platform health evaluator, local dashboard, eleven safe faults and manual read-only OIDC audit tooling.
 - [x] Offline entity risk correlation, strict attack sequence, baseline controls and replay report.

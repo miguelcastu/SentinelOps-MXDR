@@ -1,0 +1,76 @@
+{
+  "evidence": "actual-local-preparation-plus-offline-cloud-design",
+  "date": "2026-10-28",
+  "guest": {
+    "machine": "lab-sentinelops-linux-01",
+    "os": "Ubuntu 24.04.5 LTS",
+    "architecture": "x86_64",
+    "cloud_init": "done",
+    "rsyslog_active": true,
+    "ssh_active": true,
+    "arc_installed": true,
+    "ama_active": false,
+    "root_free_mib": 6643,
+    "ssh_keys_only_no_root": true,
+    "arc_status": "Disconnected",
+    "arc_version": "1.69.03579.1568",
+    "evidence": "actual-local-guest-ssh",
+    "verified_utc": "2026-10-28T20:34:53.848910+00:00",
+    "vcpus": 1,
+    "ram_mib": 1536,
+    "azure_requests": 0,
+    "cloud_ingestion_verified": false
+  },
+  "local_syslog": {
+    "events": 10,
+    "unique_events": 10,
+    "reconciled": true,
+    "evidence": "actual-local-rsyslog-only",
+    "machine": "lab-sentinelops-linux-01",
+    "verified_utc": "2026-10-28T20:32:48.574656+00:00",
+    "facility": "local4",
+    "severity": "warning",
+    "payload_bytes": 900,
+    "azure_requests": 0,
+    "ama_transport_verified": false,
+    "kusto_executed": false
+  },
+  "shutdown": {
+    "machine": "lab-sentinelops-linux-01",
+    "evidence": "actual-local-hypervisor-readback",
+    "vm_state": "poweroff",
+    "verified_utc": "2026-10-28T20:35:19.073997+00:00",
+    "vcpus": 1,
+    "ram_mib": 1536,
+    "nic1": "nat",
+    "ssh_loopback_only": true,
+    "clipboard_disabled": true,
+    "drag_drop_disabled": true,
+    "shared_folders": 0,
+    "azure_requests": 0
+  },
+  "ubuntu_image": {
+    "source": "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.ova",
+    "sha256": "ce599f89777c6eaa1a3156698f004b7938dcc16680132d5f10da1269770e74a2",
+    "bytes": 590766080
+  },
+  "arc_installer_sha256": "a41c8b0626e41aac6c51a9c01a0c35e87cedc77bdd38155a416b1a49bf1e9101",
+  "offline_plan_sha256": "ac0438b438c6af46bbf8a75ea66ee9df8c7f04b08b6727fe8fc5cc720b7a89ea",
+  "cloud": {
+    "resource_mutations": 0,
+    "new_roles": 0,
+    "arc_registered": false,
+    "ama_installed": false,
+    "dcr_deployed": false,
+    "dcr_association_deployed": false,
+    "log_queries_executed": 0,
+    "ingestion_verified": false,
+    "credit_observation": "Read-only closed balance EUR 175.99436818021823 on 2026-10-28; expiry 2026-11-12T18:00:16Z; usage can lag"
+  },
+  "limitations": [
+    "Local rsyslog evidence is not AMA delivery or Kusto execution.",
+    "Arc package installed does not mean Arc registered.",
+    "Source is excluded from active health inventory until approved and cloud-verified.",
+    "Closed credit balance is not a guarantee of zero current charges."
+  ]
+}

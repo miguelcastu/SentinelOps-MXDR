@@ -1,0 +1,8 @@
+// Proposed operator-only query. Not executed by CI or by the offline CLI.
+// After rollout approval, replace the private resource ID and unique pilot run ID.
+Syslog
+| where TimeGenerated between (ago(1h) .. now())
+| where _ResourceId =~ "<EXACT_ARC_MACHINE_RESOURCE_ID>"
+| where Facility == "local4" and ProcessName == "sentinelops-lab"
+| where SyslogMessage startswith "SENTINELOPS_AMA_PILOT run=<EXACT_PILOT_RUN_ID> "
+| summarize Events=count(), UniqueEvents=count_distinct(SyslogMessage), LastSeen=max(TimeGenerated), BillableBytes=sumif(_BilledSize, tolower(_IsBillable)=="true")

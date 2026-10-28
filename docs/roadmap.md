@@ -14,3 +14,10 @@ The eight-phase mission is tracked in [PROJECT_STATUS.md](PROJECT_STATUS.md), th
 | 8. Portfolio completion | Existing technical README/evidence | Final acceptance, demo and verified release |
 
 Earlier AzureActivity ingestion and disabled-rule deployment evidence remain valid. Offline ingestion does not complete Phase 1 or establish a second cloud source. Every increment must preserve the subscription, protections and spending controls.
+
+The 28 October [personal Linux machine increment](onboarding/local-linux-ama.md)
+adds local VM preparation and a fixed Arc/AMA Syslog design to Phase 2. This
+does not replace the separate synthetic-authentication design or establish live
+AMA ingestion. The [local/cloud acceptance stages](validation/local-linux-ama.md)
+and scoped resource/ingestion approval must be satisfied before treating the
+machine as an active source or developing detections that depend on its logs.

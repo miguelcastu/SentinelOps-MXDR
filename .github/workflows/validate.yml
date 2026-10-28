@@ -38,3 +38,5 @@ jobs:
         run: python -m rba
       - name: Validate AzureActivity portfolio contracts and synthetic scenarios
         run: python -m portfolio
+      - name: Validate offline local-machine AMA plan
+        run: python -m ama
