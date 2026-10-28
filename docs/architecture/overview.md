@@ -56,3 +56,24 @@ Offline PR CI has no OIDC permission or Azure secrets. The opt-in live validatio
 The [synthetic authentication package](../../ingestion/) generates labeled fictional events, validates the source contract and projects ASIM-shaped fields before batching. The executable demo ends in ignored local JSON files; it does not authenticate or upload. The real transport is tested with mocks. Two source formats are demonstrable, but AzureActivity remains the only source with actual cloud ingestion evidence.
 
 After resource/cost/RBAC approval, the proposed path uses one Direct DCR and one custom Analytics table in the existing West Europe workspace. No DCE or compute is required by this design. REST bodies are checked for exact stream/table schema agreement and one fixed destination. Provisioning, sending and query permissions must be reviewed separately from rule-deployment roles. See [onboarding](../onboarding/synthetic-authentication.md) and [acceptance status](../PROJECT_STATUS.md).
+
+## Personally owned local guest: proposed AMA data path
+
+On 28 October the operator authorized preparing a local VM on a personal PC.
+The [dedicated Ubuntu guest](../onboarding/local-linux-ama.md) has a separate
+source inventory and local SSH evidence. Its proposed cloud path is Linux
+rsyslog -> AMA -> the existing workspace's `Syslog` table. Azure Arc would
+provide machine management and identity, the DCR would select only local4
+Warning and above, and one association would bind that DCR to this guest.
+No Azure VM, tenant-wide identity log export or university device join is
+involved. Registering an Arc resource still uses the subscription's existing
+tenant and Azure access inheritance.
+
+The local guest, Arc package, Arc registration, AMA extension provisioning,
+DCR association and queried messages are distinct acceptance stages. Cloud
+registration and ingestion remain pending; existing source-health output
+does not claim this planned source is live. No Azure deployment workflow or
+new permissions were introduced by this local preparation. The [validation
+record](../validation/local-linux-ama.md) identifies the actual completed
+stages and [the runbook](../onboarding/local-linux-ama.md) specifies the cloud
+exceptions and protected PR/OIDC path still needed.

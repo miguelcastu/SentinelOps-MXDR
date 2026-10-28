@@ -1,0 +1,18 @@
+{
+  "id": "ama-linux-syslog",
+  "state": "local-prepared-arc-disconnected-cloud-rollout-pending-approval",
+  "owner": "Lab operator; personally owned machine",
+  "machine": "lab-sentinelops-linux-01",
+  "operating_system": "Ubuntu 24.04 LTS amd64",
+  "hosting": "Local VirtualBox VM; not an Azure VM",
+  "pipeline": "Linux rsyslog -> Azure Monitor Linux Agent -> existing Log Analytics workspace",
+  "management": "Azure Arc; no Entra device join, university directory export or application registration",
+  "table": "Syslog",
+  "facilities": ["local4"],
+  "minimum_severity": "Warning",
+  "acceptance": "Guest identity/agent status, persisted DCR/association and ten unique labeled pilot messages verified by aggregate query",
+  "heartbeat": "Machine must be running; no availability promise while stopped",
+  "last_verification": "2026-10-28: actual Ubuntu SSH/rsyslog checks, ten local messages reconciled, Arc package installed but disconnected; no Azure ingestion",
+  "privacy": "Only the dedicated local VM is in scope; public evidence excludes real identity, IP and tenant/subscription identifiers",
+  "coverage_limitations": ["No native SSH Info messages, auth/authpriv, Windows Security Events, Sysmon, performance counters or packet capture in this pilot"]
+}
