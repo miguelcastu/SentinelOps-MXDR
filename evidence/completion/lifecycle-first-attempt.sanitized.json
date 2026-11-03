@@ -1,0 +1,15 @@
+{
+  "evidence": "actual-azure-management-event-and-oidc-cleanup",
+  "workflow_run": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41697635395",
+  "source_sha": "30c78bd9480df7620c1fc1970815316138220b6c",
+  "disabled_rule_creation": "Succeeded",
+  "enable_status": "Unauthorized",
+  "enable_observed_utc": "2026-11-03T18:51:17.0581067Z",
+  "azure_reason": "Query execution permission required although the fixed inline test reads no customer tables",
+  "test_rule_disabled": true,
+  "original_thirteen_rules_unchanged": true,
+  "workspace_settings_unchanged": true,
+  "incident_observed": false,
+  "raw_identity_or_event_output": false,
+  "planned_correction": "Exact-workspace query/read execution gate; no table permissions; explicit digest-bound recovery"
+}

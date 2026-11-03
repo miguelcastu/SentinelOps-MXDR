@@ -58,3 +58,40 @@ approved fixed-resource deployments have historical actual Azure verification.
 Full platform redeployment/ARM what-if remains **unverified**. New ARM roles or
 foundation writes need separate scope/approval. The artifacts provide useful
 IaC/recovery practice without claiming certified production disaster recovery.
+
+## Additional read-only live-verification implementation
+
+The new [manual protected-main workflow](../../.github/workflows/verify-infrastructure.yml)
+and [GET-only adapter](../../scripts/verify_infrastructure.py) can compare the
+compiled contracts to current Azure responses using **existing permissions**.
+No cloud call was made while implementing these files. The implementation and
+tests are not themselves an actual successful workflow run; final delivery must
+link the actual run/report separately if it is executed.
+
+Pre-login verification genuinely runs the locked compiler via
+`scripts.check_bicep` and validates its exact result. The adapter then reads six
+fixed endpoints: workspace, rules inventory, owned machine and the three AMA
+children. It compares fifteen compiled writable bodies plus workspace/machine
+reference contracts, accepting an intentionally Disconnected Linux guest.
+Onboarding metadata and the subscription export stay Unknown and are never
+queried with ungranted permissions. No live KQL, events, new grants, source
+activation or resource modification is involved.
+
+```powershell
+python -m unittest discover -s tests -p test_infrastructure_live.py -v
+```
+
+**Seven additional local tests pass**, covering the exact six GETs / expected
+17 Matching and 2 Unknown under mocks, disconnected-machine semantics, independent
+destination UUID validation, drift/missing-rule failures, duplicate/partial/wrong
+scope rejection, transport refusal of every write/unapproved route, sanitized
+403 errors and compiler-evidence refusal before authentication. Tests also
+check that neither actual-shaped resource IDs nor private sample values reach
+the public report. They never publish mock output as real cloud evidence.
+Actionlint passes the new workflow; it has no schedule or deployment path.
+
+This path can establish current compiler-to-live contract agreement without
+the unrelated permissions needed by ARM what-if. Even after a successful run,
+full ARM deployment/what-if and current telemetry/runtime health remain outside
+that proof. Existing resource IDs, pricing, retention, cap and rule states are
+only read; the local VM remains stopped.

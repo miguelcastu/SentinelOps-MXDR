@@ -87,7 +87,7 @@ python -m infrastructure.preview
 python -m lab --bundle
 ```
 
-Current local suite: **187 tests**, plus independent customer/evidence/schema
+Current local suite: **198 tests**, plus independent customer/evidence/schema
 checks. Required GitHub CI runs on Python 3.12; local checks also run on 3.15.
 The pinned Bicep compiler is acquired from the official release, SHA-256 checked
 and actually executed in CI. Tests cover conflicting replay, lineage, approval

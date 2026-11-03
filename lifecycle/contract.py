@@ -9,6 +9,8 @@ TITLE = "LAB-VAL-001 - Synthetic lifecycle acceptance"
 API = "2025-09-01"
 READER = "SentinelOps Lifecycle Incident Reader"
 CLOSER = "SentinelOps Exact Test Incident Classifier"
+QUERY_ROLE = "SentinelOps Inline Query Execution Gate"
+QUERY_ACTIONS = ["Microsoft.OperationalInsights/workspaces/query/read"]
 READ_ACTIONS = ["Microsoft.SecurityInsights/incidents/read"]
 CLOSE_ACTIONS = ["Microsoft.SecurityInsights/incidents/read", "Microsoft.SecurityInsights/incidents/write"]
 
@@ -64,7 +66,8 @@ def parameters(current):
 def fingerprint():
     spec = {"rule": rule("1234567890", "2026-11-03T00:00:00Z"), "uuid": RULE_UUID,
             "reader": READ_ACTIONS, "closer": CLOSE_ACTIONS, "polls": 24, "interval_seconds": 30,
-            "new_ingestion_messages": 0, "personal_deployment": False}
+            "new_ingestion_messages": 0, "personal_deployment": False, "query_execution_gate": QUERY_ACTIONS,
+            "table_data_grants": [], "recovery": "one explicit prior-query SHA256; disabled/no-incident preflight; fresh bounded window; no automatic replay"}
     return hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()
 
 

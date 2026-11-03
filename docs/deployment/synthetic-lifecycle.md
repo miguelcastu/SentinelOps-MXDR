@@ -1,6 +1,9 @@
 # Isolated scheduled-alert and incident acceptance
 
-This is a concrete **approval-gated proposal**, not executed cloud evidence.
+The operator approved the concrete PR #20 test on 3 November with
+"autorizo las pruebas que necesites, cualquiera". The first actual enable was
+rejected and cleanup preserved disabled state. A focused recovery is described
+below; neither its code nor the rejection is successful live acceptance.
 The 3 November request authorizes completing the project and a maximum budget;
 the permanent project policy separately requires explicit rule-activation and
 new-access scope. No activation or role setup is inferred from an estimate.
@@ -42,10 +45,11 @@ deploys an analytics rule. Proposed additions are:
 |---|---|
 | Reused analytics writer | Existing read/write actions at only the fixed test-rule resource |
 | New incident reader | `Microsoft.SecurityInsights/incidents/read` at the existing lab workspace; this permits incident metadata inventory in that workspace |
+| Inline-query execution gate | Only `Microsoft.OperationalInsights/workspaces/query/read` at this workspace, with no table permission or DataActions |
 | Later classifier | Incidents read/write at **only the actual linked test incident**, after it exists and the rule is disabled |
 
 No workspace-wide incident writer, role-management permission for CI, extra CI
-identity, customer-log query permission or broad rule writer is proposed.
+identity, customer-table read permission or broad rule writer is proposed.
 The classifier identifier is placed in a GitHub environment secret, not the
 repository. No personal deployment fallback is allowed. Azure rejected a
 missing DCR scope in the earlier AMA work; if it similarly rejects the missing
@@ -97,6 +101,28 @@ to expiry that its cleanup window would cross the expiry.
 The completed [AMA ledgers](../validation/local-linux-ama.md) are unrelated and
 must never be reset/reused. The test workflow code, mocks and this proposal do
 not satisfy Phase 1 until dated actual start and classified-closure evidence exist.
+
+## Diagnosed first enable and controlled recovery
+
+Actual [run 41697635395](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41697635395)
+created the disabled target, then enable returned `Unauthorized` at 18:51:17
+UTC. Filtered management-event metadata identified missing query permissions;
+no raw event or identity is published. OIDC cleanup and independent REST confirm
+disabled, and no incident was found.
+
+Microsoft separates [query execution from table-data access](https://learn.microsoft.com/azure/azure-monitor/logs/manage-table-access#configure-table-level-access-dual-role-method).
+The minimum correction is workspace `query/read`; metadata read already exists.
+No `query/*/read`, specific table action or `tables/data/read` is added. A new
+fingerprint binds this exact permission; no broad Reader or paid plan.
+
+The explicit `recover` operation requires the prior query's SHA-256 in the
+approved environment. It verifies the old exact target is disabled and has no
+linked incident, then updates only that target to a fresh bounded synthetic
+window using its ETag. The new query consumes the old reference, preventing
+automatic repeated recovery. Run-attempt1, finite observation and finally plus
+always-disable remain. The first failed record remains historical; the completed
+AMA pilot is untouched. The operator's latest approval authorizes necessary
+tests, not relaxed subscription, privacy or containment boundaries.
 
 API references: [scheduled rule request](https://learn.microsoft.com/rest/api/securityinsights/alert-rules/create-or-update?view=rest-securityinsights-2025-09-01),
 [incident alerts](https://learn.microsoft.com/rest/api/securityinsights/incidents/list-alerts?view=rest-securityinsights-2025-09-01),
