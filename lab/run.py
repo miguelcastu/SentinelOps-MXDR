@@ -119,8 +119,8 @@ def run(output):
         detail=json.loads(investigation.read_text(encoding="utf-8"))
         from lifecycle.contract import fingerprint
         live = (all(x.get("evidence") == "actual-azure-scheduled-lifecycle" and x.get("auth_mode") == "github-oidc" and x.get("approved_sha256") == fingerprint() and x.get("original_thirteen_rules_unchanged") is True and x.get("workspace_settings_unchanged") is True for x in (a, b))
-                and a.get("mode") in {"start", "recover", "observe"} and b.get("mode") == "close"
-                and (a.get("mode") != "observe" or a.get("observed_existing_test") is True)
+                and a.get("mode") in {"start", "recover", "observe", "reconcile"} and b.get("mode") == "close"
+                and (a.get("mode") not in {"observe", "reconcile"} or a.get("observed_existing_test") is True)
                 and isinstance(a.get("test_run_reference"), str) and len(a["test_run_reference"]) == 64 and a["test_run_reference"] == b.get("test_run_reference")
                 and a.get("incident_created") is True and a.get("scheduled_rule_link_verified") is True and b.get("incident_status") == "Closed" and b.get("classification") == "BenignPositive" and b.get("test_rule_disabled") is True
                 and detail.get('evidence')=='actual-azure-rest-alert-investigation' and detail.get('auth_mode')=='personal-mfa-read-only-verification'

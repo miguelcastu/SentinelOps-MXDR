@@ -10,7 +10,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 from ama.cloud import Client
-from lifecycle.contract import API, RULE_UUID, TITLE, close_body, fingerprint, instant, parameters, require, rule, validate_incident
+from lifecycle.contract import API, RULE_UUID, TITLE, close_body, reconcile_closed_body, fingerprint, instant, parameters, require, rule, validate_incident
 from scripts.azure_guard import context
 from scripts.deploy_ama_pilot import workspace_settings
 from scripts.prepare_portfolio import NoRedirect
@@ -166,6 +166,29 @@ def execute(client, workspace, mode):
         finally:
             require(disabled(client, target), "Created test rule must persist disabled")
         report["test_rule_disabled"] = True
+    elif mode == "reconcile":
+        require(disabled(client, target), "Test rule must remain disabled")
+        from scripts.azure_guard import canonical_uuid
+        identifier = canonical_uuid(os.environ.get("SENTINEL_LIFECYCLE_INCIDENT_ID", ""))
+        path = workspace + "/providers/Microsoft.SecurityInsights/incidents/" + identifier
+        current = client.request("GET", path + "?api-version=" + API)
+        require(current.get("id", "").lower() == path.lower(), "Unexpected incident reconciliation target")
+        source = client.request("GET", target + "?api-version=" + API)
+        _, started = parameters(source)
+        reference = hashlib.sha256(source["properties"]["query"].encode()).hexdigest()
+        require(reference == os.environ.get("SENTINEL_LIFECYCLE_RECONCILE_REFERENCE", ""), "Exact reviewed source query required for timeline repair")
+        body = reconcile_closed_body(current, target, started)
+        needed = any(current["properties"].get(k) != started for k in ("firstActivityTimeUtc", "lastActivityTimeUtc"))
+        if needed:
+            client.request("PUT", path + "?api-version=" + API, body)
+        final = client.request("GET", path + "?api-version=" + API)
+        props = validate_incident(final, target)
+        require(all(props.get(k) == started for k in ("firstActivityTimeUtc", "lastActivityTimeUtc")), "Activity timeline repair did not persist")
+        require(props.get("status") == "Closed" and props.get("classification") == "BenignPositive" and props.get("classificationReason") == "SuspiciousButExpected", "Classification changed during timeline repair")
+        report.update(observe(client, workspace, target))
+        report.update(test_rule_disabled=True, observed_existing_test=True, new_rule_activations=0,
+                      incident_activity_timestamps_restored=needed, classification_unchanged=True,
+                      incident_status="Closed", classification="BenignPositive", classification_reason="SuspiciousButExpected")
     elif mode == "observe":
         require(disabled(client, target), "Existing synthetic rule must remain disabled during observation")
         report.update(observe(client, workspace, target))
@@ -200,7 +223,7 @@ def execute(client, workspace, mode):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["start", "recover", "observe", "close", "disable"])
+    parser.add_argument("mode", choices=["start", "recover", "observe", "reconcile", "close", "disable"])
     args = parser.parse_args()
     require(os.environ.get("SENTINEL_LIFECYCLE_APPROVED_SHA256") == fingerprint(), "Exact reviewed lifecycle approval required before authentication")
     require(datetime.now(timezone.utc) < instant("2026-11-12T18:00:16Z"), "Credit eligibility expired; close locally without cloud work")

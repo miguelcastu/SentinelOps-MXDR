@@ -84,7 +84,27 @@ def close_body(value, target):
     props = validate_incident(value, target)
     require(props.get("status") in {"New", "Active"}, "Test incident must still be open")
     require(isinstance(value.get("etag"), str) and value["etag"], "Incident concurrency token required")
-    return {"etag": value["etag"], "properties": {
+    body = {"etag": value["etag"], "properties": {
         "title": TITLE, "description": props.get("description", ""), "severity": props["severity"],
         "status": "Closed", "classification": "BenignPositive", "classificationReason": "SuspiciousButExpected",
         "classificationComment": "Authorized SentinelOps synthetic lifecycle test. The scheduled rule matched a labeled inline test event, not a customer attack. Related rule/alert verified; existing twelve detections remain disabled. No containment performed."}}
+    for key in ("firstActivityTimeUtc", "lastActivityTimeUtc", "owner", "labels"):
+        if key in props:
+            body["properties"][key] = props[key]
+    return body
+
+
+def reconcile_closed_body(value, target, started):
+    """Restore only known inline-event time on the exact classified test case."""
+    props = validate_incident(value, target)
+    instant(started)
+    require(props.get("status") == "Closed" and props.get("classification") == "BenignPositive" and
+            props.get("classificationReason") == "SuspiciousButExpected", "Only the already-classified synthetic incident may be reconciled")
+    require(isinstance(value.get("etag"), str) and value["etag"], "Exact concurrency token required")
+    for key in ("firstActivityTimeUtc", "lastActivityTimeUtc"):
+        require(props.get(key) in (None, started), "Existing activity time conflicts with the exact inline event")
+    mutable = ("title", "description", "severity", "status", "classification", "classificationReason",
+               "classificationComment", "owner", "labels", "firstActivityTimeUtc", "lastActivityTimeUtc")
+    body = {"etag": value["etag"], "properties": {k: props[k] for k in mutable if k in props}}
+    body["properties"].update(firstActivityTimeUtc=started, lastActivityTimeUtc=started)
+    return body

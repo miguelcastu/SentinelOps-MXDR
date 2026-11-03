@@ -46,7 +46,7 @@ The reviewed correction adds only workspace query/read execution, no table
 access/DataActions, and one explicit prior-query-digest-bound recovery. No
 broad role or personal deployment fallback. The new compiler-to-live verifier
 uses only six existing fixed GET routes; actual verification remains pending.
-Local suite now includes 211 tests. Live acceptance remains incomplete until
+Local suite now includes 213 tests. Live acceptance remains incomplete until
 the actual linked alert/incident and classified closure are verified.
 
 - Actual read-only Azure eligibility confirms same Enabled subscription, spending limit On, published EUR175.99436818021823, expiry 12 November 2026 18:00:16 UTC. New operator budget is maximum EUR175, not a spending target. Closed credit can lag usage. [Eligibility](../evidence/completion/eligibility.sanitized.json).
