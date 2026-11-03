@@ -1,0 +1,277 @@
+{
+  "schema_version": "1.0",
+  "evidence": "fictional-service-ticket-examples",
+  "customer": "Atlas Financial",
+  "tickets": [
+    {
+      "id": "AF-SVC-001",
+      "category": "source-onboarding",
+      "title": "Accept one owned Linux source",
+      "evidence": "fictional-service-ticket",
+      "priority": "P3",
+      "status": "ClosedSynthetic",
+      "trigger": "The fictional customer asks to demonstrate Linux log onboarding without using a managed university endpoint or an Azure VM.",
+      "investigation": [
+        "Confirm ownership, collection facility/severity, one existing destination and explicit finite pilot consent.",
+        "Verify actual Arc machine, AMA extension, exact DCR and association independently from the local package installation.",
+        "Reconcile only the approved run with aggregate count/distinct/billable bytes; preserve the consumed ledger."
+      ],
+      "root_cause": "A collector package alone cannot establish destination delivery; acceptance must follow the complete approved data path.",
+      "actions": [
+        "Use the fixed one-machine Arc/AMA design and exact resource-scoped access.",
+        "Record ten expected unique labeled messages and their verified destination counts.",
+        "Stop the owned local guest after the bounded verification."
+      ],
+      "acceptance": [
+        "Counts reconcile ten total / ten distinct for the historical lab pilot.",
+        "Actual shutdown read-back shows poweroff and the existing DCR remains unchanged."
+      ],
+      "closure_rationale": "ClosedSynthetic: the fictional onboarding acceptance exercise follows actual historical transport and shutdown evidence; no new upload was sent.",
+      "limitations": [
+        "The actual evidence is historical, not current source freshness.",
+        "Only local4 Warning and higher is selected; native SSH/authpriv is not covered."
+      ],
+      "reference_paths": [
+        "docs/onboarding/local-linux-ama.md",
+        "evidence/local-linux-ama/ingestion.sanitized.json",
+        "evidence/local-linux-ama/shutdown.sanitized.json"
+      ]
+    },
+    {
+      "id": "AF-SVC-002",
+      "category": "connector-troubleshooting",
+      "title": "Policy exists but no rows are visible",
+      "evidence": "fictional-service-ticket",
+      "priority": "P2",
+      "status": "ClosedSynthetic",
+      "trigger": "A fictional operator sees a neutral connector badge after assigning Azure Activity export policy and assumes onboarding has failed.",
+      "investigation": [
+        "Verify assignment at subscription scope, destination workspace and logsEnabled/effect parameters.",
+        "Inspect compliance and remediation state for the already-existing subscription.",
+        "Verify the resulting diagnostic export and bounded actual destination summary rather than trusting the connector badge."
+      ],
+      "root_cause": "In the historical engineering case, the existing subscription needed remediation after policy assignment; a UI badge was not delivery evidence.",
+      "actions": [
+        "Use the policy remediation path rather than creating a duplicate export.",
+        "Record the expected destination and actual query window separately from UI status."
+      ],
+      "acceptance": [
+        "Historical remediation evidence records one of one resources complete.",
+        "Historical AzureActivity summary contains actual records in the correct workspace."
+      ],
+      "closure_rationale": "ClosedSynthetic: the fictional connector ticket is resolved using the documented diagnostic method and dated real lab evidence, without modifying collection.",
+      "limitations": [
+        "No current AzureActivity freshness query is executed by this ticket.",
+        "A populated historical sample does not prove every category or future availability."
+      ],
+      "reference_paths": [
+        "docs/troubleshooting/azure-policy-remediation.md",
+        "docs/validation/first-ingestion.md"
+      ]
+    },
+    {
+      "id": "AF-SVC-003",
+      "category": "detection-tuning",
+      "title": "Approved role grant matches a detection",
+      "evidence": "fictional-service-ticket",
+      "priority": "P3",
+      "status": "ClosedSynthetic",
+      "trigger": "An approved maintenance role grant produces the same control-plane behavior the fictional analyst is investigating as a suspicious change.",
+      "investigation": [
+        "Inspect original event ID, actor format, exact target scope, role permissions and change approval.",
+        "Compare the authorized action with a suspicious lookalike outside the approved scope or time window.",
+        "Preserve the matching event and document benign-positive reasoning instead of calling every authorized match a logic defect."
+      ],
+      "root_cause": "The detection is a behavioral signal; legitimate administration can correctly satisfy its predicates.",
+      "actions": [
+        "Bind any maintenance exception to actor, operation, target, source and expiry.",
+        "Add positive, benign-lookalike and out-of-scope controls before proposing a protected tuning change."
+      ],
+      "acceptance": [
+        "Approved maintenance is explained while the suspicious lookalike remains observable.",
+        "No blanket CI/admin allowlist or silent live activation is introduced."
+      ],
+      "closure_rationale": "ClosedSynthetic: the example is classified as benign positive with a narrow proposed tuning control; no production false-positive rate is inferred.",
+      "limitations": [
+        "Synthetic fixtures are not real operational accuracy data.",
+        "The twelve managed AzureActivity rules remain disabled."
+      ],
+      "reference_paths": [
+        "docs/detections/lifecycle-validation.md",
+        "docs/operations/risk-correlation.md",
+        "tests/fixtures/detection_triage.json"
+      ]
+    },
+    {
+      "id": "AF-SVC-004",
+      "category": "incident-investigation",
+      "title": "Investigate a multi-stage fictional compromise",
+      "evidence": "fictional-service-ticket",
+      "priority": "P1",
+      "status": "ClosedSynthetic",
+      "trigger": "A synthetic authentication sequence is followed by a role grant, diagnostic change and endpoint-style execution for one canonical account.",
+      "investigation": [
+        "Verify canonical mapping and original-event lineage before linking stages.",
+        "Check strict time order and matching host/resource context; reject a shared-IP-only identity join.",
+        "Inspect contribution caps/decay and record Unknown endpoint-health confidence limits."
+      ],
+      "root_cause": "The fictional sequence satisfies AF-RBA-001; the finding prioritizes investigation and is not proof of a real compromise.",
+      "actions": [
+        "Create or locate the idempotent local case and attach the evidence chain.",
+        "Record analyst interpretation, explicit human decision and evidence-backed synthetic classification.",
+        "Preserve residual collection gaps and follow-up actions in the audit."
+      ],
+      "acceptance": [
+        "The synthetic finding retains all source event IDs and ordered stage context.",
+        "The local case audit distinguishes recommendation, approval and final classification."
+      ],
+      "closure_rationale": "ClosedSynthetic: the fictional case is investigated and classified using labeled evidence; no real Sentinel/Defender incident closure is claimed.",
+      "limitations": [
+        "No actual endpoint attack or security containment is executed.",
+        "The original mission live Sentinel lifecycle remains a separate acceptance gate."
+      ],
+      "reference_paths": [
+        "docs/operations/risk-correlation.md",
+        "evidence/phase-4/risk-report.synthetic.json",
+        "customer/atlas-financial/operations.md"
+      ]
+    },
+    {
+      "id": "AF-SVC-005",
+      "category": "pipeline-failure",
+      "title": "Required validation blocks an unsafe payload",
+      "evidence": "fictional-service-ticket",
+      "priority": "P2",
+      "status": "ClosedSynthetic",
+      "trigger": "A fictional detection change adds an extra destination, arbitrary query or enabled state outside the reviewed fixed contract.",
+      "investigation": [
+        "Reproduce the contract failure offline and inspect the changed properties.",
+        "Confirm validation runs before OIDC authentication and deployment.",
+        "Check that no cloud success evidence is emitted from the failing mock/local test."
+      ],
+      "root_cause": "The proposed payload violates an explicit allowlisted contract; the block is intended behavior, not a deployment outage to bypass.",
+      "actions": [
+        "Correct the payload or propose a separate reviewed scope change.",
+        "Retain negative regression controls and require exact-head offline CI before normal merge."
+      ],
+      "acceptance": [
+        "The unsafe change fails locally/CI before cloud mutation.",
+        "The corrected fixed contract passes required validation without bypassing branch protection."
+      ],
+      "closure_rationale": "ClosedSynthetic: the fictional pipeline request is corrected through the protected path; no broad writer or environment bypass is used.",
+      "limitations": [
+        "A passing offline test is not actual Azure deployment proof.",
+        "No failing scenario is injected into live collection."
+      ],
+      "reference_paths": [
+        "tests/test_ama_cloud.py",
+        "tests/test_deployment.py",
+        ".github/workflows/validate.yml",
+        "docs/security.md"
+      ]
+    },
+    {
+      "id": "AF-SVC-006",
+      "category": "automation-deployment",
+      "title": "Demonstrate safe local case orchestration",
+      "evidence": "fictional-service-ticket",
+      "priority": "P3",
+      "status": "ClosedSynthetic",
+      "trigger": "The fictional SOC asks for automatic enrichment and case tracking while retaining human authority over consequential response.",
+      "investigation": [
+        "Validate intake evidence class, stable finding identity and source lineage.",
+        "Exercise duplicate and conflicting delivery, bounded adapter failure and recovery.",
+        "Check that a pending or denied human decision cannot become an executed containment action."
+      ],
+      "root_cause": "The requested workflow can be demonstrated with local state and audit records; no paid Logic App, SaaS or real containment is necessary.",
+      "actions": [
+        "Use the local synthetic case integration and deterministic context.",
+        "Record state transitions and explicit decision/audit entries.",
+        "Export the exercise result with fiction labels and response limitations."
+      ],
+      "acceptance": [
+        "A finding reaches a reproducible investigated/classified local case state.",
+        "Identical replay is idempotent and conflicting evidence is rejected.",
+        "No cloud notification, account disable, resource deletion or paid service occurs."
+      ],
+      "closure_rationale": "ClosedSynthetic: the local orchestration exercise is accepted with persistent evidence and human gates; actual Azure incident automation remains separate.",
+      "limitations": [
+        "A simulated approval does not grant Azure authorization.",
+        "A local closed case is not a closed Sentinel incident."
+      ],
+      "reference_paths": [
+        "customer/atlas-financial/operations.md",
+        "docs/PROJECT_STATUS.md"
+      ]
+    },
+    {
+      "id": "AF-SVC-007",
+      "category": "cost-investigation",
+      "title": "Explain payload versus billed volume",
+      "evidence": "fictional-service-ticket",
+      "priority": "P2",
+      "status": "ClosedSynthetic",
+      "trigger": "The fictional customer expects the billable volume to equal a 900-byte message payload and treats the credit balance as a real-time spending guarantee.",
+      "investigation": [
+        "Compare message bytes with actual aggregate billable bytes from the same accepted run.",
+        "Record credit observation timestamp, expiry and the possibility of delayed usage posting.",
+        "Distinguish daily-cap/budget alerts from a guaranteed monetary ceiling."
+      ],
+      "root_cause": "Log metadata and billing semantics differ from message payload size; closed credit balances can lag usage.",
+      "actions": [
+        "Report the historical pilot as 900 payload bytes and 2600 billable bytes.",
+        "Leave final monetary charge unknown until billing provides it.",
+        "Stop unnecessary repeat tests and preserve the existing spending and workspace controls."
+      ],
+      "acceptance": [
+        "The report includes volume, time/evidence scope, expiry and billing uncertainty.",
+        "No zero-charge promise, pricing change, subscription upgrade or new paid feature is introduced."
+      ],
+      "closure_rationale": "ClosedSynthetic: the cost explanation is corrected using actual historical volume evidence; no synthetic price is represented as an invoice.",
+      "limitations": [
+        "Final monetary charge is not established by billable-byte arithmetic alone.",
+        "Existing unrelated workloads may still incur charges."
+      ],
+      "reference_paths": [
+        "evidence/local-linux-ama/ingestion.sanitized.json",
+        "evidence/local-linux-ama/financial.sanitized.json",
+        "customer/atlas-financial/service-assurance.md"
+      ]
+    },
+    {
+      "id": "AF-SVC-008",
+      "category": "configuration-drift",
+      "title": "Investigate simulated workspace/rule drift",
+      "evidence": "fictional-service-ticket",
+      "priority": "P2",
+      "status": "ClosedSynthetic",
+      "trigger": "A synthetic health observation differs from the reviewed workspace retention/cap or managed disabled-rule properties.",
+      "investigation": [
+        "Compare only reviewed managed properties against the approved contract.",
+        "Separate configuration mismatch from unavailable telemetry and rule-runtime evidence.",
+        "Verify inventory completeness and target ownership before proposing a correction."
+      ],
+      "root_cause": "The simulated configuration differs from policy; this does not itself prove an actual Azure setting changed or that logging stopped.",
+      "actions": [
+        "Preserve the synthetic faulty observation and expected values.",
+        "Open a controlled exact-target change with before-state, rollback and post-read-back criteria.",
+        "Run local fault controls without changing actual collection."
+      ],
+      "acceptance": [
+        "The simulated scenario becomes Misconfigured with a specific reason.",
+        "The baseline/control remains distinct from Unknown telemetry or a quiet source.",
+        "No Azure retention, cap, pricing or diagnostic setting is altered by the demonstration."
+      ],
+      "closure_rationale": "ClosedSynthetic: the drift exercise identifies the mismatched contract and controlled remediation plan; no live fault or auto-repair was deployed.",
+      "limitations": [
+        "Configuration agreement does not prove runtime or data freshness.",
+        "Actual remediation would require separately authorized scope and verification."
+      ],
+      "reference_paths": [
+        "docs/operations/platform-health.md",
+        "evidence/phase-3/fault-injection.sanitized.json",
+        "platform_health/demo.py"
+      ]
+    }
+  ]
+}

@@ -66,7 +66,7 @@ def baseline():
                     expected_events=None, expected_by=None, latency_p95_seconds=480, billable_bytes=0,
                     hourly_volume=[{"start": "2026-10-18T11:00:00Z", "events": 3}])
     return {"schema_version": "1.0", "evidence": "synthetic", "observed_at": NOW,
-            "sources": [activity, auth],
+            "sources": [activity, auth, ama_observation()],
             "checks": [{"id": key, "state": "Healthy", "reason": "configuration_matches"}
                        for key in ("workspace", "AZ-DET-001", "AZ-DET-002")],
             "rules": {"expected": 2, "present": 2, "matching": 2, "active": 0, "intentionally_disabled": 2}}
@@ -112,3 +112,41 @@ def scenarios():
     snapshot["sources"][1]["query_status"] = "partial"
     append("partial-query-is-unknown", snapshot, "Unknown")
     return result
+
+
+def ama_observation(now=NOW, machine_state="stopped", complete_metrics=False):
+    """Fictional machine context; does not inspect the real local VM or Azure."""
+    at = instant(now)
+    start = (at - timedelta(hours=1)).isoformat().replace("+00:00", "Z")
+    seen = (at - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+    result = blank_observation("ama-linux-syslog", now, start)
+    result["operation_context"] = {"machine_state": machine_state, "observed_at": now,
+                                   "evidence": "synthetic", "reason": "operator-shutdown" if machine_state == "stopped" else "operator-session" if machine_state == "running" else "unverified"}
+    if complete_metrics:
+        result.update(query_status="success", total_events=10, distinct_events=10, valid_events=10,
+                      schema_errors=0, mapping_errors=0, negative_latency_events=0, last_seen=seen,
+                      latency_p95_seconds=60, billable_bytes=2600, hourly_volume=[{"start": start, "events": 10}])
+    return result
+
+
+def ama_scenarios():
+    """Five additional maintenance/partial-evidence cases; original eleven retained."""
+    cases = []
+
+    def append(name, observation, expected):
+        snapshot = baseline()
+        snapshot["sources"][2] = observation
+        cases.append({"scenario": name, "target": "ama-linux-syslog", "expected": expected, "snapshot": snapshot})
+
+    append("ama-planned-shutdown", ama_observation(), "Unknown")
+    running = ama_observation(machine_state="running")
+    running["pilot_evidence"] = {"evidence": "synthetic", "observed_at": NOW, "total_events": 10,
+        "distinct_events": 10, "last_seen": "2026-10-18T11:59:00Z", "billable_bytes": 2600,
+        "query_attempts": 2, "raw_events_returned": 0, "complete_health_metrics": False}
+    append("ama-pilot-is-not-health-metrics", running, "Unknown")
+    append("ama-running-complete-metrics", ama_observation(machine_state="running", complete_metrics=True), "Healthy")
+    stale = ama_observation()
+    stale["operation_context"]["observed_at"] = "2026-10-18T11:44:00Z"
+    append("ama-stale-maintenance-context", stale, "Unknown")
+    append("ama-unknown-operation", ama_observation(machine_state="unknown", complete_metrics=True), "Unknown")
+    return cases

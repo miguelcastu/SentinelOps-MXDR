@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from platform_health.demo import baseline, scenarios
+from platform_health.demo import ama_scenarios, baseline, scenarios
 from platform_health.engine import report, require
 from platform_health.render import markdown, write_report
 
@@ -31,7 +31,7 @@ def main():
         from platform_health.demo import NOW
         value = report(baseline(), NOW)
         value["fault_injection"] = []
-        for scenario in scenarios():
+        for scenario in scenarios() + ama_scenarios():
             checked = report(scenario["snapshot"], NOW)
             target = next((s for s in checked["sources"] if s["source_id"] == scenario["target"]), None)
             target = target or next(c for c in checked["checks"] if c["id"] == scenario["target"])

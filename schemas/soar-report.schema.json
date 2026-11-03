@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/sentinelops/soar-report.schema.json",
+  "title": "Synthetic local SOAR demonstration report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence", "customer", "as_of", "cases", "counts", "audit_chain_verified", "audit", "scenario_checks", "safety", "limitations"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "evidence": {"const": "synthetic-local-soar"},
+    "customer": {"const": "Atlas Financial"},
+    "as_of": {"type": "string", "format": "date-time"},
+    "cases": {"type": "array", "maxItems": 1000, "items": {"$ref": "#/$defs/case"}},
+    "counts": {"type": "object", "additionalProperties": false, "required": ["cases", "closed", "tickets", "audit_events"], "properties": {"cases": {"type": "integer", "minimum": 0, "maximum": 1000}, "closed": {"type": "integer", "minimum": 0, "maximum": 1000}, "tickets": {"type": "integer", "minimum": 0, "maximum": 1000}, "audit_events": {"type": "integer", "minimum": 0, "maximum": 50000}}},
+    "audit_chain_verified": {"const": true},
+    "audit": {"type": "array", "maxItems": 50000, "items": {"$ref": "#/$defs/audit"}},
+    "scenario_checks": {"type": "array", "maxItems": 32, "items": {"type": "object", "required": ["scenario", "passed"], "properties": {"scenario": {"type": "string", "maxLength": 64}, "passed": {"const": true}}}},
+    "safety": {"type": "object", "additionalProperties": false, "required": ["network_calls", "azure_changes", "sentinel_incidents_created", "containment_actions"], "properties": {"network_calls": {"const": 0}, "azure_changes": {"const": 0}, "sentinel_incidents_created": {"const": 0}, "containment_actions": {"const": 0}}},
+    "limitations": {"type": "array", "maxItems": 20, "items": {"type": "string", "maxLength": 500}}
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["case_id", "finding_id", "fingerprint", "state", "revision", "classification", "rationale", "finding", "evidence", "entities", "enrichment", "notes", "approvals", "ticket_delivery"],
+      "properties": {
+        "case_id": {"type": "string", "pattern": "^lab-case-[0-9a-f]{24}$"},
+        "finding_id": {"type": "string", "pattern": "^synthetic-finding-[0-9a-f]{32}$"},
+        "fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "state": {"enum": ["New", "Investigating", "AwaitingApproval", "Closed"]},
+        "revision": {"type": "integer", "minimum": 1},
+        "classification": {"enum": [null, "BenignPositive", "FalsePositive", "TruePositive", "Undetermined"]},
+        "rationale": {"type": ["string", "null"]},
+        "evidence": {"const": "synthetic-local-case"},
+        "finding": {"type": "object", "required": ["evidence", "sentinel_incident_created"], "properties": {"evidence": {"const": "synthetic"}, "sentinel_incident_created": {"const": false}}},
+        "entities": {"type": "array", "maxItems": 100},
+        "enrichment": {"type": "object"},
+        "notes": {"type": "array", "maxItems": 200},
+        "approvals": {"type": "array", "maxItems": 1000},
+        "ticket_delivery": {"type": ["object", "null"]}
+      }
+    },
+    "audit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sequence", "observed_at", "case_id", "actor", "action", "details", "previous_hash", "entry_hash"],
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "case_id": {"type": "string", "pattern": "^lab-case-[0-9a-f]{24}$"},
+        "actor": {"type": "string", "maxLength": 64},
+        "action": {"type": "string", "maxLength": 64},
+        "details": {"type": "object"},
+        "previous_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "entry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

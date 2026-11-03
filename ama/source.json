@@ -20,6 +20,6 @@
     "No native SSH Info messages, auth/authpriv, Windows Security Events, Sysmon, performance counters or packet capture in this pilot"
   ],
   "continuous_collection": "Not running while the VM is powered off; collection would resume at boot with the existing DCR",
-  "health_integration": "Separate verified source inventory; no AMA freshness policy or automatic health collector added",
+  "health_integration": "Integrated into the three-source inventory/policies with planned-stop and stale-evidence handling; no automatic live AMA telemetry collector or query added",
   "evidence": "../evidence/local-linux-ama/ingestion.sanitized.json"
 }

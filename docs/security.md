@@ -38,3 +38,20 @@ not make a compromised authorized main workflow harmless. Do not weaken
 branch protection, federation, MFA or environment gates. The Arc machine's
 identity is separate from the CI identity; the guest is not joined to the
 university directory. Its installed agent identity material stays private.
+
+## Completion artifacts and isolated acceptance proposal
+
+The offline SOAR, IaC and integrated lab add no Azure permission or cloud
+workflow execution. Archive generation uses exact public generated-file
+allowlists and tracked source; no SQLite, keys, pins or arbitrary neighboring
+JSON is bundled. Source code, synthetic case data and historical cloud receipts
+remain separate evidence classes. Local reviewer roles are simulations, not
+authenticated humans, and audit chaining is not protection against an
+administrator rewriting the entire database.
+
+The prepared [synthetic lifecycle workflow](deployment/synthetic-lifecycle.md)
+is manual, main-only, defaults to disable and fails before authentication
+without its exact approval fingerprint. Its proposed workspace incident read
+and fixed test-rule/incident writes are **not present in the eighteen-assignment
+baseline**. They require the documented scope decision and exact setup; no
+workspace-wide incident writer or new log-query permission is included.

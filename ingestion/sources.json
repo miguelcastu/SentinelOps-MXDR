@@ -28,6 +28,22 @@
       "acceptance": "24 expected unique synthetic IDs, no invalid events, reconcile duplicates, timestamps and billed bytes; measure latency before claiming an SLI",
       "last_verification": "2026-10-18: generator, normalization, batching, transport mocks and infrastructure contracts tested offline",
       "data_classification": "synthetic documentation-range addresses and fictional identities"
+    },
+    {
+      "id": "ama-linux-syslog",
+      "owner": "Lab operator; personally owned local machine",
+      "type": "Owned Ubuntu Linux Syslog through Azure Arc and AMA",
+      "table": "Syslog",
+      "pipeline": "Local rsyslog -> AMA -> fixed DCR/association -> existing workspace",
+      "state": "pilot-verified-guest-stopped",
+      "event_types": ["Labeled local4 Warning-or-higher transport test messages"],
+      "heartbeat": "operator-controlled-local-machine",
+      "silent_window_minutes": null,
+      "acceptance": "Actual fixed resource read-back and one ten-message batch reconciled; future health also requires fresh machine state and complete telemetry aggregates",
+      "last_verification": "2026-10-28: actual Syslog query reconciled 10 total / 10 distinct messages and 2600 billable bytes; VM poweroff verified at 21:58:02 UTC",
+      "data_classification": "Owned guest only; pilot messages synthetic; no university directory or native SSH collection",
+      "operation": "Guest intentionally stopped after the completed pilot; collection would resume on boot. No ongoing collection authorized.",
+      "evidence": "../evidence/local-linux-ama/ingestion.sanitized.json"
     }
   ]
 }

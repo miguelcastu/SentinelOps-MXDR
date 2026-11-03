@@ -1,154 +1,163 @@
 # SentinelOps MXDR
 
-**Microsoft Sentinel platform-engineering lab**
+**Microsoft Sentinel engineering, detection as code and controlled SOC automation.**
 
-> **19 October 2026 - Twelve managed detections deployed disabled.** Ten additional AzureActivity definitions now have actual OIDC/REST verification and investigation runbooks. Existing Fusion remains enabled; subscription and workspace settings are preserved. Phase 4 offline correlation remains implemented. See [PROJECT_STATUS.md](docs/PROJECT_STATUS.md); disabled rules do not provide active alerting.
+A reproducible security-engineering portfolio for **Atlas Financial**, a fictional
+customer. It combines actual Azure/OIDC deployment evidence with a complete
+offline lab: source normalization, detection controls, telemetry health, risk
+correlation, persistent case handling, reviewer decisions and customer delivery.
 
-> **28 October 2026 - Local Linux AMA pilot verified.** One owned Ubuntu VM sent ten labeled messages through rsyslog/AMA to `Syslog`: ten total / ten distinct, 2,600 billable bytes, two aggregate queries. The VM is now stopped. Actual REST, main OIDC verification and [Kusto evidence](docs/validation/local-linux-ama.md) are recorded; subscription and workspace controls are preserved. This establishes bounded ingestion, not continuous endpoint alerting.
+> **3 November 2026:** the original Azure subscription is Enabled with spending
+> limit On. Twelve managed detections remain disabled; the owned Linux AMA VM
+> is stopped. SOAR, Bicep models, AMA health policies, customer operations and
+> the integrated demonstration are implemented. The original mission's real
+> scheduled-alert/incident closure remains a separately gated acceptance test.
+> [Exact status and evidence](docs/PROJECT_STATUS.md).
 
-This technical lab covers SIEM platform deployment, source onboarding, troubleshooting, KQL investigations and ingestion-health validation. The documented environment is a lab, not a production deployment.
+## Try it in one command
 
-## Proven deliverables
-
-| Engineering capability | Evidence |
-|---|---|
-| Microsoft Sentinel on Log Analytics (West Europe) | [Azure resource inventory](evidence/01-azure-resources.png) |
-| Azure Activity solution and connector configured | [Connector inventory](evidence/02-azure-activity-connector.png) |
-| Azure Policy `DeployIfNotExists` assigned | [Policy parameters](evidence/03-azure-policy-assignment.png) |
-| Existing subscription remediated: **1/1 resources** | [Remediation result](evidence/04-remediation-complete.png) |
-| Subscription-level diagnostic export to workspace | [Diagnostic setting](evidence/05-diagnostic-settings.png) |
-| Activity events queryable with KQL | [Query result](evidence/06-kql-ingestion-summary.png) |
-| Owned local Ubuntu / Arc / AMA pilot: ten Syslog messages reconciled | [Actual validation](docs/validation/local-linux-ama.md) |
-| Operations analysis and estimated ingestion latency | [Operations](evidence/07-kql-administrative-operations.png) · [Latency](evidence/08-kql-ingestion-latency.png) |
-
-**Observed snapshot:** 9 records, 3 distinct `Caller` values; mean estimated ingestion delay 7.89 min, maximum 9 min. These are *point-in-time lab observations*, **not** production performance targets or SLAs. The connector inventory itself shows a neutral Azure Activity status, so correctness is established through the diagnostic export and actual `AzureActivity` table results, not by assuming the connector UI is green.
-
-## Data flow
-
-```mermaid
-flowchart TD
-    ARM[Azure Resource Manager
-Management actions] --> SRC[Azure Activity Log
-Log source]
-    POL[Azure Policy
-DeployIfNotExists] --> REM[Remediation task
-Existing subscription]
-    REM --> DIA[Subscription diagnostic settings]
-    SRC --> DIA
-    DIA --> LAW[Log Analytics
-AzureActivity table]
-    LAW --> SENT[Microsoft Sentinel
-KQL / hunting / security analytics]
-```
-
-Azure Policy **governs and deploys configuration**, rather than forwarding event payloads itself. Diagnostic settings export Azure Activity to Log Analytics. Sentinel queries the ingested data. Learn more in the [architecture overview](docs/architecture/overview.md).
-
-## Getting started
-
-1. Follow the [manual deployment record](docs/deployment/azure-sentinel-setup.md).
-2. Review the [Azure Activity onboarding runbook](docs/onboarding/azure-activity.md).
-3. Read the [Azure Policy remediation incident](docs/troubleshooting/azure-policy-remediation.md).
-4. Run the reusable [KQL queries](hunting/) against a workspace containing `AzureActivity`.
-5. Review [validation evidence](docs/validation/first-ingestion.md) and the [roadmap](docs/roadmap.md).
-6. Review [AZ-DET-001](docs/detections/AZ-DET-001.md), the [CI/CD prerequisites and runbook](docs/deployment/detection-cicd.md), [pipeline troubleshooting](docs/troubleshooting/detection-cicd.md) and [deployment evidence status](docs/validation/detection-cicd.md).
-
-Run the dependency-free offline checks with Python 3.12+:
+Python **3.12+**, Git and a checkout of this public repository are sufficient.
+The default lab needs no Azure login, Python dependencies, hosted service or
+paid account. It performs no network request or cloud operation.
 
 ```powershell
-python -m scripts.validate_detection
-python -m unittest discover -s tests -v
-python -m ingestion
-python -m scripts.assess_detections
-python -m platform_health
-python -m rba
-python -m portfolio
-python -m ama
+python -m lab --bundle
 ```
 
-The primary pipeline updates only the configured existing disabled rule through GitHub OIDC. It stops before authentication if prerequisites are missing. It never selects another subscription, provisions paid infrastructure or enables a rule. Optional live validation is manual and returns only aggregates. See [AGENTS.md](AGENTS.md) for permanent project constraints.
+Open **`.local/lab/index.html`**. Explore the detection catalog, source-health
+faults, original event timeline, correlated finding, reviewer-gated closed case
+and actual cloud evidence. A portable ZIP with source, workflows, reports and
+a SHA-256 manifest is created beside the output. Private pins, credentials,
+VM disks and the case database are excluded. The demonstration keeps working
+after the Azure account is closed.
 
-The operator also authorized [AZ-DET-002 - Azure Role Assignment Created](docs/detections/AZ-DET-002.md), now deployed disabled through its fixed-target workflow using the same existing identity. [Setup and scope](docs/deployment/detection-cicd.md), [security](docs/security.md), [reusable templates](templates/) and [actual Azure evidence](docs/validation/platform-setup.md) document the implementation. No paid service, connector or billing change was introduced.
-
-## Detection portfolio before SOAR
-
-The [AzureActivity portfolio](docs/detections/portfolio.md) adds ten reviewed disabled definitions for custom roles, network rules, Key Vault access policies, VM Run Command, storage key listing, removed locks/alerts/policies, repeated failed privileged operations and ordered role-grant/diagnostic changes. All reuse the existing source. Each has synchronized KQL/REST, investigation guidance, benign matches, MITRE/coverage limitations and original-event lineage. Disabled definitions do not provide active coverage.
-
-`python -m portfolio` checks complete fixed contracts and 60 synthetic controls; 130 tests pass. The [successful main OIDC deployment](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39235924991) verified all ten additional disabled definitions after a fingerprint-bound approval and exact target-scoped permissions using the existing identity. [Validation and actual deployment evidence](docs/validation/detection-portfolio.md) distinguish source agreement from runtime/accuracy evidence; no new source, activation, incident, paid resource or subscription change is included.
-
-## Advanced ingestion: offline implementation
-
-The fictional **Atlas Financial** customer now has a second source format: explicitly synthetic Windows-style authentication. The dependency-free Python pipeline generates stable IDs, validates its schema, normalizes UTC timestamps and ASIM-shaped fields, and prepares bounded batches. Its real HTTPS transport has finite retries, rate limits, no redirects, sanitized errors and explicit approval before network access; HTTP behavior is tested with mocks. The offline CLI makes zero Azure calls.
+[Architecture and evidence overview](docs/architecture/overview.md)
 
 ```mermaid
 flowchart LR
-    GEN[Local synthetic authentication generator] --> CHECK[Schema validation and UTC normalization]
-    CHECK --> BATCH[Bounded batches: offline verified]
-    BATCH -. Approval required .-> DCR[Proposed synthetic-auth Direct DCR]
-    DCR -. Not deployed .-> TABLE[Proposed SentinelOpsAuth_CL]
+    AZ[Azure subscription activity] --> EXPORT[Existing diagnostic export]
+    EXPORT --> LAW[Log Analytics / Sentinel]
+    VM[Owned local Ubuntu VM] --> RS[rsyslog: local4 Warning+]
+    RS --> AMA[AMA / fixed DCR]
+    AMA --> LAW
+    ARC[Azure Arc management / identity] -.-> VM
+    LAW --> RULES[Twelve disabled detections]
+    FIX[Synthetic multi-source exercise] --> RISK[Risk correlation / source lineage]
+    RISK --> CASE[Persistent local SOAR / reviewer / classification]
+    DEV[Code / tests] --> PR[Protected PR / required CI]
+    PR --> OIDC[Main-only GitHub OIDC]
+    OIDC --> VERIFY[Exact resources / actual REST verification]
 ```
 
-[Source inventory](ingestion/sources.json), [onboarding](docs/onboarding/synthetic-authentication.md), [REST bodies](infrastructure/ingestion/) and [cost/validation evidence](docs/validation/phase-1-2.md) document the implementation. The default demo produces 24 events and a 14,833-byte batch. That synthetic-authentication design has no deployed DCR/custom table or cloud upload; it is separate from the completed Linux AMA pilot below. [Synthetic triage and the incident proposal](docs/detections/lifecycle-validation.md) record benign matches and coverage gaps without claiming real-data false-positive statistics.
+Cloud source proofs are point-in-time observations. The SOAR exercise is local
+and synthetic; it does not create a Sentinel incident. Arc manages one owned
+guest; it does not export university directory logs or join the device to Entra.
 
-## Personally owned Linux machine and AMA
+![Local portfolio explorer with clearly labeled synthetic and historical evidence](evidence/completion/dashboard.synthetic.png)
 
-The [local Linux source](ama/source.json) uses a dedicated VirtualBox Ubuntu 24.04 guest on the operator's personal PC, avoiding Azure compute. It has NAT, loopback-only SSH, key authentication and no shared folders. Preview-first preparation, a hash-pinned local Arc package installer and sanitized SSH verification are versioned; images, keys and raw diagnostics remain ignored. Existing VMs and Windows security settings are preserved.
+## What is implemented
 
-The [runbook](docs/onboarding/local-linux-ama.md) explains rsyslog -> AMA -> the existing workspace's `Syslog` table, Arc's separate management role, the exact DCR/extension/association and the manual acceptance sequence. The approved pilot collects only `local4` Warning and above with ten labeled messages; it does not collect native SSH authentication or university tenant logs. A fingerprint-bound main-only OIDC workflow configures only the three fixed targets. The manual local sender has a persistent attempt ledger and bounded aggregate verification; there is no GitHub sender or schedule.
+| Capability | Executable implementation | Evidence and practical limit |
+|---|---|---|
+| Detection engineering | Twelve fixed AzureActivity rules, synchronized KQL/REST, entity mapping, investigations and sixty portfolio controls | [Actual disabled deployment](docs/validation/detection-portfolio.md); no active security coverage or measured production false-positive rate |
+| Source onboarding | AzureActivity export; actual owned Linux Arc/AMA pilot; synthetic auth schema/normalizer/bounded transport | [10/10 AMA messages, 2,600 billable bytes](docs/validation/local-linux-ama.md); guest stopped, native SSH outside collection |
+| Platform health | Three-source policies, freshness/quality/latency/volume checks, sixteen safe fault scenarios and maintenance handling | [Operations and SLIs](docs/operations/platform-health.md); unavailable telemetry remains Unknown |
+| Risk correlation | Canonical identity joins, event lineage, ordered attack sequence, bounded scoring/decay/caps, deduplication and nine scenario controls | [Design and replay](docs/operations/risk-correlation.md); synthetic finding, not a calibrated risk probability |
+| SOAR | Durable SQLite cases, structured notes, enrichment, revision/expiry-bound reviewer decisions, classified closure, idempotent local ticket and chained audit | [Implementation and six failure scenarios](docs/operations/soar.md); local roles/connectors are simulations |
+| IaC and recovery | Four Bicep models, one parameter file, pinned compiler, nineteen-target comparison and destructive-change gates | [Real compilation](docs/validation/phase-6.md); full platform ARM deployment/what-if remains unverified |
+| Customer operations | Twenty deliverables, definition-derived coverage, RACI, runbooks, SLIs, risk register and eight fictional service tickets | [Atlas Financial handover](customer/atlas-financial/README.md); no real customer or affiliation claim |
+| Portfolio delivery | One-command integrated replay, standalone evidence explorer, portable archive and presentation/interview material | [Reviewer guide](docs/portfolio/README.md) and [final acceptance](docs/validation/project-completion.md) |
 
-A separately approved one-time personal bootstrap initialized only the three fixed resources when Azure rejected RBAC at the absent DCR; routine control then returned to exact-scoped OIDC. [Validation](docs/validation/local-linux-ama.md) records actual REST verification, a successful main OIDC run and ten unique Syslog messages reconciled in Kusto. The completed sender/bootstrap ledgers prevent reuse. The VM is stopped and AMA is not yet part of the automatic health evaluator; final monetary charges remain unknown. Rule activation remains outside this scope.
+The [isolated synthetic scheduler test](docs/deployment/synthetic-lifecycle.md)
+is implemented with a fixed target, twenty-minute data expiry, finite polling,
+mandatory disable and exact-incident classification. Its code and mock checks
+are **not actual alert/incident evidence**; the live gate remains explicit.
 
-## Platform health and observability
+## Verify the project
 
-[Health tooling](platform_health/) evaluates Healthy, Delayed, Missing, Misconfigured and Unknown states using the existing inventory. It handles stale/partial evidence, latency, missing approved batches, schema/mapping errors, duplicates, rule/workspace drift, latest deployment failures and partial ingestion-cost estimates. Quiet AzureActivity has no heartbeat requirement, so zero events alone never proves a collection failure.
+```powershell
+python -m unittest discover -s tests -v
+python -m scripts.validate_detection
+python customer/atlas-financial/validate.py
+python -m portfolio
+python -m platform_health
+python -m rba
+python -m soar
+python -m infrastructure.preview
+python -m lab --bundle
+```
 
-`python -m platform_health` runs eleven synthetic scenarios and writes JSON, Markdown and a standalone filterable dashboard under `.local/platform-health/`. The default demonstration performs no network calls. The manual **Read-only Platform Health** GitHub workflow reuses existing OIDC permissions to inspect workspace/rule configuration and workflow history; it executes no KQL or recurring workload. Configuration agreement is separate from active detection coverage and actual ingestion/runtime health.
+Current local suite: **187 tests**, plus independent customer/evidence/schema
+checks. Required GitHub CI runs on Python 3.12; local checks also run on 3.15.
+The pinned Bicep compiler is acquired from the official release, SHA-256 checked
+and actually executed in CI. Tests cover conflicting replay, lineage, approval
+expiry, audit corruption, persistent retry budgets, partial/stale health,
+forbidden infrastructure changes, exact resource contracts and archive privacy.
+These checks are separate from actual Kusto/REST evidence.
 
-The [actual OIDC health audit](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39153342114) succeeded: workspace and both managed rule configurations match, and latest observed validation/deployment runs passed. Overall health remains **Unknown** because telemetry/export/runtime were not measured; this is distinct from a failed audit. [Sanitized evidence](evidence/phase-3/health-report.sanitized.json) and [synthetic fault outcomes](evidence/phase-3/fault-injection.sanitized.json) are separate.
+Component demos write only ignored `.local/` artifacts. The integrated risk
+finding is passed directly into SOAR with its original seven-event chain.
+The separate 24-event normalization sample is labeled as a distinct fixture;
+the project does not pretend it caused an unrelated real Azure incident.
 
-See the [health runbook and SLIs](docs/operations/platform-health.md), [KQL library](platform_health/queries/) and [validation evidence](docs/validation/phase-3.md). No SentinelHealth export, resources or roles were added.
+## Actual cloud evidence
 
-## Risk-based correlation: synthetic investigation
+| Observation | Recorded result |
+|---|---|
+| [AzureActivity ingestion](docs/validation/first-ingestion.md) | Actual KQL arrival and policy/export troubleshooting; historical snapshot |
+| [Detection OIDC deployment](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39235924991) | Twelve total managed Scheduled definitions disabled; existing Fusion preserved |
+| [AMA main OIDC verification](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40774219658) | Same fixed DCR/extension/association already matching after approved one-time initialization |
+| [Actual Syslog query](evidence/local-linux-ama/ingestion.sanitized.json) | Ten total/ten distinct messages, two aggregate queries, 900 payload bytes and 2,600 billable bytes |
+| [Fresh 3 November baseline](evidence/completion/baseline.sanitized.json) | Thirteen rules, twelve disabled Scheduled, original Fusion enabled, eighteen CI assignments, Arc Disconnected |
+| [Subscription/credit](evidence/completion/eligibility.sanitized.json) | Same Enabled subscription, spending limit On, published EUR175.99436818021823; expiry 12 November 2026 18:00:16 UTC |
 
-[Offline RBA](rba/) scores canonical account entities across synthetic authentication, AzureActivity-shaped administration and endpoint-style signals. AF-RBA-001 requires strict event order, same-account/host/resource relationships, at least three families and enough accumulated risk. Individual weak signals and duplicate replays cannot independently produce the demonstrated finding. Uncertainty about collection limits confidence without suppressing valid evidence.
+Raw logs, identity fields and subscription/tenant identifiers are not release
+artifacts. Cloud records remain dated evidence, not a promise the subscription
+will still exist when someone clones the repository. See [evidence handling](docs/evidence-handling.md).
 
-`python -m rba` writes an interactive entity/timeline replay, JSON contribution ledger, original synthetic dataset and investigation Markdown to `.local/rba/`. The default scenario produces one High-priority/Low-confidence synthetic finding with a 75.7182 peak; maintenance and administrative-noise controls remain below threshold. Nine scenarios cover joins, order, duplicates and benign controls. It executes no payload, network request, KQL or Azure operation and creates no Sentinel incident.
+## Security and cost design
 
-See the [scoring design and investigation runbook](docs/operations/risk-correlation.md), [validation](docs/validation/phase-4.md) and [versioned signal contract](schemas/rba-signal.schema.json). This lab demonstrates heuristic correlation, not calibrated probabilities or measured production accuracy.
+The control path is **feature branch -> protected PR -> required CI -> merged
+main -> approved environment -> short-lived OIDC -> exact-resource REST ->
+read-back**. PR validation has no Azure credentials/OIDC permission. The
+existing CI identity and immutable repository/environment trust are reused;
+actions and the compiler are pinned. No client secret or public SSH endpoint.
+See [security boundaries](docs/security.md) and [recovery](docs/deployment/recovery.md).
 
-## Project organization
+The subscription and plan are preserved. Workspace pricing `pergb2018`,
+30-day retention, 0.1 GB/day cap, budgets and diagnostics are unchanged.
+The operator permits a maximum EUR175 for necessary completion work; the
+offline implementation uses **zero additional Azure ingestion or paid services**.
+Available credit is not a spending target. Closed credit can lag charges;
+2,600 historical billable bytes are not a measured invoice or zero-cost proof.
+No Azure VM, paid add-on, Defender plan, university source or recurring sender.
+
+## Review and demonstrate
+
+- [Five-minute demo](docs/portfolio/demo-five-minutes.md) and [fifteen-minute presentation](docs/portfolio/presentation-fifteen-minutes.md).
+- [Engineering decisions](docs/portfolio/engineering-decisions.md) and [troubleshooting cases](docs/portfolio/engineering-case-studies.md).
+- [Interview and CV wording](docs/portfolio/interview-and-cv.md).
+- [Customer package](customer/atlas-financial/README.md), [acceptance/limitations](docs/validation/project-completion.md), [operator-led account closure](customer/atlas-financial/handover.md).
+
+## Repository map
 
 ```text
-docs/         Architecture, onboarding, deployment, validation, troubleshooting
-hunting/      Reusable KQL queries
-evidence/     Sanitized Azure records and explicitly labeled synthetic evidence
-infrastructure/  Proposed ingestion REST bodies; platform Bicep remains future work
-ingestion/    Synthetic generator, normalization, bounded client and source inventory
-ama/          Pilot-verified owned Linux source, fixed AMA contract, bounded pilot and aggregate KQL
-platform_health/  Source health, readonly collector, local reports, safe faults and KQL library
-rba/          Synthetic entity risk, correlation, baselines, source adapters and replay reports
-tests/        Lightweight offline project validation
-detections/azure/  Disabled REST rule definition and synchronized KQL
-schemas/      Signal/source contracts and restricted approved-rule JSON Schema
-scripts/      Offline validation, guarded deployment and aggregate queries
-.github/workflows/  Free public-repository CI, OIDC deployment and opt-in KQL checks
+lab/                  Integrated replay, evidence explorer and portable release
+detections/azure/     Twelve disabled REST/KQL definitions
+portfolio/            Exact contracts and sixty synthetic controls
+ingestion/            Synthetic event schema, normalization and bounded transport
+ama/                  Actual pilot source, fixed AMA contract and aggregate KQL
+platform_health/      Source policies, safe faults, metadata collector and reports
+rba/                  Canonical risk/sequence engine and original-event lineage
+soar/                 Persistent local case workflow, approvals and audit
+infrastructure/       Bicep models, compiler lock and nonmutating preview
+lifecycle/            Isolated approval-gated real-scheduler test contract
+customer/atlas-financial/  Operational delivery, coverage and fictional tickets
+docs/                 Architecture, runbooks, validation and portfolio material
+evidence/             Sanitized actual records and labeled synthetic evidence
+.github/workflows/    Required offline CI and manual scoped OIDC operations
+tests/                Unit, behavior, security and integration checks
 ```
 
-## Costs and privacy
-
-Azure budgets are alerts, **not hard spending limits**. Promotional credit and product trials are subject to eligibility and expiration. Verify charges, Log Analytics ingestion, retention and workspace caps in your own subscription. Do not include secrets, tenant/subscription IDs, email identities or unredacted event logs. See [evidence guidelines](docs/evidence-handling.md).
-
-Keep the existing subscription and billing plan. Azure reports a 200 USD / 175.99 EUR sign-up credit expiring 12 November 2026 at 18:00 UTC. The post-pilot API still publishes EUR 175.99436818021823, but billing lag can apply. The single approved Syslog pilot reported 2,600 billable bytes; that is not a measured monetary charge or a zero-cost guarantee. No paid add-on or Azure compute was added. Existing workloads can still accrue costs. See [post-pilot finances](evidence/local-linux-ama/financial.sanitized.json) and [preservation evidence](evidence/local-linux-ama/preservation.sanitized.json).
-
-## Status / roadmap
-
-- [x] Azure foundation, source onboarding, policy remediation and working Azure Activity ingestion evidence.
-- [x] Exact-resource RBAC, MFA-protected initial setup, immutable GitHub OIDC and protected PR validation.
-- [x] Two disabled detections, synthetic cases, actual deployment/REST verification and a clean manual drift check.
-- [x] Ingestion offline: synthetic source, normalization, bounded transport, configuration and tests.
-- [ ] Separate synthetic-auth custom table/DCR and upload: not deployed or authorized.
-- [x] Personal local Linux VM preparation, verification and documented Arc/AMA source design.
-- [x] Approved Arc/AMA registration, exact cloud configuration, main OIDC verification and reconciled ten-message Syslog pilot; VM stopped.
-- [ ] Live telemetry false-positive measurement, activated alert behavior and investigations.
-- [x] Platform health evaluator, local dashboard, eleven safe faults and manual read-only OIDC audit tooling.
-- [x] Offline entity risk correlation, strict attack sequence, baseline controls and replay report.
-- [ ] SOAR, platform Bicep and operational handover.
+This is an engineering lab with explicit acceptance boundaries, not a deployed
+production MXDR service. Preserve those boundaries when presenting the project.

@@ -1,4 +1,12 @@
 # Architecture — Azure foundation and ingestion
+## Health-policy integration (3 November 2026)
+
+The verified source now has a coordinated inventory and health policy. Fresh
+planned shutdown remains Unknown maintenance; absent/stale operation evidence
+and partial pilot metrics cannot establish health. No live query or automatic
+AMA collector was added. This supersedes earlier statements below about the
+source being outside the policy inventory. See [project acceptance](../validation/project-completion.md).
+
 
 ## Environment
 

@@ -1,0 +1,228 @@
+{
+  "schema_version": "1.0",
+  "evidence": "versioned-definition-summary",
+  "customer": "Atlas Financial",
+  "rules": [
+    {
+      "id": "AZ-DET-001",
+      "title": "AZ-DET-001 - Azure Diagnostic Settings Modified",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "DefenseEvasion"
+      ],
+      "techniques": [
+        "T1562"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-001.json",
+      "query_path": "detections/azure/AZ-DET-001.kql",
+      "runbook_path": "docs/detections/AZ-DET-001.md"
+    },
+    {
+      "id": "AZ-DET-002",
+      "title": "AZ-DET-002 - Azure Role Assignment Created",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "Persistence",
+        "PrivilegeEscalation"
+      ],
+      "techniques": [
+        "T1098"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-002.json",
+      "query_path": "detections/azure/AZ-DET-002.kql",
+      "runbook_path": "docs/detections/AZ-DET-002.md"
+    },
+    {
+      "id": "AZ-DET-003",
+      "title": "AZ-DET-003 - Custom Role Definition Changed",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "PrivilegeEscalation"
+      ],
+      "techniques": [
+        "T1098"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-003.json",
+      "query_path": "detections/azure/AZ-DET-003.kql",
+      "runbook_path": "docs/detections/AZ-DET-003.md"
+    },
+    {
+      "id": "AZ-DET-004",
+      "title": "AZ-DET-004 - Network Security Rule Changed",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Low",
+      "tactics": [],
+      "techniques": [],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-004.json",
+      "query_path": "detections/azure/AZ-DET-004.kql",
+      "runbook_path": "docs/detections/AZ-DET-004.md"
+    },
+    {
+      "id": "AZ-DET-005",
+      "title": "AZ-DET-005 - Key Vault Access Policy Changed",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "Persistence",
+        "PrivilegeEscalation"
+      ],
+      "techniques": [
+        "T1098"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-005.json",
+      "query_path": "detections/azure/AZ-DET-005.kql",
+      "runbook_path": "docs/detections/AZ-DET-005.md"
+    },
+    {
+      "id": "AZ-DET-006",
+      "title": "AZ-DET-006 - Virtual Machine Run Command",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "Execution"
+      ],
+      "techniques": [
+        "T1651"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-006.json",
+      "query_path": "detections/azure/AZ-DET-006.kql",
+      "runbook_path": "docs/detections/AZ-DET-006.md"
+    },
+    {
+      "id": "AZ-DET-007",
+      "title": "AZ-DET-007 - Storage Account Keys Listed",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Low",
+      "tactics": [
+        "CredentialAccess"
+      ],
+      "techniques": [],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-007.json",
+      "query_path": "detections/azure/AZ-DET-007.kql",
+      "runbook_path": "docs/detections/AZ-DET-007.md"
+    },
+    {
+      "id": "AZ-DET-008",
+      "title": "AZ-DET-008 - Resource Lock Removed",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Low",
+      "tactics": [],
+      "techniques": [],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-008.json",
+      "query_path": "detections/azure/AZ-DET-008.kql",
+      "runbook_path": "docs/detections/AZ-DET-008.md"
+    },
+    {
+      "id": "AZ-DET-009",
+      "title": "AZ-DET-009 - Activity Log Alert Deleted",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [
+        "DefenseEvasion"
+      ],
+      "techniques": [
+        "T1562"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-009.json",
+      "query_path": "detections/azure/AZ-DET-009.kql",
+      "runbook_path": "docs/detections/AZ-DET-009.md"
+    },
+    {
+      "id": "AZ-DET-010",
+      "title": "AZ-DET-010 - Policy Assignment Deleted",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Low",
+      "tactics": [],
+      "techniques": [],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-010.json",
+      "query_path": "detections/azure/AZ-DET-010.kql",
+      "runbook_path": "docs/detections/AZ-DET-010.md"
+    },
+    {
+      "id": "AZ-DET-011",
+      "title": "AZ-DET-011 - Repeated Failed Privileged Operations",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "Medium",
+      "tactics": [],
+      "techniques": [],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-011.json",
+      "query_path": "detections/azure/AZ-DET-011.kql",
+      "runbook_path": "docs/detections/AZ-DET-011.md"
+    },
+    {
+      "id": "AZ-DET-012",
+      "title": "AZ-DET-012 - Role Grant Followed by Diagnostic Change",
+      "source": "AzureActivity",
+      "enabled": false,
+      "severity": "High",
+      "tactics": [
+        "Persistence",
+        "PrivilegeEscalation",
+        "DefenseEvasion"
+      ],
+      "techniques": [
+        "T1098",
+        "T1562"
+      ],
+      "schedule": "PT15M",
+      "lookback": "PT1H",
+      "incident_creation": false,
+      "definition_path": "detections/azure/AZ-DET-012.json",
+      "query_path": "detections/azure/AZ-DET-012.kql",
+      "runbook_path": "docs/detections/AZ-DET-012.md"
+    }
+  ],
+  "limitations": [
+    "All twelve managed definitions are disabled; this inventory describes potential logic coverage, not active protection.",
+    "ATT&CK labels mirror versioned API properties, not an assertion of current taxonomy completeness or attack attribution.",
+    "No percentage of ATT&CK coverage, real-data false-positive rate or current telemetry health is measured.",
+    "Historical actual deployment evidence is separate from this offline summary."
+  ]
+}

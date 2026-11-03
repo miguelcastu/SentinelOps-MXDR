@@ -149,6 +149,10 @@ class TestHealthCollection(unittest.TestCase):
         self.assertTrue(all(call.args[:3] == ("rest", "--method", "get") for call in az.call_args_list))
         self.assertTrue(all('api.loganalytics' not in str(call) and 'diagnosticSettings' not in str(call) for call in az.call_args_list))
         self.assertEqual(value["rules"],dict(expected=2,present=2,matching=2,active=0,intentionally_disabled=2))
+        self.assertEqual({s["source_id"] for s in value["sources"]}, {"azure-activity", "synthetic-authentication", "ama-linux-syslog"})
+        ama = next(s for s in value["sources"] if s["source_id"] == "ama-linux-syslog")
+        self.assertEqual(ama["reason"], "operation_unknown")
+        self.assertIsNone(ama["operation_context"])
         self.assertTrue(all(s["state"] == "Unknown" for s in value["sources"]))
         self.assertNotIn(WORKSPACE, json.dumps(value))
         self.assertNotIn(FIRST_ID, json.dumps(value))
@@ -236,7 +240,7 @@ class TestHealthEvidenceAndRendering(unittest.TestCase):
                 patch('platform_health.collect.collect') as cloud, patch('urllib.request.OpenerDirector.open') as network, \
                 redirect_stdout(io.StringIO()) as output:
             self.assertEqual(main(),0)
-            self.assertEqual(json.loads(output.getvalue())['fault_scenarios'],11)
+            self.assertEqual(json.loads(output.getvalue())['fault_scenarios'],16)
             cloud.assert_not_called();network.assert_not_called()
 
     def test_imported_snapshot_cannot_label_itself_azure_verified_and_is_rechecked_for_staleness(self):

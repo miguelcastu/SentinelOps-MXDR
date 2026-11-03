@@ -1,0 +1,22 @@
+{
+  "evidence": "actual-local-bicep-compile-contract-check",
+  "template_count": 4,
+  "writable_ama_resources": 3,
+  "disabled_rule_definitions": 12,
+  "foundation_writes": 0,
+  "azure_requests": 0,
+  "deployment_executed": false,
+  "compiler": "Azure/bicep",
+  "compiler_version": "0.48.1",
+  "compiler_sha256_verified": true,
+  "parameter_files": 1,
+  "review_date": "2026-11-03",
+  "behavioral_and_compiler_tests_passed": 11,
+  "model_target_count": 19,
+  "source_sha256": {
+    "ama.bicep": "b4fbbcd3fb26659592d96647e07de21ce6ee92ee72f6e1bc74c627df97abf9c3",
+    "diagnostic-export.bicep": "07be1e7ca34eaee54d6d27f32f85d736692ee7cf728586b93cc702e98880babe",
+    "disabled-rules.bicep": "5173fccd2752f2d9daf2e57cfd21c51c2fde6cc0a7ad0ca5bc5638ed99f1ffcd",
+    "main.bicep": "fe24c0a7e3e734f27bf2a4e1cb2c696f7f63ad79188419f9c788935b2d491f6a"
+  }
+}

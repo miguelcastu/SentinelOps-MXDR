@@ -13,6 +13,12 @@
       "latency_warning_seconds": 300,
       "freshness_warning_seconds": 3600,
       "snapshot_max_age_seconds": 900
+    },
+    "ama-linux-syslog": {
+      "collection_model": "operator-controlled-local-machine",
+      "latency_warning_seconds": 900,
+      "freshness_warning_seconds": 3600,
+      "snapshot_max_age_seconds": 900
     }
   }
 }

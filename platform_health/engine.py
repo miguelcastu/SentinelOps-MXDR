@@ -31,11 +31,15 @@ REASONS = {
     "deployment_success": "The latest observed workflow run succeeded.",
     "deployment_failed": "The latest observed workflow run failed; inspect its sanitized run evidence.",
     "deployment_unavailable": "No completed trustworthy workflow observation is available.",
+    "planned_maintenance": "Fresh local evidence shows the owned guest intentionally stopped; current telemetry health is not established.",
+    "operation_unknown": "Fresh evidence that the owned machine should be collecting is absent; no heartbeat or outage is inferred.",
+    "stale_operation_context": "The machine-state observation is too old to establish current operation or maintenance.",
+    "pilot_metrics_only": "A bounded transport pilot is recorded, but schema, latency and continuous freshness were not measured.",
 }
 OBS_FIELDS = {"source_id", "window_start", "window_end", "observed_at", "query_status",
               "total_events", "valid_events", "distinct_events", "schema_errors", "mapping_errors",
               "negative_latency_events", "last_seen", "latency_p95_seconds", "billable_bytes",
-              "expected_events", "expected_by", "hourly_volume"}
+              "expected_events", "expected_by", "hourly_volume", "operation_context", "pilot_evidence"}
 COUNTS = ("total_events", "valid_events", "distinct_events", "schema_errors", "mapping_errors",
           "negative_latency_events", "billable_bytes")
 
@@ -79,11 +83,30 @@ def blank_observation(source_id, now, start):
                 query_status="not_collected", total_events=None, valid_events=None,
                 distinct_events=None, schema_errors=None, mapping_errors=None,
                 negative_latency_events=None, last_seen=None, latency_p95_seconds=None,
-                billable_bytes=None, expected_events=None, expected_by=None, hourly_volume=[])
+                billable_bytes=None, expected_events=None, expected_by=None, hourly_volume=[],
+                operation_context=None, pilot_evidence=None)
 
 
 def validate_observation(value, policy):
     require(isinstance(value, dict) and set(value) == OBS_FIELDS and value["query_status"] in QUERY_STATES)
+    context, pilot = value["operation_context"], value["pilot_evidence"]
+    if policy["collection_model"] != "operator-controlled-local-machine":
+        require(context is None and pilot is None)
+    if context is not None:
+        require(isinstance(context, dict) and set(context) == {"machine_state", "observed_at", "evidence", "reason"})
+        require(context["machine_state"] in {"running", "stopped", "unknown"})
+        require(context["evidence"] in {"synthetic", "local-hypervisor"})
+        require(context["reason"] in {"operator-shutdown", "operator-session", "unverified"})
+        instant(context["observed_at"])
+        require(context["machine_state"] != "stopped" or context["reason"] == "operator-shutdown")
+        require(context["machine_state"] != "running" or context["reason"] == "operator-session")
+    if pilot is not None:
+        require(isinstance(pilot, dict) and set(pilot) == {"evidence", "observed_at", "total_events", "distinct_events", "last_seen", "billable_bytes", "query_attempts", "raw_events_returned", "complete_health_metrics"})
+        require(pilot["evidence"] in {"synthetic", "recorded-pilot-aggregate"})
+        require(integer(pilot["total_events"], 10) and integer(pilot["distinct_events"], 10) and pilot["distinct_events"] <= pilot["total_events"])
+        require(integer(pilot["billable_bytes"], 1_000_000) and integer(pilot["query_attempts"], 3) and pilot["query_attempts"] > 0)
+        require(type(pilot["raw_events_returned"]) is int and pilot["raw_events_returned"] == 0 and pilot["complete_health_metrics"] is False)
+        require(instant(pilot["last_seen"]) <= instant(pilot["observed_at"]))
     start, end, observed = (instant(value[k]) for k in ("window_start", "window_end", "observed_at"))
     require(0 < (end - start).total_seconds() <= 86_400 and end <= observed)
     for key in COUNTS:
@@ -119,6 +142,8 @@ def validate_observation(value, policy):
 def evaluate_source(observation, policy, now):
     validate_observation(observation, policy)
     source = observation["source_id"]
+    operation = observation["operation_context"]
+    operation_age = (now - instant(operation["observed_at"])).total_seconds() if operation else None
 
     def result(state, reason):
         success = observation["query_status"] == "success"
@@ -137,7 +162,23 @@ def evaluate_source(observation, policy, now):
                 "uniqueness_ratio": observation["distinct_events"] / total if total else None,
                 "duplicate_events": total - observation["distinct_events"] if success else None,
                 "billable_bytes": observation["billable_bytes"] if success else None,
-                "hourly_volume": observation["hourly_volume"] if success else []}
+                "hourly_volume": observation["hourly_volume"] if success else [],
+                "operation_context": operation,
+                "operational_evidence_fresh": operation_age is not None and -60 <= operation_age <= policy["snapshot_max_age_seconds"],
+                "telemetry_metrics_complete": success,
+                "pilot_evidence": observation["pilot_evidence"]}
+
+    if policy["collection_model"] == "operator-controlled-local-machine":
+        if operation is None or operation["machine_state"] == "unknown":
+            return result("Unknown", "operation_unknown")
+        if operation_age < -60:
+            return result("Misconfigured", "clock_inconsistent")
+        if operation_age > policy["snapshot_max_age_seconds"]:
+            return result("Unknown", "stale_operation_context")
+        if operation["machine_state"] == "stopped":
+            return result("Unknown", "planned_maintenance")
+        if observation["pilot_evidence"] is not None and observation["query_status"] != "success":
+            return result("Unknown", "pilot_metrics_only")
 
     age = (now - instant(observation["observed_at"])).total_seconds()
     if age < -60:
@@ -218,7 +259,7 @@ def report(snapshot, now=None):
             "sources": sources, "checks": checks, "rules": rules,
             "coverage": {"inventoried_sources": len(inventory), "queried_sources": sum(s["query_status"] == "success" for s in sources),
                          "healthy_sources": sum(s["state"] == "Healthy" for s in sources),
-                         "inventory_cloud_sources": sum(s["state"] == "existing-cloud-source" for s in inventory)},
+                         "inventory_cloud_sources": sum(s["state"] in {"existing-cloud-source", "pilot-verified-guest-stopped"} for s in inventory)},
             "cost": {"known_sources": len(known_cost), "complete": len(known_cost) == len(sources),
                      "observed_billable_bytes": sum(known_cost) if known_cost else None,
                      "planning_eur_per_gb": config["planning_eur_per_gb"],

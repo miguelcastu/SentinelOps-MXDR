@@ -1,17 +1,55 @@
 # SentinelOps MXDR project status
 
-Last updated: 28 October 2026. Read this file first when resuming. Atlas Financial is a fictional customer. Current increment: personally owned local Linux VM and one explicitly approved Arc/AMA pilot. The bounded Arc/AMA pilot is verified end to end and the local guest is stopped. The eight-phase mission remains incomplete.
+Last updated: **3 November 2026**. Read this file first when resuming. Atlas
+Financial is fictional. Current increment: complete the verified offline
+portfolio, prepare the isolated real-scheduler acceptance and preserve the
+original subscription. **The original mission is not fully accepted while
+the real scheduled-alert/incident lifecycle remains unverified.**
 
-| Phase | State | Acceptance evidence / blocker |
+| Phase | Current delivered scope | Acceptance boundary |
 |---|---|---|
-| 1. Detection engineering and incident lifecycle | Portfolio deployed; live lifecycle pending | Twelve actual disabled definitions, fresh REST verification, per-rule investigations, synthetic controls and test plan. Actual alert -> incident -> classification requires approval and narrow access. |
-| 2. Advanced ingestion | Synthetic offline complete; owned Linux AMA pilot verified | Actual Arc/AMA/DCR configuration, main OIDC verification and ten unique Syslog messages reconciled. Local guest stopped; separate synthetic-auth custom-table deployment and continuous health remain pending. |
-| 3. Platform health | Implemented and verified within current scope | Eleven simulated faults and actual read-only OIDC configuration/deployment audit verified. Live telemetry/export/runtime remain Unknown; no query access or health export added. |
-| 4. Risk-based correlation | Implemented and verified offline | Bounded entity scoring, strict multi-stage sequence, decay/caps/deduplication, narrow maintenance context, health-aware confidence and replay report. No Sentinel incident or live validation. |
-| 5. SOAR | Pending | No automation/Logic App claimed. |
-| 6. Infrastructure and advanced CI/CD | Partial baseline | Restricted OIDC detection CI/CD exists; REST bodies are not platform Bicep or verified infrastructure deployment. |
-| 7. Customer operations | Pending | Initial source onboarding and fictional customer context only. |
-| 8. Portfolio completion | Pending | No final release or full completion claim. |
+| 1. Detection engineering | Twelve actual disabled rules, sixty portfolio controls, investigations; fixed isolated lifecycle workflow prepared | Actual scheduled alert -> linked incident -> investigation/classified closure still pending its concrete activation/access scope |
+| 2. Advanced ingestion | Offline schema/normalizer/transport plus actual AzureActivity and owned AMA/Syslog proofs | Ten unique AMA messages verified; guest stopped. Optional synthetic-auth custom table remains undeployed |
+| 3. Platform health | Three-source policies/inventory, sixteen simulated faults, maintenance/stale/partial handling, prior actual read-only OIDC configuration audit | No new live query or automatic AMA telemetry collector; current telemetry/runtime uncertainty remains explicit |
+| 4. Risk correlation | Canonical joins, strict sequence, decay/caps/dedup, original lineage and nine replay scenarios | Fully implemented/verified synthetic scope, not a live Sentinel finding |
+| 5. SOAR | Durable cases, enrichment/notes, reviewer gates, classified closure, idempotent local ticket, chained audit and six failure scenarios | Fully implemented/verified local scope; remote roles/connectors/timeouts simulated |
+| 6. IaC and CI/CD | Four actual compiler-validated Bicep models, one parameter file, nineteen-target comparison, exact/destructive-change guards and recovery runbook | No full platform ARM deployment/what-if claim; existing fixed-resource OIDC evidence stays separate |
+| 7. Customer operations | Twenty mapped deliverables, twelve-rule source-derived coverage, eight fictional tickets, RACI/SLIs/risks/acceptance/handover | Fictional package validated offline; no real service/customer certification |
+| 8. Portfolio delivery | One-command integrated explorer, source/demo archive and SHA manifest, timed demo/presentation/interview material | Tested local deliverables usable after Azure closes; original full acceptance still depends on Phase1 |
+
+## Current increment: Portfolio completion work
+
+- Actual read-only Azure eligibility confirms same Enabled subscription, spending limit On, published EUR175.99436818021823, expiry 12 November 2026 18:00:16 UTC. New operator budget is maximum EUR175, not a spending target. Closed credit can lag usage. [Eligibility](../evidence/completion/eligibility.sanitized.json).
+- Fresh REST baseline: West Europe, `pergb2018`, retention30days, cap0.1GB/day, thirteen rules/twelve disabled Scheduled/original enabled Fusion, eighteen CI assignments; Arc Disconnected. No new cloud mutation/log query/message or paid plan for this offline increment. [Actual baseline](../evidence/completion/baseline.sanitized.json).
+- `python -m lab --bundle` exercises schema/normalization, sixty detection controls, sixteen health scenarios, nine risk scenarios, the exact RBA finding -> one Closed synthetic SOAR case, nine audit events/one idempotent ticket/six failure scenarios, and a nineteen-target synthetic IaC comparison. Four source-health/risk/evidence views live in `.local/lab/index.html`. Private state is excluded from its portable archive.
+- Real locked Bicep0.48.1 compiles four models/one parameters file; exact AMA3/rules12 body comparisons pass. [Compiler evidence](../evidence/completion/bicep-compile.sanitized.json). This does not prove a full platform deployment.
+- Local unit suite:187tests; detection/portfolio/customer validation, actual compiler/linter, actionlint, archive/HTML safety, documentation links and identifier/token/key scans. Required Python3.12 CI and exact protected-merge references are recorded in the delivery PR. No Azure workflow is needed for offline delivery.
+- [Full acceptance](validation/project-completion.md), [customer package](../customer/atlas-financial/README.md), [reviewer tour](portfolio/README.md), [SOAR runbook](operations/soar.md), [IaC/recovery](deployment/infrastructure.md).
+- [Concrete isolated live acceptance](deployment/synthetic-lifecycle.md) is reviewable code with no arbitrary query/target, one self-expiring synthetic datatable event, bounded polls and finally-disable. Activation/new access remain gated under AGENTS.md. Code/tests are not cloud proof and consumed AMA ledgers are untouched.
+
+## Next executable task
+
+Complete required protected PR CI/merge and archive verification. If the
+operator approves the concrete isolated synthetic lifecycle exception,
+recheck credit/expiry, prepare only exact narrow roles, execute start once
+through merged-main OIDC, verify the actual linked alert/incident, disable,
+grant classification at only that actual incident, close through OIDC and
+record sanitized read-back. Do not broaden permissions if a missing-resource
+scope is rejected. No general rule activation, recurring collection, extra
+AMA batch, university logs or paid add-on is needed.
+
+If consent, authentication, permissions or subscription eligibility prevent
+that acceptance, retain the implemented offline portfolio and report the
+precise unaccepted gate. Never mark the original mission complete from the
+synthetic case. If Azure has expired, stop new project/cloud work and hand
+over existing verified artifacts without upgrade/switch/deletion.
+
+## Historical implementation and cloud checkpoints
+
+The following dated records describe earlier increments. Their counts and
+scope apply at those timestamps. Current three-source health-policy integration
+supersedes older statements that AMA is outside the inventory; live AMA health
+queries are still absent.
 
 ## Current increment: Verified personal Linux Arc/AMA pilot
 
@@ -70,11 +108,3 @@ Earlier 18-19 October detection, health and billing observations are historical 
 Prior successful deployments: [001](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39134917660), [002](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39134917548). These are prior evidence, not new ingestion evidence.
 
 Delivery: [PR #6](https://github.com/miguelcastu/SentinelOps-MXDR/pull/6), branch `feat/phase-two-bounded-ingestion`, implementation commit `613f11b`. The [required offline CI](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39142405359) passed on that implementation. Local verification: 67 tests pass on Python 3.12 and 3.15, both detection contracts pass, independent JSON Schema validation passes for 100 events, five workflow YAML files parse, actionlint and Markdown link checks pass. The PR records final-head checks and the protected merge SHA. No unchanged rule deployment is needed for this offline increment.
-
-## Next executable task
-
-The approved local-machine increment is complete. Keep the guest stopped and retain both completed private ledgers. Do not reconnect Arc, rerun personal initialization, replay the ten-message batch or use the unused third query without a reason and appropriate authorization. The same DCR would collect qualifying local4 messages again if the guest were started.
-
-When requested, develop Linux detection candidates and AMA health policies **offline**, explaining which additional facilities/severities would be needed; the current local4 test data does not support native SSH detection. New collection, another pilot, real-data false-positive assessment, rule activation or incidents need their own concrete approved scope. The twelve AzureActivity definitions remain disabled.
-
-Phase 5 remains **offline SOAR and case management** when requested, using synthetic RBA findings, idempotent intake, entity enrichment, investigation notes, safe approval gates, audit logging and bounded retries. Do not create Logic Apps, paid SaaS, real incidents or containment actions without separate authorization. The separate Phase 1 live lifecycle test and synthetic-authentication custom-table cloud path remain unapproved.
