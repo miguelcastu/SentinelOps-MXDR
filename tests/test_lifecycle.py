@@ -4,7 +4,7 @@ import json
 import unittest
 from unittest.mock import patch
 
-from lifecycle.contract import TITLE, RULE_UUID, close_body, fingerprint, parameters, rule, validate_incident
+from lifecycle.contract import TITLE, RULE_UUID, close_body, reconcile_closed_body, fingerprint, parameters, rule, validate_incident
 from scripts.run_lifecycle import disabled, observe, recovery_current, execute
 
 
@@ -75,6 +75,28 @@ class LifecycleBoundaries(unittest.TestCase):
             value['properties']['additionalData']['alertsCount']=count
             with self.assertRaises(ValueError):
                 validate_incident(value,'/lab/rule/'+RULE_UUID)
+
+    def test_classification_preserves_existing_timeline_labels_and_owner(self):
+        value=self.incident()
+        value['properties'].update(lastActivityTimeUtc='2026-11-03T18:00:00Z',labels=[{'labelName':'synthetic','labelType':'User'}],owner={'objectId':None})
+        body=close_body(value,'/lab/rule/'+RULE_UUID)
+        for key in ('firstActivityTimeUtc','lastActivityTimeUtc','owner','labels'):
+            self.assertEqual(body['properties'][key],value['properties'][key])
+        self.assertEqual(value['properties']['status'],'New')
+
+    def test_reconciliation_only_restores_known_time_on_the_closed_exact_test(self):
+        value=self.incident()
+        value['properties'].update(status='Closed',classification='BenignPositive',classificationReason='SuspiciousButExpected')
+        value['properties'].pop('firstActivityTimeUtc')
+        body=reconcile_closed_body(value,'/lab/rule/'+RULE_UUID,'2026-11-03T18:00:00Z')
+        self.assertEqual(body['properties']['firstActivityTimeUtc'],body['properties']['lastActivityTimeUtc'])
+        self.assertEqual(body['properties']['status'],'Closed')
+        self.assertNotIn('firstActivityTimeUtc',value['properties'])
+        for changes in ({'status':'Active'},{'classification':'TruePositive'},{'firstActivityTimeUtc':'2026-11-03T18:01:00Z'}):
+            edited=copy.deepcopy(value)
+            edited['properties'].update(changes)
+            with self.assertRaises(ValueError):
+                reconcile_closed_body(edited,'/lab/rule/'+RULE_UUID,'2026-11-03T18:00:00Z')
 
     def test_cleanup_uses_etag_and_does_not_touch_other_rules(self):
         body = rule("1234567890", "2026-11-03T18:00:00Z", True)

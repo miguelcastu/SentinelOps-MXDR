@@ -144,6 +144,23 @@ acceptance requires this evidence, the separate detailed investigation and
 successful classified closure. A service-provided Defender incident URL exists;
 no claim of opening the Defender portal UI is made.
 
+## Preserve incident activity during classification
+
+Actual closed-state verification exposed a PUT-semantic bug: omitting optional
+first/last activity fields removed them from the incident representation. The
+original scheduled alert and pre-close read still retain both exact times.
+The closure body now preserves existing times, owner and labels; regression
+tests cover that preservation.
+
+For this single already-classified test, explicit `reconcile` requires its
+exact incident secret and the current source-query SHA. It only restores missing
+first/last time to the known constant datetime of the one synthetic row, with
+ETag protection. Conflicting times, another title/rule, open status or another
+classification stop it. The case remains Closed/BenignPositive, the rule remains
+disabled, and no new event/activation/data grant is involved. Matching metadata
+is not rewritten. The post-repair GET/observer and separate original-alert
+evidence establish the timeline; dates are not invented from a wall clock.
+
 API references: [scheduled rule request](https://learn.microsoft.com/rest/api/securityinsights/alert-rules/create-or-update?view=rest-securityinsights-2025-09-01),
 [incident alerts](https://learn.microsoft.com/rest/api/securityinsights/incidents/list-alerts?view=rest-securityinsights-2025-09-01),
 [incident classification](https://learn.microsoft.com/rest/api/securityinsights/incidents/create-or-update?view=rest-securityinsights-2025-09-01).
