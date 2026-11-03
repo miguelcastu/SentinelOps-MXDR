@@ -19,6 +19,22 @@ the real scheduled-alert/incident lifecycle remains unverified.**
 
 ## Current increment: Portfolio completion work
 
+Actual backend lifecycle is now verified: the inline event at 19:12:41 UTC
+matched once, produced a Scheduled Alerts alert at 19:19:09 and one linked
+incident. Operator read-only investigation reconciled the exact rule/time/alert.
+OIDC [classification run41704210239](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41704210239)
+closed it BenignPositive/SuspiciousButExpected at 19:33:13; the rule is disabled.
+The recovery run's detailed-alert POST was denied despite successful backend
+alerting. CI is being corrected to verify incident metadata only, keeping the
+separate operator investigation instead of broadening its data access. A
+metadata-only existing-test observer and final evidence delivery remain.
+One actual aggregate executed all twelve KQL definitions successfully:
+AZ-DET-002=3, AZ-DET-003=2, ten others=0; this is not an accuracy/FP rate.
+Actual compiler-to-live OIDC verification passed 17 Matching/2 Unknown with
+six GETs. Independent preservation audit passed 74 checks, including all
+22 exact CI assignments, ten role definitions, preserved original rules and
+workspace/subscription controls, the closed incident and powered-off VM.
+
 The operator explicitly approved the concrete PR #20 test on 3 November:
 "autorizo las pruebas que necesites, cualquiera". Actual OIDC run
 [41697635395](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41697635395)
@@ -30,7 +46,7 @@ The reviewed correction adds only workspace query/read execution, no table
 access/DataActions, and one explicit prior-query-digest-bound recovery. No
 broad role or personal deployment fallback. The new compiler-to-live verifier
 uses only six existing fixed GET routes; actual verification remains pending.
-Local suite now includes 210 tests. Live acceptance remains incomplete until
+Local suite now includes 211 tests. Live acceptance remains incomplete until
 the actual linked alert/incident and classified closure are verified.
 
 - Actual read-only Azure eligibility confirms same Enabled subscription, spending limit On, published EUR175.99436818021823, expiry 12 November 2026 18:00:16 UTC. New operator budget is maximum EUR175, not a spending target. Closed credit can lag usage. [Eligibility](../evidence/completion/eligibility.sanitized.json).

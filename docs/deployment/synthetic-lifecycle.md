@@ -124,6 +124,26 @@ always-disable remain. The first failed record remains historical; the completed
 AMA pilot is untouched. The operator's latest approval authorizes necessary
 tests, not relaxed subscription, privacy or containment boundaries.
 
+## Successful backend lifecycle and observation scope
+
+Recovery created one real Scheduled Alerts alert and incident, but its detailed
+`POST /incidents/{id}/alerts` read was denied to CI. This is preserved as a
+failed observation step. The backend event/alert/incident were independently
+verified through the authorized personal read-only session; no additional CI
+entity/table permission was granted. Exact-incident OIDC classification then
+succeeded as Closed/BenignPositive/SuspiciousButExpected, with the test disabled.
+
+The corrected CI observer uses GET incident metadata only: exact workspace,
+rule, first-activity window and a strictly typed alert count between one and
+five. The operator investigation remains a separate evidence record confirming
+actual Scheduled Alerts product/component, title, test time, one KQL match and
+the actual related alert. Both records join by query SHA and hashed incident
+reference. `observe` verifies the existing disabled test without activation,
+replay or new data; the report links its original source workflow. Final lab
+acceptance requires this evidence, the separate detailed investigation and
+successful classified closure. A service-provided Defender incident URL exists;
+no claim of opening the Defender portal UI is made.
+
 API references: [scheduled rule request](https://learn.microsoft.com/rest/api/securityinsights/alert-rules/create-or-update?view=rest-securityinsights-2025-09-01),
 [incident alerts](https://learn.microsoft.com/rest/api/securityinsights/incidents/list-alerts?view=rest-securityinsights-2025-09-01),
 [incident classification](https://learn.microsoft.com/rest/api/securityinsights/incidents/create-or-update?view=rest-securityinsights-2025-09-01).

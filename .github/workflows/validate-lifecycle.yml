@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Single-use start, exact incident close, or fixed test rule disable'
+        description: 'Single-use start/recovery, read existing test metadata, exact incident close, or disable'
         type: choice
         required: true
-        options: [disable, start, recover, close]
+        options: [disable, start, recover, observe, close]
         default: disable
       confirm_isolated_test:
         description: 'Confirm reviewed synthetic test; preserve twelve disabled detections and all collection/billing settings'
