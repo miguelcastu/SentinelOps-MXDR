@@ -37,7 +37,9 @@ jobs:
       - name: Validate synthetic risk correlation and control scenarios offline
         run: python -m rba
       - name: Validate AzureActivity portfolio contracts and synthetic scenarios
-        run: python -m portfolio
+        run: |
+          python -m portfolio
+          python -m scripts.validate_portfolio_live
       - name: Validate offline local-machine AMA plan
         run: python -m ama
       - name: Verify SOAR, customer handover and integrated lab offline
