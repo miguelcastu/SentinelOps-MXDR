@@ -63,8 +63,13 @@ def disabled(client, target):
     if current["properties"]["enabled"]:
         body = rule(run, started, False) | {"etag": current["etag"]}
         client.request("PUT", target + "?api-version=" + API, body)
-    final = client.request("GET", target + "?api-version=" + API)
-    parameters(final)
+    for attempt in range(6):
+        final = client.request("GET", target + "?api-version=" + API)
+        require(parameters(final) == (run, started) and final.get("id", "").lower() == target.lower(), "Cleanup read-back changed the fixed test contract")
+        if final["properties"]["enabled"] is False:
+            break
+        if attempt < 5:
+            time.sleep(3)
     require(final["properties"]["enabled"] is False, "Test rule cleanup not verified")
     return True
 
@@ -108,6 +113,16 @@ def observe(client, workspace, target, sleep=time.sleep):
     raise ValueError("No scheduled-rule incident observed within the finite acceptance window")
 
 
+def recovery_current(client, workspace, target):
+    current = client.request("GET", target + "?api-version=" + API)
+    parameters(current)
+    require(current.get("id", "").lower() == target.lower() and current["properties"]["enabled"] is False, "Recovery requires the exact disabled test")
+    approved = os.environ.get("SENTINEL_LIFECYCLE_RECOVERY_REFERENCE", "")
+    require(len(approved) == 64 and approved == hashlib.sha256(current["properties"]["query"].encode()).hexdigest(), "Exact prior test query reference required; no automatic replay")
+    require(find_incident(client, workspace, target) is None, "Existing linked incident must be investigated, not replayed")
+    return current
+
+
 def execute(client, workspace, mode):
     target = workspace + "/providers/Microsoft.SecurityInsights/alertRules/" + RULE_UUID
     baseline = other_rules(client, workspace)
@@ -116,19 +131,33 @@ def execute(client, workspace, mode):
     report = {"evidence": "actual-azure-scheduled-lifecycle", "auth_mode": "github-oidc", "mode": mode,
               "synthetic_input": True, "customer_tables_scanned": 0, "new_ingestion_messages": 0, "containment_actions": 0,
               "approved_sha256": fingerprint()}
-    if mode == "start":
+    if mode in {"start", "recover"}:
         require(os.environ.get("GITHUB_RUN_ATTEMPT") == "1", "Lifecycle reruns are prohibited")
-        require(client.request("GET", target + "?api-version=" + API, missing_ok=True) is None, "Single-use rule already exists; do not replay")
+        previous = recovery_current(client, workspace, target) if mode == "recover" else None
+        if mode == "start":
+            require(client.request("GET", target + "?api-version=" + API, missing_ok=True) is None, "Single-use rule already exists; do not replay")
         started = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         run = os.environ.get("GITHUB_RUN_ID", "")
         body = rule(run, started)
+        if previous:
+            body["etag"] = previous["etag"]
+            report["previous_test_run_reference"] = hashlib.sha256(previous["properties"]["query"].encode()).hexdigest()
+            report["recovery_of_disabled_alertless_test"] = True
+        print("Lifecycle stage: persist fixed disabled synthetic contract", flush=True)
         client.request("PUT", target + "?api-version=" + API, body)
         try:
             created = client.request("GET", target + "?api-version=" + API)
             parameters(created)
+            print("Lifecycle stage: enable only the fixed bounded synthetic rule", flush=True)
             client.request("PUT", target + "?api-version=" + API, rule(run, started, True) | {"etag": created["etag"]})
-            live = client.request("GET", target + "?api-version=" + API)
-            require(parameters(live) == (run, started) and live["properties"]["enabled"] is True)
+            for attempt in range(6):
+                live = client.request("GET", target + "?api-version=" + API)
+                require(parameters(live) == (run, started), "Unexpected persisted synthetic contract")
+                if live["properties"]["enabled"] is True:
+                    break
+                time.sleep(3)
+            require(live["properties"]["enabled"] is True, "Enabled state did not persist within bounded read-back")
+            print("Lifecycle stage: actual enabled state verified; observe linked incident", flush=True)
             report.update(observe(client, workspace, target))
             report["test_started_utc"] = started
         finally:
@@ -163,11 +192,11 @@ def execute(client, workspace, mode):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["start", "close", "disable"])
+    parser.add_argument("mode", choices=["start", "recover", "close", "disable"])
     args = parser.parse_args()
     require(os.environ.get("SENTINEL_LIFECYCLE_APPROVED_SHA256") == fingerprint(), "Exact reviewed lifecycle approval required before authentication")
     require(datetime.now(timezone.utc) < instant("2026-11-12T18:00:16Z"), "Credit eligibility expired; close locally without cloud work")
-    if args.mode == "start":
+    if args.mode in {"start", "recover"}:
         require(datetime.now(timezone.utc) + timedelta(minutes=25) < instant("2026-11-12T18:00:16Z"), "Insufficient time for observation and cleanup before credit expiry")
     workspace = context("validate-lifecycle.yml")
     report = execute(LifecycleClient(), workspace, args.mode)
@@ -177,5 +206,8 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except (ValueError, OSError, KeyError, TypeError):
+    except ValueError as exc:
+        # ValueErrors originate in fixed validators and sanitized HTTP code paths.
+        raise SystemExit("Lifecycle stopped: " + str(exc) + ". Cleanup step must verify disabled state; no broad permission or replay fallback.") from None
+    except (OSError, KeyError, TypeError):
         raise SystemExit("Lifecycle stopped; inspect sanitized step evidence. Cleanup step must verify disabled state. No subscription/permission fallback or automatic replay.") from None

@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from lifecycle.contract import TITLE, RULE_UUID, close_body, fingerprint, parameters, rule, validate_incident
-from scripts.run_lifecycle import disabled, observe
+from scripts.run_lifecycle import disabled, observe, recovery_current, execute
 
 
 class LifecycleBoundaries(unittest.TestCase):
@@ -85,3 +85,77 @@ class LifecycleBoundaries(unittest.TestCase):
         self.assertFalse(client.puts[0]["properties"]["enabled"])
         self.assertTrue(disabled(client, "/lab/fixed"))
         self.assertEqual(len(client.puts), 1)
+
+    def test_recovery_is_bound_to_one_prior_disabled_alertless_test(self):
+        import hashlib
+        value = rule("1234567890", "2026-11-03T18:00:00Z")
+        value.update(id="/lab/fixed", etag='"v1"')
+        class Client:
+            def request(inner, method, path, body=None):
+                self.assertEqual(method, "GET")
+                return {"value": []} if '/incidents?' in path else copy.deepcopy(value)
+        digest = hashlib.sha256(value["properties"]["query"].encode()).hexdigest()
+        with patch.dict('os.environ', {'SENTINEL_LIFECYCLE_RECOVERY_REFERENCE': '0'*64}):
+            with self.assertRaises(ValueError):
+                recovery_current(Client(), '/lab', '/lab/fixed')
+        with patch.dict('os.environ', {'SENTINEL_LIFECYCLE_RECOVERY_REFERENCE': digest}):
+            self.assertEqual(recovery_current(Client(), '/lab', '/lab/fixed'), value)
+            value['properties']['enabled'] = True
+            with self.assertRaises(ValueError):
+                recovery_current(Client(), '/lab', '/lab/fixed')
+
+    def test_query_execution_gate_has_no_table_or_wildcard_data_permission(self):
+        from lifecycle.contract import QUERY_ACTIONS
+        self.assertEqual(QUERY_ACTIONS, ['Microsoft.OperationalInsights/workspaces/query/read'])
+        self.assertFalse(any('query/*/' in a or '/tables/' in a for a in QUERY_ACTIONS))
+
+    def test_cleanup_waits_for_readback_without_repeating_mutation(self):
+        value = rule("1234567890", "2026-11-03T18:00:00Z", True)
+        value.update(id='/lab/fixed', etag='"v1"')
+        class Client:
+            puts = 0
+            gets = 0
+            def request(inner, method, path, request=None, missing_ok=False):
+                if method == 'PUT':
+                    inner.puts += 1
+                    return None
+                inner.gets += 1
+                result = copy.deepcopy(value)
+                result['properties']['enabled'] = inner.gets < 3
+                return result
+        client = Client()
+        with patch('scripts.run_lifecycle.time.sleep') as delay:
+            self.assertTrue(disabled(client, '/lab/fixed'))
+        self.assertEqual(client.puts, 1)
+        self.assertEqual(client.gets, 3)
+        delay.assert_called_once_with(3)
+
+    def test_rejected_enable_always_leaves_test_disabled_and_does_not_touch_baseline(self):
+        workspace='/lab'
+        target=workspace+'/providers/Microsoft.SecurityInsights/alertRules/'+RULE_UUID
+        baseline=[{'name':f'rule-{n}', 'kind':'Scheduled', 'properties':{'enabled':False}} for n in range(12)]
+        baseline.append({'name':'fusion', 'kind':'Fusion','properties':{'enabled':True}})
+        class Client:
+            current=None
+            writes=[]
+            reads=[]
+            def request(inner, method, path, body=None, missing_ok=False):
+                if method=='PUT':
+                    self.assertTrue(path.startswith(target+'?'))
+                    inner.writes.append(copy.deepcopy(body))
+                    if body['properties']['enabled']:
+                        raise ValueError('Lifecycle Azure PUT rejected: HTTP 401, Unauthorized; no wider permission fallback')
+                    inner.current=copy.deepcopy(body)|{'id':target,'etag':'"v1"'}
+                    return copy.deepcopy(inner.current)
+                inner.reads.append(path)
+                if path.startswith(target+'?'): return copy.deepcopy(inner.current)
+                if '/alertRules?' in path: return {'value':copy.deepcopy(baseline)}
+                return {'properties':{'sku':{'name':'pergb2018'},'retentionInDays':30,'workspaceCapping':{'dailyQuotaGb':.1}}}
+        client=Client()
+        with patch.dict('os.environ',{'GITHUB_RUN_ATTEMPT':'1','GITHUB_RUN_ID':'1234567890'}),patch('builtins.print'):
+            with self.assertRaisesRegex(ValueError,'HTTP 401, Unauthorized'):
+                execute(client,workspace,'start')
+        self.assertFalse(client.current['properties']['enabled'])
+        self.assertEqual([b['properties']['enabled'] for b in client.writes],[False,True])
+        self.assertGreaterEqual(sum(p.startswith(target+'?') for p in client.reads),4)
+        self.assertTrue(all(r['properties']['enabled'] is False for r in baseline[:12]))

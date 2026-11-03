@@ -6,7 +6,7 @@ import subprocess
 import uuid
 from pathlib import Path
 
-from lifecycle.contract import API, CLOSER, CLOSE_ACTIONS, READER, READ_ACTIONS, RULE_UUID, fingerprint, parameters, require
+from lifecycle.contract import API, CLOSER, CLOSE_ACTIONS, READER, READ_ACTIONS, RULE_UUID, QUERY_ROLE, QUERY_ACTIONS, fingerprint, parameters, require
 from scripts.azure_guard import RG, WORKSPACE, az_json, canonical_uuid
 from scripts.bootstrap_oidc import IDENTITY, ENVIRONMENT, PIN, ROLE_NAME, ACTIONS, check_role, github, github_token, oidc_subject, seal, set_variable
 from scripts.prepare_ama import ensure_exact_assignment
@@ -31,7 +31,7 @@ def ensure_role(arm, group, name, actions):
 
 def prepare(apply=False, approve_incident=False):
     require(os.environ.get("GITHUB_ACTIONS") != "true", "Administrative setup cannot run in CI")
-    print("Lifecycle setup: fixed rule writer plus workspace incident read; optional later classifier only at the actual linked test incident. No cloud deployment by this script.")
+    print("Lifecycle setup: fixed rule writer, incident read and query-execution gate without table access; later classifier only at the actual linked test incident. No cloud deployment by this script.")
     if not apply:
         print("PREVIEW: no Azure request, GitHub mutation, rule activation or log query; contract=" + fingerprint())
         return
@@ -88,15 +88,17 @@ def prepare(apply=False, approve_incident=False):
         ensure_exact_assignment(arm, assignment_path, principal, writer, target)
         reader = ensure_role(arm, group, READER, READ_ACTIONS)
         ensure_exact_assignment(arm, assignment_path, principal, reader, workspace)
-        scope = "one fixed test rule writer and workspace incident inventory read"
-        added = [(writer["id"].lower(), target.lower()), (reader["id"].lower(), workspace.lower())]
+        query_gate = ensure_role(arm, group, QUERY_ROLE, QUERY_ACTIONS)
+        ensure_exact_assignment(arm, assignment_path, principal, query_gate, workspace)
+        scope = "one fixed test rule writer, workspace incident inventory read and query-execution gate with no table-data grant"
+        added = [(writer["id"].lower(), target.lower()), (reader["id"].lower(), workspace.lower()), (query_gate["id"].lower(), workspace.lower())]
     after = arm.request("GET", assignment_path)
     require(not after.get("nextLink"), "Complete final assignment inventory required")
     pairs = lambda value: {(a["properties"]["roleDefinitionId"].lower(), a["properties"]["scope"].lower()) for a in value["value"]}
     require(pairs(after) == pairs(before) | set(added), "Unrelated assignment change detected")
     set_variable(token, "SENTINEL_LIFECYCLE_APPROVED_SHA256", fingerprint())
     report = {"evidence": "actual-azure-rest-rbac-setup", "scope": scope, "existing_ci_identity_and_trust_reused": True,
-              "assignments_total": len(after["value"]), "added_exact_assignments": len(added), "analytics_rules_deployed": 0, "queries_executed": 0,
+              "assignments_total": len(after["value"]), "added_exact_assignments": len(pairs(after)-pairs(before)), "verified_lifecycle_assignments": len(added), "analytics_rules_deployed": 0, "queries_executed": 0,
               "workspace_wide_incident_write": False, "broad_rule_write": False, "approved_sha256": fingerprint()}
     destination = Path(".local/completion/lifecycle-classifier-rbac.sanitized.json" if approve_incident else ".local/completion/lifecycle-start-rbac.sanitized.json")
     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

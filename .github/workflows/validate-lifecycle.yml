@@ -7,7 +7,7 @@ on:
         description: 'Single-use start, exact incident close, or fixed test rule disable'
         type: choice
         required: true
-        options: [disable, start, close]
+        options: [disable, start, recover, close]
         default: disable
       confirm_isolated_test:
         description: 'Confirm reviewed synthetic test; preserve twelve disabled detections and all collection/billing settings'
@@ -37,6 +37,7 @@ jobs:
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       SENTINEL_LIFECYCLE_APPROVED_SHA256: ${{ vars.SENTINEL_LIFECYCLE_APPROVED_SHA256 }}
       SENTINEL_LIFECYCLE_INCIDENT_ID: ${{ secrets.SENTINEL_LIFECYCLE_INCIDENT_ID }}
+      SENTINEL_LIFECYCLE_RECOVERY_REFERENCE: ${{ vars.SENTINEL_LIFECYCLE_RECOVERY_REFERENCE }}
       LIFECYCLE_MODE: ${{ inputs.mode }}
       AZURE_CORE_COLLECT_TELEMETRY: 'false'
     steps:

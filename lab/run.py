@@ -113,7 +113,7 @@ def run(output):
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (cloud_start, cloud_close))
         from lifecycle.contract import fingerprint
         live = (all(x.get("evidence") == "actual-azure-scheduled-lifecycle" and x.get("auth_mode") == "github-oidc" and x.get("approved_sha256") == fingerprint() and x.get("original_thirteen_rules_unchanged") is True and x.get("workspace_settings_unchanged") is True for x in (a, b))
-                and a.get("mode") == "start" and b.get("mode") == "close"
+                and a.get("mode") in {"start", "recover"} and b.get("mode") == "close"
                 and isinstance(a.get("test_run_reference"), str) and len(a["test_run_reference"]) == 64 and a["test_run_reference"] == b.get("test_run_reference")
                 and a.get("incident_created") is True and a.get("scheduled_rule_link_verified") is True and b.get("incident_status") == "Closed" and b.get("classification") == "BenignPositive" and b.get("test_rule_disabled") is True)
     value = {"schema_version": "1.0", "evidence": "offline-integrated-lab", "customer": "Atlas Financial (fictional)",

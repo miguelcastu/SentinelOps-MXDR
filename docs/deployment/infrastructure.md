@@ -124,3 +124,50 @@ Microsoft documents [existing-resource semantics](https://learn.microsoft.com/az
 and [monitoring scopes](https://learn.microsoft.com/azure/azure-resource-manager/bicep/scenarios-monitoring).
 These sources explain the implementation; [Phase 6 validation](../validation/phase-6.md)
 records what this lab actually executed.
+
+## Read-only compiler-to-live verification
+
+The manual [verify-infrastructure.yml](../../.github/workflows/verify-infrastructure.yml)
+workflow provides a stronger verification path without adding ARM deployment
+permissions or starting the guest. It runs only on protected main in the existing
+`sentinel-lab` environment, on public-repository standard runners, with an
+explicit default-false `confirm_read_only` input. It shares the existing
+deployment concurrency group and introduces no schedule.
+
+Before Azure login it runs the detection validator/tests and
+`scripts.check_bicep`, saving the actual hash-verified compiler result privately.
+The verifier rejects absent/altered compiler evidence before authentication;
+there is no arbitrary compiler, resource, query or HTTP method input.
+
+The [adapter](../../scripts/verify_infrastructure.py) uses the existing OIDC
+identity and exactly **six allowlisted GET routes**: workspace metadata,
+analytics inventory, owned Arc machine, fixed DCR, fixed extension and fixed
+association. It checks seventeen targets: twelve disabled rule definitions,
+three compiled AMA bodies and workspace/owned-machine reference contracts.
+The actual workspace customer UUID independently checks the read-only DCR
+destination UUID. Expected runtime handler-version resolution is preserved.
+Matching titles/UUIDs must be unique; template-managed ownership, another
+scope/type or an incomplete/paginated inventory stops verification.
+
+Sentinel onboarding metadata and the subscription diagnostic export remain
+**Unknown**, because the existing verifier grants do not include their reads.
+They are not fetched and are not described as missing. Unmanaged inventory
+entries such as Fusion or the isolated lifecycle test are counted without
+being modified or claimed as compiled catalog members. Connected or
+Disconnected is accepted for the owned Linux Arc machine: a stopped guest
+does not invalidate its persisted collection contract or establish freshness.
+
+The adapter's transport refuses POST/PUT/PATCH/DELETE, request bodies,
+unapproved routes and redirects. Responses are finite; raw error bodies,
+resource IDs, names of real identities and query results are never printed.
+Its sanitized `INFRASTRUCTURE_EVIDENCE` report contains per-target states,
+changed field paths, counts, connectivity and compiler facts. Observed drift
+or missing managed rules causes a nonzero exit after the sanitized report.
+No retry, upload, guest start, grant or automatic repair occurs.
+
+Successful **17 Matching / 2 Unknown** is live GET agreement with the compiled
+writable contracts plus reference invariants. It remains separate from ARM
+what-if, platform deployment, telemetry arrival and rule accuracy. The workflow
+requires no new role assignment and preserves all existing deployment gates.
+Only a completed actual run can be published as cloud verification evidence;
+the seven local adapter tests use mocks and do not establish that result.

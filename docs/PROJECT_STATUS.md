@@ -19,6 +19,20 @@ the real scheduled-alert/incident lifecycle remains unverified.**
 
 ## Current increment: Portfolio completion work
 
+The operator explicitly approved the concrete PR #20 test on 3 November:
+"autorizo las pruebas que necesites, cualquiera". Actual OIDC run
+[41697635395](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41697635395)
+created LAB-VAL-001 disabled, but enable returned Unauthorized because Azure
+requires query-execution permission even for an inline datatable. Cleanup and
+independent REST confirm disabled; no incident was observed. Original thirteen
+rules/settings are preserved. Exact setup reached twenty CI assignments.
+The reviewed correction adds only workspace query/read execution, no table
+access/DataActions, and one explicit prior-query-digest-bound recovery. No
+broad role or personal deployment fallback. The new compiler-to-live verifier
+uses only six existing fixed GET routes; actual verification remains pending.
+Local suite now includes 198 tests. Live acceptance remains incomplete until
+the actual linked alert/incident and classified closure are verified.
+
 - Actual read-only Azure eligibility confirms same Enabled subscription, spending limit On, published EUR175.99436818021823, expiry 12 November 2026 18:00:16 UTC. New operator budget is maximum EUR175, not a spending target. Closed credit can lag usage. [Eligibility](../evidence/completion/eligibility.sanitized.json).
 - Fresh REST baseline: West Europe, `pergb2018`, retention30days, cap0.1GB/day, thirteen rules/twelve disabled Scheduled/original enabled Fusion, eighteen CI assignments; Arc Disconnected. No new cloud mutation/log query/message or paid plan for this offline increment. [Actual baseline](../evidence/completion/baseline.sanitized.json).
 - `python -m lab --bundle` exercises schema/normalization, sixty detection controls, sixteen health scenarios, nine risk scenarios, the exact RBA finding -> one Closed synthetic SOAR case, nine audit events/one idempotent ticket/six failure scenarios, and a nineteen-target synthetic IaC comparison. Four source-health/risk/evidence views live in `.local/lab/index.html`. Private state is excluded from its portable archive.

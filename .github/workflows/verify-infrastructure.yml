@@ -1,0 +1,59 @@
+name: Read-only Compiled Infrastructure Verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_read_only:
+        description: 'Verify fixed compiled contracts using existing GET permissions; no guest start, writes, queries or grants'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-lab-deployment
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main' && github.event.repository.private == false && inputs.confirm_read_only
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    environment: sentinel-lab
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SENTINEL_RULE_ID: ${{ vars.SENTINEL_RULE_ID }}
+      SENTINELOPS_COMPILE_REPORT: .local/infrastructure-compile.json
+      AZURE_CORE_COLLECT_TELEMETRY: 'false'
+    steps:
+      - name: Checkout reviewed main
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate and compile locked contracts before authentication
+        run: |
+          python -m scripts.validate_detection
+          python -m unittest discover -s tests -v
+          mkdir -p .local
+          python -m scripts.check_bicep > "$SENTINELOPS_COMPILE_REPORT"
+          python -c "from scripts.verify_infrastructure import load_compiler_evidence; load_compiler_evidence(); print('PASS: actual locked compiler checks completed')"
+      - name: Login with existing OIDC identity
+        uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: GET exact resources and compare compiled contracts
+        run: python -m scripts.verify_infrastructure
