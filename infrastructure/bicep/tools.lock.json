@@ -1,0 +1,13 @@
+{
+  "tool": "Azure/bicep",
+  "version": "0.48.1",
+  "release": "https://github.com/Azure/bicep/releases/tag/v0.48.1",
+  "windows-x64": {
+    "url": "https://github.com/Azure/bicep/releases/download/v0.48.1/bicep-win-x64.exe",
+    "sha256": "398af294cf16ac4becdbd008a77d148d0e8e91492309a6b60ec911b7e1cab082"
+  },
+  "linux-x64": {
+    "url": "https://github.com/Azure/bicep/releases/download/v0.48.1/bicep-linux-x64",
+    "sha256": "b09ec25a9d376c1f8e33ede6ed22b587f915ad68488d5db77a6f9541748c7f6e"
+  }
+}

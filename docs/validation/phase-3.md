@@ -1,5 +1,43 @@
 # Phase 3 validation: platform health
 
+## Completion increment: coordinated AMA health inventory
+
+The health inventory/policies now contain **three** coordinated sources:
+AzureActivity, synthetic authentication and `ama-linux-syslog`. The latter
+records actual bounded ingestion acceptance, not active continuous collection.
+The owned machine remains intentionally stopped. Local source-specific policy
+separates fresh planned shutdown, stale/unknown operation and full running-source
+health. Planned shutdown is **Unknown**, never an outage/Missing alarm or a
+misleading Healthy result. Fresh running context and complete telemetry metrics
+are both required for Healthy.
+
+The default CLI preserves the original eleven scenarios and adds five AMA
+maintenance/partial-evidence cases, **sixteen in total**. Thirty-four health
+tests pass locally, including twelve new AMA tests. They cover coordinated
+inventory IDs, fresh/stale/absent/future machine context, partial pilot metrics,
+the real recorded ten-message evidence shape, wrong machine/raw-field rejection,
+no implicit batch/heartbeat authorization and partial cost coverage. Existing
+collector tests still assert exactly **two authorized resource GETs**, no Logs
+API/export query and no identity leakage; the third source is uncollected in
+that cloud-only collector, rather than assuming local power state.
+
+The offline [AMA adapter](../../platform_health/ama.py) can import the recorded
+[pilot aggregate](../../evidence/local-linux-ama/ingestion.sanitized.json) and
+[shutdown evidence](../../evidence/local-linux-ama/shutdown.sanitized.json).
+At the historical shutdown timestamp its result is planned maintenance; a
+current evaluation ages the machine observation to Unknown. Ten total/distinct
+events, 2,600 billable bytes and two actual query attempts stay in a separate
+`pilot_evidence` object. Full-health query status remains not_collected;
+schema, mapping, negative-latency and p95 fields remain unknown. No zero-error,
+latency or continuous-freshness proof is fabricated from those four columns.
+
+JSON/Markdown/HTML show the machine context and separate pilot evidence. No
+live query, role, workflow, cloud resource or collection change is introduced.
+Final whole-project integration/checks and release evidence are recorded by
+the root completion work; this local validation does not claim a fresh OIDC
+run. The 18 October evidence below remains an actual historical **two-source**
+checkpoint and has not been rewritten as a current three-source observation.
+
 ## Implemented offline
 
 The new health package uses the existing source inventory and per-source policies. Default evidence is explicitly synthetic. The demo runs eleven scenarios from mutated in-memory events or configuration/workflow fixtures and checks each expected classification. Reports contain only allowlisted aggregate metrics and public source/check names.

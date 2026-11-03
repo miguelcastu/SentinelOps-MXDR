@@ -1,0 +1,15 @@
+{
+  "evidence": "actual-azure-rest-control-plane",
+  "observed_utc": "2026-11-03T18:23:47.199052+00:00",
+  "workspace_region": "westeurope",
+  "pricing": "pergb2018",
+  "retention_days": 30,
+  "daily_cap_gb": 0.1,
+  "rules": 13,
+  "disabled_scheduled": 12,
+  "original_fusion_enabled": true,
+  "ci_assignments": 18,
+  "arc_status": "Disconnected",
+  "new_mutations": 0,
+  "new_log_queries": 0
+}

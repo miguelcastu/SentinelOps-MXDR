@@ -5,6 +5,8 @@ Workspace: `law-sentinelops-mxdr-euw`, West Europe.
 
 ## Authorized work
 
+- On 3 November 2026 the operator requested all feasible remaining phases and a portable, fully documented portfolio, with maximum EUR175 necessary spend only while the existing subscription remains valid. Current implementation adds offline SOAR, Bicep/preview/recovery, coordinated AMA health policies, customer operations and an integrated demo/release archive. This does not alter subscription/plan/cap/retention/diagnostics or authorize university data. An isolated real-scheduler lifecycle proposal is in `docs/deployment/synthetic-lifecycle.md`; its new activation/access gate remains separate until specifically approved. Do not infer live evidence from its code or mocks. If subscription/credit eligibility expires, stop new project work and close out existing verified artifacts.
+
 - Develop KQL, detection definitions, Python tooling, tests and English documentation.
 - Work on feature branches and prepare commits and pull requests.
 - Deploy only through the approved GitHub Actions OIDC workflow after PR approval and merge.

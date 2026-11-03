@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "evidence": "fictional-customer-package-acceptance",
+  "customer": "Atlas Financial",
+  "deliverables": [
+    {
+      "id": "discovery",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/discovery-requirements.md",
+      "acceptance": "Questions identify authority, critical assets, licensing, normal administration, response owners and budget."
+    },
+    {
+      "id": "security-requirements",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/discovery-requirements.md",
+      "acceptance": "Twelve named security/reliability/operations requirements include concrete validation methods."
+    },
+    {
+      "id": "monitoring-scope",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-design.md",
+      "acceptance": "Source boundaries distinguish subscription activity, owned guest Syslog and local synthetic formats."
+    },
+    {
+      "id": "architecture",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-design.md",
+      "acceptance": "Logical data/control paths and management/authentication/storage responsibilities are explicit."
+    },
+    {
+      "id": "responsibility-matrix",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-design.md",
+      "acceptance": "Five exercise roles have RACI ownership for onboarding, engineering, investigation, cost and handover."
+    },
+    {
+      "id": "source-onboarding",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-design.md",
+      "acceptance": "Per-source ownership, acceptance gaps and reusable onboarding criteria are documented."
+    },
+    {
+      "id": "detection-coverage",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/detection-coverage.md",
+      "acceptance": "Twelve IDs map to source, severity, schedule, investigation limits and disabled state."
+    },
+    {
+      "id": "mitre-report",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/detection-coverage.md",
+      "acceptance": "API technique/tactic labels, unmapped areas and current-taxonomy uncertainty remain explicit."
+    },
+    {
+      "id": "detection-catalog",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/coverage.json",
+      "acceptance": "Machine-readable coverage matches all twelve versioned definitions and links queries/runbooks."
+    },
+    {
+      "id": "operations-runbooks",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/operations.md",
+      "acceptance": "Triage, investigation, escalation, closure, tuning and platform failure procedures are actionable."
+    },
+    {
+      "id": "triage",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/operations.md",
+      "acceptance": "Evidence class, lineage, identity/scope, health uncertainty, impact and owner are assessed in order."
+    },
+    {
+      "id": "incident-response",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/operations.md",
+      "acceptance": "Response recommendations require explicit authority and evidence-backed classification."
+    },
+    {
+      "id": "health-reporting",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-assurance.md",
+      "acceptance": "Health definitions separate quiet event sources, stopped machines, stale snapshots and unavailable measurement."
+    },
+    {
+      "id": "cost-retention",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-assurance.md",
+      "acceptance": "Existing workspace controls, payload/billable distinction, billing lag and finite cost review are explicit."
+    },
+    {
+      "id": "kpis-slis",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-assurance.md",
+      "acceptance": "Metric formulas, denominator/time scopes, unknowns and noncontractual exercise targets are defined."
+    },
+    {
+      "id": "change-management",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/operations.md",
+      "acceptance": "Changes require scope, hashes, tests, approval, protected exact-head CI and actual read-back."
+    },
+    {
+      "id": "troubleshooting-escalation",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/operations.md",
+      "acceptance": "Source-to-case diagnostic sequence, role-based routes and eight realistic ticket exercises exist."
+    },
+    {
+      "id": "acceptance-checklist",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-assurance.md",
+      "acceptance": "Customer acceptance distinguishes implemented artifacts, actual cloud proof and unexecuted live gates."
+    },
+    {
+      "id": "risk-register",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/service-assurance.md",
+      "acceptance": "Twelve risks have concrete controls, owners and residual acceptance decisions."
+    },
+    {
+      "id": "handover",
+      "state": "implemented-offline",
+      "path": "customer/atlas-financial/handover.md",
+      "acceptance": "Successor checks, recovery boundaries, private-state handling and operator-led closure are documented."
+    }
+  ],
+  "live_incident_gate": {
+    "state": "not-asserted-by-this-package",
+    "reason": "Customer documents and synthetic tickets do not establish an actual scheduled Sentinel alert, incident, investigation or classification; assess current global evidence separately.",
+    "authoritative_status_path": "docs/PROJECT_STATUS.md"
+  },
+  "operational_service_claim": false
+}

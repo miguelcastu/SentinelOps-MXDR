@@ -1,0 +1,68 @@
+name: Single Synthetic Scheduled Alert and Incident Acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Single-use start, exact incident close, or fixed test rule disable'
+        type: choice
+        required: true
+        options: [disable, start, close]
+        default: disable
+      confirm_isolated_test:
+        description: 'Confirm reviewed synthetic test; preserve twelve disabled detections and all collection/billing settings'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sentinel-lab-deployment
+  cancel-in-progress: false
+
+jobs:
+  lifecycle:
+    if: github.ref == 'refs/heads/main' && github.event.repository.private == false && inputs.confirm_isolated_test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: sentinel-lab
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SENTINEL_LIFECYCLE_APPROVED_SHA256: ${{ vars.SENTINEL_LIFECYCLE_APPROVED_SHA256 }}
+      SENTINEL_LIFECYCLE_INCIDENT_ID: ${{ secrets.SENTINEL_LIFECYCLE_INCIDENT_ID }}
+      LIFECYCLE_MODE: ${{ inputs.mode }}
+      AZURE_CORE_COLLECT_TELEMETRY: 'false'
+    steps:
+      - name: Checkout reviewed main
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Validate before authentication
+        run: |
+          python -m scripts.validate_detection
+          python -m unittest discover -s tests -v
+          python -c "import os; from lifecycle.contract import fingerprint, require; require(os.environ.get('SENTINEL_LIFECYCLE_APPROVED_SHA256') == fingerprint())"
+      - name: Login with existing OIDC identity
+        id: login
+        uses: azure/login@8216e11d8cd9b42fe925c852af8e76311ff067ac # v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: false
+      - name: Run the fixed bounded lifecycle operation
+        run: python -m scripts.run_lifecycle "$LIFECYCLE_MODE"
+      - name: Always verify fixed test rule disabled
+        if: always() && steps.login.outcome == 'success'
+        run: python -m scripts.run_lifecycle disable

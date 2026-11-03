@@ -1,4 +1,12 @@
 # Local Linux / Arc / AMA pilot validation
+## Health-policy integration (3 November 2026)
+
+The verified source now has a coordinated inventory and health policy. Fresh
+planned shutdown remains Unknown maintenance; absent/stale operation evidence
+and partial pilot metrics cannot establish health. No live query or automatic
+AMA collector was added. This supersedes earlier statements below about the
+source being outside the policy inventory. See [project acceptance](project-completion.md).
+
 
 The explicitly approved one-machine pilot completed on **28 October 2026**.
 One cloud batch reconciled in Kusto; the local VM is now powered off.

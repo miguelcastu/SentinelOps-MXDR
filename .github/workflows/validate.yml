@@ -40,3 +40,11 @@ jobs:
         run: python -m portfolio
       - name: Validate offline local-machine AMA plan
         run: python -m ama
+      - name: Verify SOAR, customer handover and integrated lab offline
+        run: |
+          python -m soar
+          python customer/atlas-financial/validate.py
+          python -m infrastructure.preview
+          python -m lab --bundle
+      - name: Compile and validate pinned Bicep contracts without Azure
+        run: python -m scripts.check_bicep
