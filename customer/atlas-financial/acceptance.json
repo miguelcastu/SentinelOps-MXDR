@@ -126,7 +126,7 @@
   ],
   "live_incident_gate": {
     "state": "not-asserted-by-this-package",
-    "reason": "Customer documents and synthetic tickets do not establish an actual scheduled Sentinel alert, incident, investigation or classification; assess current global evidence separately.",
+    "reason": "This offline customer package cannot establish cloud acceptance alone. The global final status now links the actual isolated Sentinel lifecycle; synthetic tickets still describe fictional service scenarios, not that real laboratory incident.",
     "authoritative_status_path": "docs/PROJECT_STATUS.md"
   },
   "operational_service_claim": false

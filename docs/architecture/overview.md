@@ -57,7 +57,7 @@ flowchart LR
 
 No part of the control path provisions a workspace, connector, playbook or paid compute. Analytics writes are scoped separately to the twelve reviewed rule resources; workspace metadata and optional AzureActivity query permissions are separate assignments. The personal MFA session is confined to the explicitly authorized initial setup and verification; routine deployments use OIDC. Environment review flags default to false until prerequisites are reviewed. Actual Azure OIDC authentication, disabled-rule deployments and final API comparisons have succeeded. See the [verified platform record](../validation/platform-setup.md) and [security boundary](../security.md).
 
-Offline PR CI has no OIDC permission or Azure secrets. The opt-in live validation workflow performs aggregate and synthetic queries only. Read the [deployment runbook](../deployment/detection-cicd.md) for limitations of RBAC, the upsert API, current MITRE mapping and query costs. Future phases cover data health, SOAR and reproducible Bicep deployments.
+Offline PR CI has no OIDC permission or Azure secrets. The opt-in live validation workflow performs aggregate and synthetic queries only. Read the [deployment runbook](../deployment/detection-cicd.md) for limitations of RBAC, the upsert API, current MITRE mapping and query costs. Data health, offline SOAR, Bicep/recovery and actual fixed-contract verification are now delivered; see the [accepted release](../validation/project-completion.md).
 
 ## Second source: local implementation, proposed cloud path
 
@@ -93,3 +93,12 @@ ingestion; AMA health policies/automatic collection are not implemented in the
 existing health tool. No native SSH or active Linux detection coverage follows
 from the local4 test. Starting the guest would resume its installed collection
 services and requires attention to the approved scope and budget.
+
+## Completed real lifecycle versus local orchestration
+
+The dedicated inline synthetic test used actual Kusto/scheduling, SecurityAlert
+and Sentinel incident creation; main OIDC closed its exact incident after
+operator read-only investigation. CI now observes metadata only instead of
+being granted detailed-alert/table access. Query and hashed incident references
+join the separate actual records. This is independent of the offline RBA->SOAR
+exercise and the two source-arrival proofs. [Actual timeline](../validation/lifecycle.md).

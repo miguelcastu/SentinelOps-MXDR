@@ -1,0 +1,13 @@
+{
+  "evidence": "actual-github-api-closeout",
+  "verified_utc": "2026-11-03T20:09:58.781857+00:00",
+  "lifecycle_approval_gate_removed": true,
+  "lifecycle_recovery_reference_removed": true,
+  "lifecycle_reconcile_reference_removed": true,
+  "exact_incident_identifier_secret_removed": true,
+  "original_azure_oidc_secret_names_and_update_times_preserved": true,
+  "main_only_environment_unchanged": true,
+  "required_ci_and_admin_branch_protection_unchanged": true,
+  "new_azure_operations": 0,
+  "completed_test_disarmed": true
+}

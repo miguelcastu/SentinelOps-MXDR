@@ -84,3 +84,14 @@ For this personal lab, acceptance is **an engineering deliverable**, not an
 assertion that Atlas Financial received a real service. The original mission's
 real scheduled alert/incident lifecycle remains a separate evidence requirement
 unless the current global project status links an actual completed test.
+
+## Final release checkpoint
+
+The dedicated actual Sentinel lifecycle is now accepted: one explicitly synthetic
+row produced a real scheduled alert/incident, was investigated read-only and
+closed through exact-incident OIDC. Twelve security definitions stayed disabled;
+all 12 KQL bodies also executed in a bounded aggregate. Local case/ticket examples
+remain fictional and separate. Compiler-to-live verification matched17 targets
+and left2 unqueried. [Final acceptance and evidence](../../docs/validation/project-completion.md).
+Keep the portable archive before operator-led personal Azure subscription
+closure; leave the university identity/tenant untouched.

@@ -1,0 +1,207 @@
+{
+  "evidence": "actual-azure-rest-compiled-contract-comparison",
+  "auth_mode": "github-oidc",
+  "verified_utc": "2026-11-03T19:10:40.068871+00:00",
+  "compiler": {
+    "azure_requests": 0,
+    "compiler": "Azure/bicep",
+    "compiler_sha256_verified": true,
+    "compiler_version": "0.48.1",
+    "deployment_executed": false,
+    "disabled_rule_definitions": 12,
+    "evidence": "actual-local-bicep-compile-contract-check",
+    "foundation_writes": 0,
+    "parameter_files": 1,
+    "template_count": 4,
+    "writable_ama_resources": 3
+  },
+  "model_target_count": 19,
+  "queried_target_count": 17,
+  "counts": {
+    "Matching": 17,
+    "Drift": 0,
+    "Missing": 0,
+    "Unknown": 2
+  },
+  "resources": [
+    {
+      "target": "workspace",
+      "resource_type": "Microsoft.OperationalInsights/workspaces",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "read-only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "sentinel",
+      "resource_type": "Microsoft.SecurityInsights/onboardingStates",
+      "state": "Unknown",
+      "changed_paths": [],
+      "write_scope": "read-only",
+      "proposed_operation": "none",
+      "reason": "not queried; existing verifier permissions exclude this resource"
+    },
+    {
+      "target": "diagnostic-export",
+      "resource_type": "Microsoft.Insights/diagnosticSettings",
+      "state": "Unknown",
+      "changed_paths": [],
+      "write_scope": "read-only",
+      "proposed_operation": "none",
+      "reason": "not queried; existing verifier permissions exclude this resource"
+    },
+    {
+      "target": "machine",
+      "resource_type": "Microsoft.HybridCompute/machines",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "read-only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "dcr",
+      "resource_type": "Microsoft.Insights/dataCollectionRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "extension",
+      "resource_type": "Microsoft.HybridCompute/machines/extensions",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "association",
+      "resource_type": "Microsoft.Insights/dataCollectionRuleAssociations",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-001",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-002",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-003",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-004",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-005",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-006",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-007",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-008",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-009",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-010",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-011",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    },
+    {
+      "target": "AZ-DET-012",
+      "resource_type": "Microsoft.SecurityInsights/alertRules",
+      "state": "Matching",
+      "changed_paths": [],
+      "write_scope": "approved fixed REST workflow only",
+      "proposed_operation": "none"
+    }
+  ],
+  "azure_requests": 6,
+  "methods": [
+    "GET"
+  ],
+  "analytics_inventory_count": 14,
+  "owned_machine_connectivity": "Disconnected",
+  "managed_rules_disabled": 12,
+  "compiled_writable_contracts": 15,
+  "reference_metadata_contracts": 2,
+  "compiled_to_live_contracts_match": true,
+  "deployment_executed": false,
+  "arm_what_if_executed": false,
+  "resource_writes": 0,
+  "role_changes": 0,
+  "log_queries": 0,
+  "messages_sent": 0,
+  "telemetry_ingestion_verified": false,
+  "limitations": [
+    "Actual GET agreement is separate from full ARM deployment/what-if.",
+    "Sentinel onboarding and subscription diagnostic export were not queried.",
+    "Disconnected Arc metadata is allowed; no guest start or freshness assertion.",
+    "Unmanaged inventory entries are counted but not modified or claimed as compiled targets."
+  ],
+  "workflow_run": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41700706739",
+  "source_sha": "2e457a28046d7168fccd24e813b6ee2e878de56d"
+}

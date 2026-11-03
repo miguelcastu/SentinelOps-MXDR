@@ -105,3 +105,33 @@ These controlled scenarios do not measure production false-positive rates.
 
 [RBA design](../operations/risk-correlation.md),
 [synthetic validation](../validation/phase-4.md).
+
+## 7. Closing an incident changed its activity timeline
+
+**Actual lab operation.** The dedicated synthetic test produced one scheduled
+alert and a linked incident. OIDC successfully classified it Closed /
+BenignPositive / SuspiciousButExpected at **19:33:13 UTC**. The closure PUT
+omitted optional first/last activity fields; later metadata inspection showed
+that the incident no longer retained the verified **19:12:41** source time.
+
+The correction preserved activity fields in closure payloads and added an
+explicit reconciliation bound to this exact already closed incident and
+query digest. The original snapshot, recorded at **19:23:01**, the fixed query
+and actual alert independently supported the timestamps. [OIDC run
+41709469491](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41709469491)
+restored them through **one exact-incident PUT** and verified the result at
+**20:07:05**. Classification stayed unchanged. No new event, activation,
+ingestion or additional permission was needed. The final preservation audit
+then passed 76 checks, including two timeline checks at **20:10:19**.
+
+**Lesson:** a successful PUT can have unintended effects when optional fields
+are omitted. Preserve verified metadata and compare the full managed contract
+after a write. Repair from independent source evidence; do not invent replacement
+timestamps or repeat the event to produce a cleaner screenshot. The final
+reconciliation was a write followed by verification, distinct from the GET-only
+infrastructure verifier and metadata-only observer.
+
+[Full lifecycle and authority](../validation/lifecycle.md),
+[actual reconciliation](../../evidence/completion/lifecycle-start.sanitized.json),
+[original classification](../../evidence/completion/lifecycle-close.sanitized.json),
+[final preservation audit](../../evidence/completion/final-preservation.sanitized.json).

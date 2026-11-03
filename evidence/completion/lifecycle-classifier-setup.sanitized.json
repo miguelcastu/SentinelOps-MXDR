@@ -1,0 +1,13 @@
+{
+  "evidence": "actual-azure-rest-rbac-setup",
+  "scope": "single actual linked synthetic incident",
+  "existing_ci_identity_and_trust_reused": true,
+  "assignments_total": 22,
+  "added_exact_assignments": 1,
+  "verified_lifecycle_assignments": 1,
+  "analytics_rules_deployed": 0,
+  "queries_executed": 0,
+  "workspace_wide_incident_write": false,
+  "broad_rule_write": false,
+  "approved_sha256": "1de2228fdfbce88dfb1591900ad51eb30cbccff9ff8b30a6aecfdf666883dabb"
+}

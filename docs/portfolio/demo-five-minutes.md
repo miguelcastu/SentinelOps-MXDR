@@ -57,3 +57,14 @@ to Azure or make a chargeable request to rescue the presentation. The checked-in
 sanitized evidence and reproducible fixtures provide a subscription-independent
 fallback. Do not claim an actual live alert lifecycle unless current project
 status links the real rule, alert, incident, investigation and classification.
+
+## Final release checkpoint
+
+The dedicated actual Sentinel lifecycle is now accepted: one explicitly synthetic
+row produced a real scheduled alert/incident, was investigated read-only and
+closed through exact-incident OIDC. Twelve security definitions stayed disabled;
+all 12 KQL bodies also executed in a bounded aggregate. Local case/ticket examples
+remain fictional and separate. Compiler-to-live verification matched17 targets
+and left2 unqueried. [Final acceptance and evidence](../validation/project-completion.md).
+Keep the portable archive before operator-led personal Azure subscription
+closure; leave the university identity/tenant untouched.

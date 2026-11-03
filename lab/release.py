@@ -46,7 +46,7 @@ def bundle(output):
         entries["demo/" + path.relative_to(output).as_posix()] = path.read_bytes()
     if sum(map(len, entries.values())) > 26_214_400:
         raise ValueError("Portable archive size exceeded")
-    manifest = {"format": "sentinelops-portable-lab-1", "source": "git-tracked-text-only", "deployment_performed": False,
+    manifest = {"format": "sentinelops-portable-lab-1", "source": "git-tracked-public-allowlist", "deployment_performed": False,
                 "excluded": [".git", ".local private files", "credentials", "VM disks", "SQLite database", "unallowlisted/raw screenshots"],
                 "files": [{"path": n, "bytes": len(b), "sha256": hashlib.sha256(b).hexdigest()} for n, b in sorted(entries.items())]}
     destination = output.parent / "SentinelOps-MXDR-portfolio.zip"

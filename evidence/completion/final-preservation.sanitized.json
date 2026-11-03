@@ -1,0 +1,174 @@
+{
+  "evidence": "actual-azure-rest-and-local-hypervisor-final-audit",
+  "observed_utc": "2026-11-03T19:41:19.520277+00:00",
+  "subscription_and_tenant_pin_unchanged": true,
+  "subscription_state": "Enabled",
+  "spending_limit": "On",
+  "subscription_plan_unchanged": true,
+  "workspace_settings_unchanged": true,
+  "workspace_pricing": "pergb2018",
+  "retention_days": 30,
+  "daily_cap_gb": 0.1,
+  "workspace_runtime_reset_timestamp_not_treated_as_configuration": true,
+  "original_thirteen_rule_properties_unchanged": true,
+  "rules_total": 14,
+  "managed_rules_disabled": 12,
+  "test_rule_disabled": true,
+  "original_fusion_enabled": true,
+  "duplicate_rule_identifiers": 0,
+  "incident": {
+    "reference_sha256": "3905ed4f85835699519947a44ea5b034802b4d0949d750a3a5073fbf2c0f82a0",
+    "status": "Closed",
+    "classification": "BenignPositive",
+    "classification_reason": "SuspiciousButExpected",
+    "linked_scheduled_alerts": 1,
+    "fixed_synthetic_rule_link_verified": true,
+    "first_activity_preserved_from_original_snapshot_and_alert": true,
+    "last_activity_preserved_from_original_snapshot_and_alert": true,
+    "timestamp_preservation_verified": true
+  },
+  "existing_ci_identity_and_immutable_trust_preserved": true,
+  "ci_assignments": 22,
+  "original_assignment_pairs_preserved": 18,
+  "new_exact_assignment_pairs": 4,
+  "verified_bound_custom_role_definitions": 10,
+  "broad_write_assignments": 0,
+  "wildcard_actions": 0,
+  "table_data_read_grants": 0,
+  "ci_role_management_grants": 0,
+  "query_execution_action": "Microsoft.OperationalInsights/workspaces/query/read",
+  "query_execution_gate_is_separate_from_table_data_access": true,
+  "new_assignment_scopes": [
+    {
+      "purpose": "isolated test rule writer",
+      "scope": "one fixed synthetic rule"
+    },
+    {
+      "purpose": "incident inventory read",
+      "scope": "owned workspace"
+    },
+    {
+      "purpose": "inline query execution only",
+      "scope": "owned workspace; no table data actions"
+    },
+    {
+      "purpose": "synthetic incident classification",
+      "scope": "one actual linked incident"
+    }
+  ],
+  "custom_role_actions": [
+    {
+      "role": "SentinelOps AMA Fixed Association Writer",
+      "actions": [
+        "Microsoft.Insights/dataCollectionRuleAssociations/read",
+        "Microsoft.Insights/dataCollectionRuleAssociations/write"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps AMA Fixed DCR Writer",
+      "actions": [
+        "Microsoft.Insights/dataCollectionRules/read",
+        "Microsoft.Insights/dataCollectionRules/write"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps AMA Fixed Extension Writer",
+      "actions": [
+        "Microsoft.HybridCompute/machines/extensions/read",
+        "Microsoft.HybridCompute/machines/extensions/write"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps AMA Machine Metadata Reader",
+      "actions": [
+        "Microsoft.HybridCompute/machines/read",
+        "Microsoft.HybridCompute/machines/extensions/read",
+        "Microsoft.Insights/dataCollectionRuleAssociations/read"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Analytics Rule Inventory Reader",
+      "actions": [
+        "Microsoft.SecurityInsights/alertRules/read"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Exact Test Incident Classifier",
+      "actions": [
+        "Microsoft.SecurityInsights/incidents/read",
+        "Microsoft.SecurityInsights/incidents/write"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Existing Analytics Rule Deployer",
+      "actions": [
+        "Microsoft.SecurityInsights/alertRules/read",
+        "Microsoft.SecurityInsights/alertRules/write"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Inline Query Execution Gate",
+      "actions": [
+        "Microsoft.OperationalInsights/workspaces/query/read"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Lifecycle Incident Reader",
+      "actions": [
+        "Microsoft.SecurityInsights/incidents/read"
+      ],
+      "data_actions": []
+    },
+    {
+      "role": "SentinelOps Workspace Metadata Reader",
+      "actions": [
+        "Microsoft.OperationalInsights/workspaces/read"
+      ],
+      "data_actions": []
+    }
+  ],
+  "published_credit": {
+    "currency": "EUR",
+    "amount": 175.99436818021823,
+    "expiry": "2026-11-12T18:00:16.0000000Z"
+  },
+  "final_monetary_charge": "unknown; published closed credit can lag usage",
+  "resource_inventory_scope": "pinned lab resource group only",
+  "resource_types": {
+    "Microsoft.HybridCompute/machines": 1,
+    "Microsoft.HybridCompute/machines/extensions": 1,
+    "Microsoft.Insights/dataCollectionRules": 1,
+    "Microsoft.ManagedIdentity/userAssignedIdentities": 1,
+    "Microsoft.OperationalInsights/workspaces": 1,
+    "Microsoft.OperationsManagement/solutions": 1
+  },
+  "azure_compute_vm_count": 0,
+  "logic_app_count": 0,
+  "defender_plan_state": "not established; no subscription pricing enumeration or plan activation in this audit",
+  "owned_local_vm_state": "poweroff",
+  "audit_resource_writes": 0,
+  "audit_role_changes": 0,
+  "audit_log_queries": 0,
+  "audit_raw_events_returned": 0,
+  "checks_passed": 76,
+  "limitations": [
+    "Inventory covers this resource group, not all tenant/subscription-level services or pricing plans.",
+    "No assertion that all Defender plans are free or every external cost source is enumerated.",
+    "Credit closed balance is not an actual final monetary charge or universal budget cap.",
+    "Full private snapshots remain ignored; public incident reference is a hash only.",
+    "Generic resource-group inventory does not enumerate every nested extension resource; rules and the incident were read separately, and AMA has separate exact-resource verification."
+  ],
+  "all_assignment_scopes_match_independent_fixed_resource_model": true,
+  "post_reconcile_verified_utc": "2026-11-03T20:10:19.114729+00:00",
+  "post_reconcile_source_workflow": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41709469491",
+  "post_reconcile_audit_resource_writes": 0,
+  "post_reconcile_audit_log_queries": 0
+}

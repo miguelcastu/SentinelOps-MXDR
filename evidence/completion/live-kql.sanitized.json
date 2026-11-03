@@ -1,0 +1,33 @@
+{
+  "evidence": "actual-log-analytics-aggregate",
+  "observed_utc": "2026-11-03T19:32:48.216584+00:00",
+  "query_sha256": "e2fde48c905726f4f418602df15e14fc9a2b8302231c897f13beee102793d937",
+  "timespan": "PT1H",
+  "query_attempts": 1,
+  "detections_validated": 12,
+  "matches": {
+    "AZ-DET-001": 0,
+    "AZ-DET-002": 3,
+    "AZ-DET-003": 2,
+    "AZ-DET-004": 0,
+    "AZ-DET-005": 0,
+    "AZ-DET-006": 0,
+    "AZ-DET-007": 0,
+    "AZ-DET-008": 0,
+    "AZ-DET-009": 0,
+    "AZ-DET-010": 0,
+    "AZ-DET-011": 0,
+    "AZ-DET-012": 0
+  },
+  "kusto_executed": true,
+  "raw_events_returned": 0,
+  "resource_changes": 0,
+  "measured_false_positive_rate": null,
+  "limitations": [
+    "Zero matches is valid inactivity, not a measured true-negative rate.",
+    "Compilation and aggregate execution do not verify scheduled rule alerts or incident creation.",
+    "The one-hour sample cannot establish production detection accuracy."
+  ],
+  "auth_mode": "personal-mfa-read-only-verification",
+  "source_sha": "af2e2bb61aba6934e5821c416333d0e51500a580"
+}
