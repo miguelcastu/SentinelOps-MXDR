@@ -52,6 +52,7 @@ class LifecycleBoundaries(unittest.TestCase):
                 self.present = present
                 self.gets = 0
             def request(inner, method, path, body=None):
+                self.assertEqual(method, 'GET', 'CI observation must not require detailed alert POST access')
                 if method == "GET":
                     if "/rule/" in path:
                         return rule("1234567890", "2026-11-03T18:00:00Z")
@@ -67,6 +68,13 @@ class LifecycleBoundaries(unittest.TestCase):
             with self.assertRaises(ValueError):
                 observe(absent, "/lab", "/lab/rule/" + RULE_UUID, sleep=lambda _: None)
         self.assertEqual(absent.gets, 24)
+
+    def test_incident_alert_count_is_bounded_and_not_a_boolean(self):
+        for count in [True, 0, -1, 6, '1', None]:
+            value=self.incident()
+            value['properties']['additionalData']['alertsCount']=count
+            with self.assertRaises(ValueError):
+                validate_incident(value,'/lab/rule/'+RULE_UUID)
 
     def test_cleanup_uses_etag_and_does_not_touch_other_rules(self):
         body = rule("1234567890", "2026-11-03T18:00:00Z", True)

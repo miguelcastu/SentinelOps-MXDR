@@ -52,6 +52,8 @@ class IntegratedLab(unittest.TestCase):
             with zipfile.ZipFile(result["artifact"]) as archive:
                 self.assertNotIn("demo/secret.private.json", archive.namelist())
                 self.assertIn("source/.github/workflows/validate.yml", archive.namelist())
+                self.assertIn("source/evidence/completion/dashboard.synthetic.png", archive.namelist())
+                self.assertNotIn("source/evidence/01-azure-resources.png", archive.namelist())
                 self.assertNotIn("demo/soar/case-store.sqlite3", archive.namelist())
                 manifest = json.loads(archive.read("manifest.json"))
                 for entry in manifest["files"]:

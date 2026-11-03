@@ -8,6 +8,7 @@ from pathlib import Path
 from scripts.validate_detection import ROOT
 
 SUFFIXES = {".py", ".json", ".md", ".kql", ".yml", ".yaml", ".bicep", ".bicepparam", ".toml"}
+PUBLIC_IMAGES = {"evidence/completion/dashboard.synthetic.png"}
 DEMO_FILES = {"index.html", "report.json", "ingestion/report.json", "detections/controls.synthetic.json",
               "health/report.json", "health/report.md", "health/dashboard.html", "risk/report.json",
               "risk/investigation.md", "risk/dashboard.html", "risk/dataset.synthetic.json",
@@ -28,7 +29,7 @@ def bundle(output):
         approved_workflow = len(parts) == 3 and parts[:2] == (".github", "workflows") and path.suffix in {".yml", ".yaml"}
         if path.is_symlink() or not path.is_file() or hidden_parent and not approved_workflow or ".private." in name:
             continue
-        if path.suffix not in SUFFIXES and name not in {"LICENSE", ".gitignore"}:
+        if path.suffix not in SUFFIXES and name not in {"LICENSE", ".gitignore"} and name not in PUBLIC_IMAGES:
             continue
         resolved = path.resolve()
         if not resolved.is_relative_to(ROOT) or path.stat().st_size > 4_194_304:
@@ -46,7 +47,7 @@ def bundle(output):
     if sum(map(len, entries.values())) > 26_214_400:
         raise ValueError("Portable archive size exceeded")
     manifest = {"format": "sentinelops-portable-lab-1", "source": "git-tracked-text-only", "deployment_performed": False,
-                "excluded": [".git", ".local private files", "credentials", "VM disks", "SQLite database", "raw images"],
+                "excluded": [".git", ".local private files", "credentials", "VM disks", "SQLite database", "unallowlisted/raw screenshots"],
                 "files": [{"path": n, "bytes": len(b), "sha256": hashlib.sha256(b).hexdigest()} for n, b in sorted(entries.items())]}
     destination = output.parent / "SentinelOps-MXDR-portfolio.zip"
     with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as archive:

@@ -31,6 +31,10 @@ def evidence_inventory():
                      "evidence/local-linux-ama/shutdown.sanitized.json",
                      "evidence/completion/eligibility.sanitized.json",
                      "evidence/completion/baseline.sanitized.json",
+                     "evidence/completion/infrastructure.sanitized.json",
+                     "evidence/completion/live-kql.sanitized.json",
+                     "evidence/completion/alert-investigation.sanitized.json",
+                     "evidence/completion/final-preservation.sanitized.json",
                      "evidence/completion/lifecycle-start.sanitized.json",
                      "evidence/completion/lifecycle-close.sanitized.json"]:
         path = ROOT / relative
@@ -108,14 +112,21 @@ def run(output):
     public_evidence = evidence_inventory()
     cloud_start = ROOT / "evidence/completion/lifecycle-start.sanitized.json"
     cloud_close = ROOT / "evidence/completion/lifecycle-close.sanitized.json"
+    investigation = ROOT / "evidence/completion/alert-investigation.sanitized.json"
     live = False
-    if cloud_start.exists() and cloud_close.exists():
+    if cloud_start.exists() and cloud_close.exists() and investigation.exists():
         a, b = (json.loads(p.read_text(encoding="utf-8")) for p in (cloud_start, cloud_close))
+        detail=json.loads(investigation.read_text(encoding="utf-8"))
         from lifecycle.contract import fingerprint
         live = (all(x.get("evidence") == "actual-azure-scheduled-lifecycle" and x.get("auth_mode") == "github-oidc" and x.get("approved_sha256") == fingerprint() and x.get("original_thirteen_rules_unchanged") is True and x.get("workspace_settings_unchanged") is True for x in (a, b))
-                and a.get("mode") in {"start", "recover"} and b.get("mode") == "close"
+                and a.get("mode") in {"start", "recover", "observe"} and b.get("mode") == "close"
+                and (a.get("mode") != "observe" or a.get("observed_existing_test") is True)
                 and isinstance(a.get("test_run_reference"), str) and len(a["test_run_reference"]) == 64 and a["test_run_reference"] == b.get("test_run_reference")
-                and a.get("incident_created") is True and a.get("scheduled_rule_link_verified") is True and b.get("incident_status") == "Closed" and b.get("classification") == "BenignPositive" and b.get("test_rule_disabled") is True)
+                and a.get("incident_created") is True and a.get("scheduled_rule_link_verified") is True and b.get("incident_status") == "Closed" and b.get("classification") == "BenignPositive" and b.get("test_rule_disabled") is True
+                and detail.get('evidence')=='actual-azure-rest-alert-investigation' and detail.get('auth_mode')=='personal-mfa-read-only-verification'
+                and detail.get('scheduled_component_verified') is True and detail.get('all_alert_titles_rule_and_test_time_verified') is True
+                and detail.get('synthetic_test') is True and detail.get('query_match_rows',0)>=1 and detail.get('linked_alerts')==a.get('linked_alerts')
+                and detail.get('test_run_reference')==a.get('test_run_reference') and detail.get('incident_reference')==a.get('incident_reference'))
     value = {"schema_version": "1.0", "evidence": "offline-integrated-lab", "customer": "Atlas Financial (fictional)",
              "safety": {"network_calls": 0, "azure_mutations": 0, "live_queries": 0, "containment_actions": 0},
              "normalization": normalization, "detections": catalog(), "detection_controls": len(controls),

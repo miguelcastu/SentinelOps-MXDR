@@ -75,7 +75,8 @@ def validate_incident(value, target):
     props = value.get("properties", {})
     related = props.get("relatedAnalyticRuleIds", [])
     require(props.get("title") == TITLE and len(related) == 1 and related[0].lower() == target.lower(), "Incident is not linked exclusively to the fixed synthetic rule")
-    require(props.get("additionalData", {}).get("alertsCount", 0) > 0, "No actual scheduled alert linked")
+    count = props.get("additionalData", {}).get("alertsCount")
+    require(type(count) is int and 1 <= count <= 5, "A bounded actual scheduled alert count is required")
     return props
 
 
