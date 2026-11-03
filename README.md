@@ -14,6 +14,16 @@ correlation, persistent case handling, reviewer decisions and customer delivery.
 > controls are preserved. [Acceptance/evidence](docs/validation/project-completion.md)
 > · [Release and portable artifact](https://github.com/miguelcastu/SentinelOps-MXDR/releases/tag/v1.0.0).
 
+## Choose your review depth
+
+- **Two minutes:** read the introduction, view the offline explorer below, then
+  scan [what is implemented](#what-is-implemented).
+- **Five minutes:** follow the [guided demonstration](docs/portfolio/demo-five-minutes.md)
+  and [architecture](docs/architecture/overview.md).
+- **Technical review:** use the [review route and lifecycle diagrams](docs/portfolio/review-route.md),
+  [engineering decisions](docs/portfolio/engineering-decisions.md), and
+  [accepted evidence and limits](docs/validation/project-completion.md).
+
 ## Try it in one command
 
 Python **3.12+**, Git and a checkout of this public repository are sufficient.
@@ -93,7 +103,7 @@ python -m infrastructure.preview
 python -m lab --bundle
 ```
 
-Current local suite: **213 tests**, plus independent customer/evidence/schema
+Current checked-in unittest suite: **211 tests**, plus independent customer/evidence/schema
 checks. Required GitHub CI runs on Python 3.12; local checks also run on 3.15.
 The pinned Bicep compiler is acquired from the official release, SHA-256 checked
 and actually executed in CI. Tests cover conflicting replay, lineage, approval
