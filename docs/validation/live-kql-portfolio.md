@@ -79,3 +79,13 @@ metadata mismatch, consumed ambiguous attempts, response bounds, redirect
 refusal and safe error codes. These tests are not Kusto execution. Final actual
 execution, if performed, must be linked from the project's completion evidence
 after its sanitized result is obtained.
+
+## Actual accepted execution,3 November2026
+
+At 19:32:48 UTC, the one authorized aggregate executed successfully in Kusto:
+all 12 fixed definitions returned their typed aggregate. AZ-DET-002=3,
+AZ-DET-003=2, tenothers=0. [Actual sanitized response](../../evidence/completion/live-kql.sanitized.json).
+The result is consistent with administrative lab activity, not an adjudication
+of every matching source event. No precision/recall/false-positive rate is
+measured. No raw event/identity was returned, no CI table permission was added,
+and the single-attempt ledger remains completed/consumed.

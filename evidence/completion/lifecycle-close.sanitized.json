@@ -1,0 +1,22 @@
+{
+  "evidence": "actual-azure-scheduled-lifecycle",
+  "auth_mode": "github-oidc",
+  "mode": "close",
+  "synthetic_input": true,
+  "customer_tables_scanned": 0,
+  "new_ingestion_messages": 0,
+  "containment_actions": 0,
+  "approved_sha256": "1de2228fdfbce88dfb1591900ad51eb30cbccff9ff8b30a6aecfdf666883dabb",
+  "incident_created": true,
+  "incident_status": "Closed",
+  "classification": "BenignPositive",
+  "classification_reason": "SuspiciousButExpected",
+  "scheduled_rule_link_verified": true,
+  "test_rule_disabled": true,
+  "original_thirteen_rules_unchanged": true,
+  "workspace_settings_unchanged": true,
+  "verified_utc": "2026-11-03T19:33:13.781971+00:00",
+  "test_run_reference": "470d9fff059c65a525ab64577afdcd3ed9d68dd7b63bd4a2de6211b3ba7e6144",
+  "workflow_run": "https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41704210239",
+  "source_sha": "af2e2bb61aba6934e5821c416333d0e51500a580"
+}

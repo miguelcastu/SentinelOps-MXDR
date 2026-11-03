@@ -95,3 +95,16 @@ the unrelated permissions needed by ARM what-if. Even after a successful run,
 full ARM deployment/what-if and current telemetry/runtime health remain outside
 that proof. Existing resource IDs, pricing, retention, cap and rule states are
 only read; the local VM remains stopped.
+
+## Actual accepted compiler-to-live OIDC proof
+
+[Run41700706739](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41700706739)
+succeeded at 19:10:40UTC. Actual hash-pinned Bicep compilation preceded login;
+six existing-authority GETs matched17core targets,0 Drift/0 Missing and2 explicit
+Unknown (Sentinelonboarding/diagnosticexport not queried). The Arc guest was
+Disconnected; no boot/write/role/query/ingestion occurred.
+[Actual record](../../evidence/completion/infrastructure.sanitized.json).
+This is the verified equivalent nonmutating fixed-contract preview, not a
+full ARMdeployment/what-if or a destructive recovery test. The final access
+audit is10 roles/22 assignments, including separately authorized lifecycle scope;
+earlier7/18counts are pre-lifecycle historical checkpoints.

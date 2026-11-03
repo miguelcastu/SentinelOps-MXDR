@@ -8,11 +8,14 @@
       "table": "AzureActivity",
       "pipeline": "Existing subscription diagnostic export to existing workspace",
       "state": "existing-cloud-source",
-      "event_types": ["Administrative operation success", "Administrative operation failure"],
+      "event_types": [
+        "Administrative operation success",
+        "Administrative operation failure"
+      ],
       "heartbeat": "event-driven",
       "silent_window_minutes": null,
       "acceptance": "Diagnostic destination matches workspace; a known approved administrative event is queryable; preserve original evidence and timestamps",
-      "last_verification": "2026-10-18: export configuration preserved; historical ingestion evidence exists; no fresh log query executed",
+      "last_verification": "2026-11-03 19:32:48 UTC: one actual one-hour Kusto aggregate executed all twelve fixed queries; AZ-DET-002=3 and AZ-DET-003=2. No raw rows/identities; current export parameters were not re-queried by CI.",
       "data_classification": "private administrative telemetry"
     },
     {
@@ -22,7 +25,10 @@
       "table": "SentinelOpsAuth_CL",
       "pipeline": "Local Python -> proposed direct DCR endpoint -> custom Analytics table",
       "state": "offline-validated-cloud-not-authorized",
-      "event_types": ["Synthetic 4624 Logon Success", "Synthetic 4625 Logon Failure"],
+      "event_types": [
+        "Synthetic 4624 Logon Success",
+        "Synthetic 4625 Logon Failure"
+      ],
       "heartbeat": "single-approved-test-batch-only",
       "silent_window_minutes": null,
       "acceptance": "24 expected unique synthetic IDs, no invalid events, reconcile duplicates, timestamps and billed bytes; measure latency before claiming an SLI",
@@ -36,7 +42,9 @@
       "table": "Syslog",
       "pipeline": "Local rsyslog -> AMA -> fixed DCR/association -> existing workspace",
       "state": "pilot-verified-guest-stopped",
-      "event_types": ["Labeled local4 Warning-or-higher transport test messages"],
+      "event_types": [
+        "Labeled local4 Warning-or-higher transport test messages"
+      ],
       "heartbeat": "operator-controlled-local-machine",
       "silent_window_minutes": null,
       "acceptance": "Actual fixed resource read-back and one ten-message batch reconciled; future health also requires fresh machine state and complete telemetry aggregates",

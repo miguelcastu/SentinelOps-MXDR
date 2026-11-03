@@ -86,3 +86,14 @@ Operator acceptance / date / agreed account-closure responsibility:
 
 This is an honest handover record. Do not replace an unexecuted acceptance item
 with a check mark merely because the documentation or mock test exists.
+
+## Final release checkpoint
+
+The dedicated actual Sentinel lifecycle is now accepted: one explicitly synthetic
+row produced a real scheduled alert/incident, was investigated read-only and
+closed through exact-incident OIDC. Twelve security definitions stayed disabled;
+all 12 KQL bodies also executed in a bounded aggregate. Local case/ticket examples
+remain fictional and separate. Compiler-to-live verification matched17 targets
+and left2 unqueried. [Final acceptance and evidence](../../docs/validation/project-completion.md).
+Keep the portable archive before operator-led personal Azure subscription
+closure; leave the university identity/tenant untouched.

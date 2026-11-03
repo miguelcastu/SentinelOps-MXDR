@@ -1,24 +1,18 @@
-# Delivered scope and final acceptance
+# Accepted release scope
 
-The detailed per-phase record is [PROJECT_STATUS.md](PROJECT_STATUS.md).
-The 3 November completion increment implements all remaining **offline**
-engineering deliverables: SOAR, Bicep/preview/recovery, AMA health policy,
-customer operations and integrated portable portfolio. It preserves the
-existing actual AzureActivity/AMA and OIDC detection evidence.
+**v1.0.0: all eight engineering phases delivered within the personal lab scope.**
+See [current status](PROJECT_STATUS.md) and [full acceptance](validation/project-completion.md).
 
-| Area | Delivered | Remaining scope |
-|---|---|---|
-| Detection lifecycle | Twelve disabled definitions, synthetic controls, runbooks and isolated scheduler-test code | Real alert/incident classified closure, only after concrete activation/access approval |
-| Ingestion | Two actual sources demonstrated; synthetic authentication pipeline offline | Optional custom table/broader collection not deployed |
-| Health | Three-source policy/inventory, sixteen faults, maintenance/partial evidence | Live telemetry/runtime not measured by the offline demo |
-| Risk | Nine synthetic scenarios, strict event lineage and score controls | No production probability/incident claim |
-| SOAR | Persistent case, reviewer decision, local ticket and failure/audit tests | No paid SaaS, Logic App or destructive containment |
-| IaC/CI/CD | Actual Bicep compilation and fixed-target comparison/recovery | Full platform ARM redeployment/what-if unverified |
-| Customer service | Twenty deliverables and eight fictional tickets validated | No real customer/service claim |
-| Portfolio | One-command explorer, archive/manifest and presentation material | Final original-mission sign-off depends on actual Phase1 evidence |
+The real scheduled lifecycle is now accepted: one explicitly synthetic event
+produced an actual alert/incident, was investigated and closed through OIDC.
+The original twelve definitions stay disabled, with independent actual KQL
+execution. Two telemetry sources have actual arrival proofs; the local guest
+is stopped. Health/risk/SOAR/customer delivery and the portable replay are tested.
+Compiled Bicep matches seventeen actual targets; two references remain Unknown.
 
-The [acceptance record](validation/project-completion.md) is the release
-boundary. [The specific live test](deployment/synthetic-lifecycle.md) preserves
-the twelve disabled rules and requires no new data source, guest boot or paid
-service. A failed/blocked live gate is documented, not replaced by a simulation.
-After sign-off, retain the offline archive before operator-led account closure.
+No required phase remains pending for this release. Possible future work is
+separate production scope: native authentication/source expansion, activation
+and representative tuning, paid automation, custom-table cloud ingestion,
+full infrastructure deployment/DR and staffing/service operations. These need
+new authority, budget and acceptance; they are not silently deployed or claimed.
+The current release remains demonstrable after operator-led Azure closure.

@@ -7,12 +7,12 @@ customer. It combines actual Azure/OIDC deployment evidence with a complete
 offline lab: source normalization, detection controls, telemetry health, risk
 correlation, persistent case handling, reviewer decisions and customer delivery.
 
-> **3 November 2026:** the original Azure subscription is Enabled with spending
-> limit On. Twelve managed detections remain disabled; the owned Linux AMA VM
-> is stopped. SOAR, Bicep models, AMA health policies, customer operations and
-> the integrated demonstration are implemented. The original mission's real
-> scheduled-alert/incident closure remains a separately gated acceptance test.
-> [Exact status and evidence](docs/PROJECT_STATUS.md).
+> **v1.0.0 — all eight engineering phases delivered within the lab scope.**
+> A real scheduled test produced one alert/incident, was investigated and closed
+> through OIDC; all twelve security queries also executed in Kusto. The twelve
+> detections and dedicated test are disabled, the VM is stopped, and subscription
+> controls are preserved. [Acceptance/evidence](docs/validation/project-completion.md)
+> · [Release and portable artifact](https://github.com/miguelcastu/SentinelOps-MXDR/releases/tag/v1.0.0).
 
 ## Try it in one command
 
@@ -64,14 +64,20 @@ guest; it does not export university directory logs or join the device to Entra.
 | Platform health | Three-source policies, freshness/quality/latency/volume checks, sixteen safe fault scenarios and maintenance handling | [Operations and SLIs](docs/operations/platform-health.md); unavailable telemetry remains Unknown |
 | Risk correlation | Canonical identity joins, event lineage, ordered attack sequence, bounded scoring/decay/caps, deduplication and nine scenario controls | [Design and replay](docs/operations/risk-correlation.md); synthetic finding, not a calibrated risk probability |
 | SOAR | Durable SQLite cases, structured notes, enrichment, revision/expiry-bound reviewer decisions, classified closure, idempotent local ticket and chained audit | [Implementation and six failure scenarios](docs/operations/soar.md); local roles/connectors are simulations |
-| IaC and recovery | Four Bicep models, one parameter file, pinned compiler, nineteen-target comparison and destructive-change gates | [Real compilation](docs/validation/phase-6.md); full platform ARM deployment/what-if remains unverified |
+| IaC and recovery | Four Bicep models, one parameter file, pinned compiler, nineteen-target comparison and destructive-change gates | [Actual compilation and 17 matching cloud contracts](evidence/completion/infrastructure.sanitized.json); two references remain unqueried, and full ARM deployment/what-if was not executed |
 | Customer operations | Twenty deliverables, definition-derived coverage, RACI, runbooks, SLIs, risk register and eight fictional service tickets | [Atlas Financial handover](customer/atlas-financial/README.md); no real customer or affiliation claim |
 | Portfolio delivery | One-command integrated replay, standalone evidence explorer, portable archive and presentation/interview material | [Reviewer guide](docs/portfolio/README.md) and [final acceptance](docs/validation/project-completion.md) |
 
-The [isolated synthetic scheduler test](docs/deployment/synthetic-lifecycle.md)
-is implemented with a fixed target, twenty-minute data expiry, finite polling,
-mandatory disable and exact-incident classification. Its code and mock checks
-are **not actual alert/incident evidence**; the live gate remains explicit.
+The [isolated synthetic scheduler test](docs/validation/lifecycle.md) completed
+the **actual** KQL match -> scheduled alert -> Sentinel incident -> investigation
+-> Closed/BenignPositive classification chain. Creation and closure used GitHub
+OIDC; detailed investigation used the authorized personal read-only session.
+The test stayed separate from the twelve disabled security definitions. Failed
+authorization and observation attempts are documented; no broader Reader or
+table-data role was granted. A final OIDC reconciliation restored the existing
+closed incident's activity timestamps from verified source evidence using one
+exact-incident PUT. It did not reactivate the test or change its classification.
+The completed test gate is disarmed.
 
 ## Verify the project
 
@@ -108,8 +114,11 @@ the project does not pretend it caused an unrelated real Azure incident.
 | [Detection OIDC deployment](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/39235924991) | Twelve total managed Scheduled definitions disabled; existing Fusion preserved |
 | [AMA main OIDC verification](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/40774219658) | Same fixed DCR/extension/association already matching after approved one-time initialization |
 | [Actual Syslog query](evidence/local-linux-ama/ingestion.sanitized.json) | Ten total/ten distinct messages, two aggregate queries, 900 payload bytes and 2,600 billable bytes |
-| [Fresh 3 November baseline](evidence/completion/baseline.sanitized.json) | Thirteen rules, twelve disabled Scheduled, original Fusion enabled, eighteen CI assignments, Arc Disconnected |
-| [Subscription/credit](evidence/completion/eligibility.sanitized.json) | Same Enabled subscription, spending limit On, published EUR175.99436818021823; expiry 12 November 2026 18:00:16 UTC |
+| [Actual scheduled lifecycle](docs/validation/lifecycle.md) | One synthetic row -> one actual scheduled alert and incident -> read-only investigation -> OIDC classified closure; test disabled |
+| [Twelve-query KQL runtime](evidence/completion/live-kql.sanitized.json) | One aggregate POST: AZ-DET-002 matched 3 rows, AZ-DET-003 matched 2, and the other ten matched 0; no raw events or measured false-positive rate |
+| [Compiler-to-live OIDC](evidence/completion/infrastructure.sanitized.json) | 17 Matching and 2 Unknown through six GETs; no resource writes or VM start |
+| [Final 76-check preservation audit](evidence/completion/final-preservation.sanitized.json) | 14 unique rules: 12 managed disabled, one disabled test and original Fusion enabled; 22 exact assignments across 10 roles; original rule properties preserved, incident closed and VM stopped |
+| [Subscription/credit](evidence/completion/eligibility.sanitized.json) | Same Enabled subscription, spending limit On, published EUR 175.99436818021823; expiry 12 November 2026 18:00:16 UTC |
 
 Raw logs, identity fields and subscription/tenant identifiers are not release
 artifacts. Cloud records remain dated evidence, not a promise the subscription
@@ -124,9 +133,14 @@ existing CI identity and immutable repository/environment trust are reused;
 actions and the compiler are pinned. No client secret or public SSH endpoint.
 See [security boundaries](docs/security.md) and [recovery](docs/deployment/recovery.md).
 
+After acceptance, the lifecycle approval gate, recovery/reconciliation references
+and exact-incident identifier secret were removed from GitHub. Existing OIDC
+configuration and all 22 Azure assignments were preserved; disarming the workflow
+did not delete Azure roles or resources.
+
 The subscription and plan are preserved. Workspace pricing `pergb2018`,
 30-day retention, 0.1 GB/day cap, budgets and diagnostics are unchanged.
-The operator permits a maximum EUR175 for necessary completion work; the
+The operator permits a maximum EUR 175 for necessary completion work; the
 offline implementation uses **zero additional Azure ingestion or paid services**.
 Available credit is not a spending target. Closed credit can lag charges;
 2,600 historical billable bytes are not a measured invoice or zero-cost proof.

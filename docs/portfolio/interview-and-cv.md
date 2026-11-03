@@ -41,7 +41,7 @@ ends, and I state explicitly which live behaviors were not executed.”
 | What happens when data is missing? | Unknown query evidence is not zero events; quiet event-driven data has no heartbeat obligation. Risk remains visible, while confidence records collection gaps. |
 | How is cost controlled? | Local compute, no paid add-ons, bounded batches/queries, preserved caps/spending protections and eligibility checks. The measured billable bytes are not a guaranteed final invoice. |
 | What was difficult? | Azure rejected exact RBAC for an absent DCR. I stopped, obtained a single-target bootstrap exception, verified matching resources, then returned to exact-scoped OIDC. |
-| What would you change in production? | Formal data/legal authority, operational staffing and escalation, actual alert lifecycle and source-specific tuning, backup/recovery exercises, stronger separation of duties and measured cost/runtime baselines. |
+| What would you change in production? | Formal data/legal authority, operational staffing and escalation, representative active-rule validation and source-specific tuning, backup/recovery exercises, stronger separation of duties and measured cost/runtime baselines. |
 
 ## CV / LinkedIn project entry
 
@@ -64,3 +64,17 @@ response,” “100% ATT&CK coverage,” “zero false positives” or “zero A
 Only mention a real completed Sentinel alert/incident lifecycle if the final
 evidence actually establishes it. Use the current test count from CI rather
 than copying an obsolete number into interview material.
+
+## Additional verified release facts
+
+The final evidence now supports saying: "Validated all 12 KQL definitions with
+one aggregate real Kusto query, and completed an isolated actual scheduled
+alert/incident lifecycle with exact-incident OIDC classification and original
+rules/settings preserved." The event was explicitly synthetic; the Azure
+scheduler/alert/incident were real. Detailed investigation was personal
+read-only; CI did not gain table/entity access for that step.
+
+"Compiled pinned Bicep and verified17 actual fixed contracts through read-only
+OIDC, leaving2 unqueried references explicit" is also supported. Do not shorten
+this to "fully redeployed Azure" or "production security incident response."
+See the [accepted scope](../validation/project-completion.md).

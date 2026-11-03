@@ -1,13 +1,15 @@
-# Final portfolio acceptance record
+# Final acceptance: SentinelOps MXDR v1.0.0
 
-Review date: **3 November 2026**. This record freezes verified deliverables and
-states the remaining live boundary. The original mission's real scheduled
-alert/incident acceptance cannot be replaced by a local synthetic case.
+**All eight engineering phases are delivered and accepted within the documented
+lab scope on 3 November 2026.** This is a personal engineering lab for fictional
+Atlas Financial, not a production MXDR service or a real customer engagement.
 
-## Reproduce the portfolio
+The [release and portable archive](https://github.com/miguelcastu/SentinelOps-MXDR/releases/tag/v1.0.0)
+are published after final protected CI. The release records the exact merge,
+checks and archive digest. Dated cloud evidence and the offline demonstration
+remain available after the operator closes Azure access.
 
-Python 3.12+ is sufficient for all default demos and tests. No Azure account,
-paid service or extra Python dependency is needed:
+## Reproduce without Azure
 
 ```powershell
 python -m unittest discover -s tests -v
@@ -16,82 +18,119 @@ python customer/atlas-financial/validate.py
 python -m lab --bundle
 ```
 
-Open `.local/lab/index.html` locally. It links source-health/risk explorers,
-the detection catalog, original synthetic event lineage, SOAR case/audit and
-separately labeled actual cloud records. The portable ZIP beside that output
-contains allowlisted tracked source, workflows and generated public reports,
-with a per-file SHA-256 manifest; keys, VM disks, private snapshots, SQLite and
-raw screenshots are excluded. An unrelated file added beside output is never
-implicitly included. ZIP creation is local, not a GitHub release publication.
+Python 3.12+ and Git are sufficient for default offline behavior. Open
+`.local/lab/index.html` for the catalog, health/risk explorers, case/audit
+exports and evidence views. No authentication, network request, cloud operation
+or paid dependency is needed. The ZIP contains allowlisted tracked source and
+workflows, generated public reports, the explicitly reviewed synthetic
+screenshot and a per-file SHA-256 manifest. It excludes unrelated private files,
+credentials, VM disks, SQLite databases and unallowlisted raw Azure images.
 
-The 24-event normalization fixture and the multi-source RBA fixture are
-different exercises. The exact canonical RBA finding, seven original-event
-IDs and original evidence chain are passed to SOAR; they are not reconstructed
-from a screenshot or an unrelated sample.
+The normalization sample, synthetic RBA finding and isolated real-scheduler
+input are distinct exercises. The canonical RBA finding reaches local SOAR
+with its original seven-event lineage; that local finding is not presented as
+the cause of the separate actual Azure incident.
 
 ## Acceptance by phase
 
-| Phase | Verified deliverable | Evidence / remaining boundary |
+| Phase | Delivered and verified | Explicit limit |
 |---|---|---|
-| 1 | Twelve actual disabled definitions, sixty synthetic portfolio controls, investigations and isolated cloud-lifecycle implementation | Actual scheduled alert -> incident -> classified closure still requires the [concrete gated test](../deployment/synthetic-lifecycle.md); no live completion is asserted |
-| 2 | Synthetic schema/normalizer/bounded transport plus two actual source proofs: AzureActivity and owned Linux AMA/Syslog | The latter reconciled ten unique messages; VM stopped. Optional synthetic custom table is not deployed or needed to claim those two source proofs |
-| 3 | Three-source policy/inventory, sixteen local health scenarios, planned-stop/stale/partial-evidence handling, existing read-only OIDC config audit | Current live telemetry/runtime remain Unknown where not measured; historical pilot columns do not supply missing latency/schema metrics |
-| 4 | Canonical identities, deduplication, sequence, decay/caps, maintenance context, nine replay scenarios and full evidence chain | Explicitly synthetic, not a Sentinel security incident or measured probability |
-| 5 | Durable SQLite case lifecycle, notes, enrichment, reviewer gate, classified closure, idempotent local ticket and audit chain | One local case/nine audit events; six local failure scenarios. Human roles and remote timeouts are simulated, not authenticated SaaS operations |
-| 6 | Four hash-pinned compiler-validated Bicep models, one parameter file, nineteen-target nonmutating comparison, exact/destructive-change gates and recovery runbook | Actual local compilation; no full platform redeployment/ARM what-if claimed. Existing REST/OIDC fixed-resource deployments are independently evidenced |
-| 7 | Twenty customer deliverables, source-derived twelve-rule coverage, eight fictional tickets, RACI/SLIs/risks/handover | [Customer contract validation](../../customer/atlas-financial/README.md), not a real regulated customer/service certification |
-| 8 | Integrated one-command demo, standalone evidence explorer, portable archive, manifest, presentation/demo/interview material and protected CI | Release capability scope is usable offline after Azure closes; original mission remains gated on Phase 1 live acceptance |
+| 1. Detection and incident lifecycle | Twelve deployed disabled definitions, sixty portfolio controls, actual Kusto execution of all twelve queries, and one actual scheduled alert/incident investigated and classified closed | Dedicated LAB event is synthetic; no production accuracy or activation of the twelve security rules is claimed |
+| 2. Advanced ingestion | AzureActivity export/arrival, ten unique owned Linux Arc/AMA Syslog messages, and offline synthetic schema/normalizer/bounded client | Guest stopped; native SSH excluded; optional synthetic custom table remains undeployed |
+| 3. Platform health | Three-source inventory/policies, sixteen safe faults, maintenance/stale/partial handling, prior OIDC health audit and current configuration evidence | Unmeasured telemetry, latency and runtime remain Unknown; no automatic fresh AMA query |
+| 4. Risk correlation | Canonical identity joins, source lineage, strict sequence, deduplication/decay/caps, maintenance context and nine scenarios | Synthetic finding, not a calibrated probability or actual attack |
+| 5. SOAR | Durable case, notes/enrichment, reviewer gates, classification, idempotent ticket, chained audit and six failure scenarios | Local actors and remote timeouts are simulated; no Logic App, paid SaaS or containment |
+| 6. IaC and CI/CD | Four compiler-validated Bicep models, one parameter file, nineteen-target preview/recovery guard and 17 actual OIDC contract matches | Two unqueried references remain Unknown; full ARM deployment/what-if was not executed |
+| 7. Customer operations | Twenty mapped deliverables, twelve definition-derived coverage records, eight fictional tickets, RACI, SLIs, risks and handover | Fictional service package, not certification or customer employment |
+| 8. Portfolio delivery | Integrated explorer, portable archive/hash manifest, presentation material, actual/synthetic evidence and protected release delivery | Accepted engineering lab; no continuously operated security-service claim |
 
-## Actual Azure baseline and cost
+## Actual verification paths
 
-The read-only [eligibility record](../../evidence/completion/eligibility.sanitized.json)
-and [fresh control-plane baseline](../../evidence/completion/baseline.sanitized.json)
-confirm the existing pinned Enabled subscription, spending limit On, West
-Europe workspace, `pergb2018`, 30-day retention and 0.1 GB/day cap. Thirteen
-rules remain: twelve disabled Scheduled and original enabled Fusion. Eighteen
-CI assignments were observed; the owned Arc machine was Disconnected, consistent
-with the stopped guest. No new project resource, role, log query, message or
-paid plan was introduced by this offline increment.
+- [Scheduled lifecycle](lifecycle.md): one match, alert and incident; detailed
+  read-only investigation; OIDC classification as Closed / BenignPositive /
+  SuspiciousButExpected at 19:33:13 UTC. Creation and resource changes used
+  OIDC; the approved personal session inspected details read-only. Defender
+  link presence is verified, but the portal UI was not opened.
+- [Final lifecycle reconciliation](../../evidence/completion/lifecycle-start.sanitized.json):
+  OIDC run [41709469491](https://github.com/miguelcastu/SentinelOps-MXDR/actions/runs/41709469491)
+  restored first/last activity to the verified 19:12:41 source time on the
+  already closed incident, then verified it at 20:07:05. This operation included
+  **one exact-incident PUT**. It preserved classification and did not create
+  another event or reactivate the rule; it was not a purely read-only run.
+- [Twelve-query KQL runtime](live-kql-portfolio.md): one one-hour aggregate POST.
+  AZ-DET-002 matched 3 rows, AZ-DET-003 matched 2, and the other ten matched 0.
+  Counts may reflect legitimate setup. No raw rows or identities were returned;
+  the attempt ledger remains consumed. This is not a false-positive rate.
+- [Compiler-to-live comparison](../../evidence/completion/infrastructure.sanitized.json):
+  four compiled models/one parameter file compared through six GETs, producing
+  17 Matching, 0 Drift, 0 Missing and 2 Unknown. The stopped Arc guest remained
+  stopped. This verifier made no resource write, role change or log query.
+- [Final preservation audit](../../evidence/completion/final-preservation.sanitized.json):
+  74 baseline/preservation checks plus two post-reconciliation timeline checks,
+  completed at 20:10:19 UTC. The original thirteen rule properties, subscription,
+  workspace controls, CI identity and immutable trust are preserved. There are
+  14 unique rules, 22 exact assignments and 10 validated custom roles. No broad
+  writer, wildcard, table-data or CI role-management grant was added.
+- [Historical AMA proof](../../evidence/local-linux-ama/ingestion.sanitized.json):
+  ten unique messages, 900 payload bytes and 2,600 billable bytes, reconciled
+  through two aggregate queries. The guest is off; this is neither a current
+  heartbeat nor a final monetary charge.
+- [GitHub closeout](../../evidence/completion/github-closeout.sanitized.json):
+  the lifecycle approval gate, recovery/reconciliation references and exact-incident
+  identifier secret were removed. Existing Azure OIDC configuration and all
+  22 Azure assignments were preserved. The completed test is disarmed.
 
-Published credit still shows EUR175.99436818021823, expiry 12 November 2026
-18:00:16 UTC. Credit is not a live invoice and billing lag is possible. The
-earlier AMA pilot's 2,600 billable bytes are historical, not a final monetary
-charge. The user's new maximum is EUR175; no amount of available credit is a
-reason to consume it. Existing unrelated workloads can incur costs independently.
+## Checks and evidence quality
 
-## Verification and provenance
+**213 local tests pass**, including actual compiler checks. Required Python 3.12
+CI runs the suite, validators, customer contracts, integrated replay, archive
+checks and the pinned Linux Bicep compiler. Independent checks cover SOAR JSON
+Schema, workflow lint, links, archive privacy/CRC/hash manifest, and browser
+behavior: tabs, severity filtering, source lineage, linked dashboards and a
+390 px mobile viewport.
 
-The protected PR records exact implementation head, required Python 3.12 CI
-and merge SHA. Local Python 3.15 unit tests, fixed rule validation, customer
-contracts, actual Bicep compilation, actionlint, relative links, JSON syntax,
-staged identifier/key/token scans and diff checks are performed before merge.
-Independent reviewers checked archive privacy and incident-scope/time matching;
-their discovered issues were corrected and tested, not hidden as successful
-cloud executions. Compiler acquisition is a public official-release download,
-hash-checked again before execution; it neither authenticates to Azure nor
-grants deployment authority.
+Mock results are not published as actual cloud evidence. Public source SHAs,
+workflow links and independent REST observations provide the provenance chain.
+JSON digests bind the reports to their inputs; they are not cryptographic Azure
+attestations. Earlier authorization failures remain in the history. The detailed
+investigation and original incident snapshot are separate from OIDC creation,
+classification and the later timestamp repair.
 
-Local reports may be regenerated. Historical actual evidence is preserved at
-its recorded timestamp. An imported JSON label is not cryptographic proof of
-Azure origin: public review, source SHA and linked actual workflow results
-provide the provenance chain. A clean code test or preview is not a live event.
+## Subscription, cost and resource scope
 
-Actual local Chrome/Playwright checks exercised all four tabs, the severity
-filter, seven-event case timeline, case expansion, both linked dashboards and
-a 390px mobile viewport without horizontal overflow, JavaScript errors or
-external page requests. [Browser check](../../evidence/completion/browser.sanitized.json)
-and [synthetic dashboard screenshot](../../evidence/completion/dashboard.synthetic.png).
+The existing subscription and plan remain Enabled with spending limit On.
+Workspace `pergb2018` pricing, 30-day retention, the 0.1 GB/day cap, budgets and
+diagnostics are preserved. Published credit is EUR 175.99436818021823, expiring
+12 November 2026 at 18:00:16 UTC. Closed balances can lag usage. The operator's
+EUR 175 maximum was a ceiling, not a spending target; the final monetary charge
+remains unknown. Spending protection is not a custom per-test euro cap.
 
-## Account closure and retained value
+Completion introduced one fixed LAB rule, three narrow role definitions/four
+exact assignments, one scheduled alert and one incident classified closed.
+The final inventory contains twelve disabled managed definitions, the disabled
+LAB test and original enabled Fusion. No existing resource was deleted. No
+Azure VM, paid add-on, university source or new live ingestion batch was added,
+and no ongoing sender or enabled managed test rule remains.
 
-Keep a local clone and the portable archive, verify its manifest and open the
-dashboard without Internet. Preserve private operational state separately;
-never upload it as evidence. Keep the guest off and consumed pilot/bootstrap
-ledgers intact. There are no schedules or repeating senders to restart later.
-Account cancellation, deletion, billing-plan changes and university identity
-changes are not performed by the project. The operator controls account closure
-after reviewing the [handover checklist](../../customer/atlas-financial/handover.md).
+Resource-group inventory found no Azure VM, Logic App, app or database type in
+the inspected scope. This is not a tenant-wide inventory or proof that every
+Defender plan is free; global Defender pricing was not established and no
+Defender plan was enabled by this work. Existing unrelated workloads may still
+incur costs.
 
-If the subscription becomes disabled/expired before any separately approved
-test, stop further project cloud work; record the reason and hand over the
-verified offline release. Do not upgrade or switch to keep a demonstration alive.
+## Handover and scope freeze
+
+Keep a local clone, verify the archive manifest and open the demo without the
+Internet before operator-led Azure closure. Private keys, pins and consumed
+ledgers remain separate. The local guest stays off, and completed tests are not
+replayed. See the [operator handover](../../customer/atlas-financial/handover.md).
+
+No required engineering task remains within this accepted lab scope. Native
+authentication collection, active-rule tuning, a custom-table deployment, full
+platform redeployment/disaster recovery and paid automation are future scope,
+not hidden acceptance claims. They require separate permissions and cost review.
+After credit expiry, preserve the release rather than upgrading or switching.
+
+Account cancellation remains the operator's choice. This project has not
+cancelled the account, deleted Azure resources or changed the university
+identity/directory.

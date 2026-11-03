@@ -55,3 +55,22 @@ without its exact approval fingerprint. Its proposed workspace incident read
 and fixed test-rule/incident writes are **not present in the eighteen-assignment
 baseline**. They require the documented scope decision and exact setup; no
 workspace-wide incident writer or new log-query permission is included.
+
+## Final3 November access and closeout
+
+The [independent final audit](../evidence/completion/final-preservation.sanitized.json)
+verifies22 exact assignments and10custom roles. The original18 pairs remain;
+additions are only the dedicated test writer, owned-workspace incident reader,
+query/read execution gate (no table grants/DataActions) and classifier at the
+actual single synthetic incident. No wildcard/table-data/broadwriter or CI
+role-management permission exists in the audited binding set. The original
+identity, immutable trust, subscription and plan are preserved.
+
+CI's detailed-alert read was denied after the backend lifecycle succeeded.
+Rather than widen access, the authorized operator investigated read-only and
+CI was narrowed to exact metadata GETs. Resource creation/activation/closure
+remained OIDC. The incident is closed and the test disabled. Lifecycle approval,
+recovery reference and exact-incident environment secret are removed in the
+[closeout record](../evidence/completion/github-closeout.sanitized.json); the
+original Azure OIDC identifiers/environment/branch protections remain. Earlier
+seven-role/eighteen-assignment statements are historical28October checkpoints.
